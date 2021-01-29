@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jschramk-utils-lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../jschramk-utils-lib/out/artifacts/jschramk_utils_lib_jar/jschramk-utils-lib.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

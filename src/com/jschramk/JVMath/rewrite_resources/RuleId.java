@@ -1,0 +1,1 @@
+package com.jschramk.JVMath.rewrite_resources;public class RuleId{public static class operand{public static final int ADD_ZERO = 0;}public static class equation{public static final int EQ_FLIP = 1;}}

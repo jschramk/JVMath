@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Java-CAS-v2-FINAL:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4c012b1e-e702-4a49-ab4f-c64b30a4a484" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1gWRjxuhhtXGi0D77Xy2OShyPc4" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../3/RandomGraphics" />
+    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Java Projects\Important\Math-Solver\src\test" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Java Projects\Important\Math-Solver\src" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Java Projects\Important\Math-Solver\src\test-pkg" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="CAS.v3" />
+      <recent name="CAS.utils" />
+      <recent name="mathsolver.v3" />
+      <recent name="mathsolver.v2" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Java Projects\Math-Solver\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.TestRuleMatch">
+    <configuration name="ParserPerformanceTest" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="CAS.test.ParserPerformanceTest" />
+      <module name="Java-CAS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="CAS.generics.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="CAS.test.Test" />
+      <module name="Java-CAS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="CAS.generics.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test1" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="CAS.test.Test1" />
+      <module name="Java-CAS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="CAS.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestRuleMatch" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="CAS.test.TestRuleMatch" />
+      <module name="Java-CAS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="CAS.generics.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TestScript" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="CAS.test.TestScript" />
+      <module name="Java-CAS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="CAS.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="CAS.v2.Test" />
+      <module name="Java-CAS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="CAS.v3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mathsolver.v3.Test" />
+      <module name="Java-CAS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mathsolver.v3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mathsolver.v4.Test" />
+      <module name="Math-Solver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mathsolver.v4.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mathsolver.v3.Test" />
+      <module name="Math-Solver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mathsolver.v3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="VM_PARAMETERS" value="-ea" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.TestRuleMatch" />
+        <item itemvalue="Application.Test" />
+        <item itemvalue="Application.TestScript" />
+        <item itemvalue="Application.Test1" />
+        <item itemvalue="Application.ParserPerformanceTest" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4c012b1e-e702-4a49-ab4f-c64b30a4a484" name="Default Changelist" comment="" />
+      <created>1598228500626</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1598228500626</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600547435891">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="479" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1600547435891" />
+    <state x="830" y="272" key="#com.intellij.ide.util.MemberChooser" timestamp="1602271961241">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="692" y="225" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920@0.0.1707.920" timestamp="1599883721728" />
+    <state x="830" y="272" key="#com.intellij.ide.util.MemberChooser/0.0.2048.1112@0.0.2048.1112" timestamp="1602271961241" />
+    <state x="755" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1598231344977">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="755" y="340" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1598231344977" />
+    <state x="845" y="423" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1600375704018">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="704" y="350" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1707.920@0.0.1707.920" timestamp="1599881097252" />
+    <state x="845" y="423" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1600375704018" />
+    <state x="522" y="140" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor" timestamp="1600375702199">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="435" y="116" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.0.1707.920@0.0.1707.920" timestamp="1598468647033" />
+    <state x="522" y="140" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.0.2048.1112@0.0.2048.1112" timestamp="1600375702199" />
+    <state x="822" y="441" width="403" height="236" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1601833306176">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="822" y="441" width="403" height="236" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.2048.1112@0.0.2048.1112" timestamp="1601833306176" />
+    <state x="613" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1602181785811">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="613" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1602181785811" />
+    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602272210689">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="755" y="303" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1602272210689" />
+    <state x="784" y="427" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1601419769015">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="784" y="427" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2048.1112@0.0.2048.1112" timestamp="1601419769015" />
+    <state x="729" y="298" key="FileChooserDialogImpl" timestamp="1604946063965">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="608" y="247" key="FileChooserDialogImpl/0.0.1707.920@0.0.1707.920" timestamp="1598474243426" />
+    <state x="729" y="298" key="FileChooserDialogImpl/0.0.2048.1112@0.0.2048.1112" timestamp="1604946063965" />
+    <state width="642" height="984" key="GridCell.Tab.0.bottom" timestamp="1602648226418">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="1664" height="258" key="GridCell.Tab.0.bottom/0.0.1707.920@0.0.1707.920" timestamp="1599884732308" />
+    <state width="642" height="984" key="GridCell.Tab.0.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1602648226418" />
+    <state width="642" height="984" key="GridCell.Tab.0.center" timestamp="1602648226418">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="1664" height="258" key="GridCell.Tab.0.center/0.0.1707.920@0.0.1707.920" timestamp="1599884732308" />
+    <state width="642" height="984" key="GridCell.Tab.0.center/0.0.2048.1112@0.0.2048.1112" timestamp="1602648226418" />
+    <state width="642" height="984" key="GridCell.Tab.0.left" timestamp="1602648226418">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="1664" height="258" key="GridCell.Tab.0.left/0.0.1707.920@0.0.1707.920" timestamp="1599884732308" />
+    <state width="642" height="984" key="GridCell.Tab.0.left/0.0.2048.1112@0.0.2048.1112" timestamp="1602648226418" />
+    <state width="642" height="984" key="GridCell.Tab.0.right" timestamp="1602648226418">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="1664" height="258" key="GridCell.Tab.0.right/0.0.1707.920@0.0.1707.920" timestamp="1599884732308" />
+    <state width="642" height="984" key="GridCell.Tab.0.right/0.0.2048.1112@0.0.2048.1112" timestamp="1602648226418" />
+    <state width="2005" height="376" key="GridCell.Tab.1.bottom" timestamp="1601835566018">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="376" key="GridCell.Tab.1.bottom/0.0.2048.1112@0.0.2048.1112" timestamp="1601835566018" />
+    <state width="2005" height="376" key="GridCell.Tab.1.center" timestamp="1601835566018">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="376" key="GridCell.Tab.1.center/0.0.2048.1112@0.0.2048.1112" timestamp="1601835566018" />
+    <state width="2005" height="376" key="GridCell.Tab.1.left" timestamp="1601835566018">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="376" key="GridCell.Tab.1.left/0.0.2048.1112@0.0.2048.1112" timestamp="1601835566018" />
+    <state width="2005" height="376" key="GridCell.Tab.1.right" timestamp="1601835566018">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state width="2005" height="376" key="GridCell.Tab.1.right/0.0.2048.1112@0.0.2048.1112" timestamp="1601835566018" />
+    <state x="505" y="131" key="SettingsEditor" timestamp="1602181382266">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="505" y="131" key="SettingsEditor/0.0.2048.1112@0.0.2048.1112" timestamp="1602181382266" />
+    <state x="465" y="177" key="new project wizard" timestamp="1602204687813">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="465" y="177" key="new project wizard/0.0.2048.1112@0.0.2048.1112" timestamp="1602204687813" />
+    <state x="731" y="175" key="refactoring.ChangeSignatureDialog" timestamp="1601338255260">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="731" y="175" key="refactoring.ChangeSignatureDialog/0.0.2048.1112@0.0.2048.1112" timestamp="1601338255260" />
+    <state x="681" y="259" key="run.anything.popup" timestamp="1598550058548">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="681" y="259" key="run.anything.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1598550058548" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup" timestamp="1601749723427">
+      <screen x="0" y="0" width="2048" height="1112" />
+    </state>
+    <state x="573" y="201" width="672" height="561" key="search.everywhere.popup/0.0.1707.920@0.0.1707.920" timestamp="1598473522438" />
+    <state x="687" y="243" width="672" height="678" key="search.everywhere.popup/0.0.2048.1112@0.0.2048.1112" timestamp="1601749723427" />
+  </component>
+</project>

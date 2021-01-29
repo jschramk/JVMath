@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jschramk-data-structures-lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../jschramk-data-structures-lib/out/artifacts/jschramk_data_structures_lib_jar/jschramk-data-structures-lib.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
