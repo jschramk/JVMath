@@ -36,8 +36,6 @@ public class RuleProcessor {
 
   private static void processFile(File file, Parser parser) throws IOException, ParserException {
 
-
-
     JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(file));
 
     editArray(array, parser);
@@ -84,9 +82,18 @@ public class RuleProcessor {
     endClassDef();
 
     File file = new File("src/com/jschramk/JVMath/rewrite_resources/RuleId.java");
+
+    if (!file.setWritable(true)) {
+      throw new IOException("Unable to set file to writable: " + file);
+    }
+
     FileWriter writer = new FileWriter(file);
     writer.write(classStringBuilder.toString());
     writer.close();
+
+    if (!file.setWritable(false)) {
+      System.out.println("WARNING: Unable to set file to read only: " + file);
+    }
 
   }
 

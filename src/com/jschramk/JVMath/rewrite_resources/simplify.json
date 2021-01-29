@@ -9,6 +9,7 @@
     ]
   },
   {
+    "id": "ADD_SAME",
     "find": "x + x",
     "steps": [
       {
@@ -17,6 +18,7 @@
     ]
   },
   {
+    "id": "SUBTRACT_SAME",
     "find": "x - x",
     "steps": [
       {
@@ -25,6 +27,7 @@
     ]
   },
   {
+    "id": "ADD_WITH_COEFFICIENT",
     "find": "x + a * x",
     "steps": [
       {
@@ -33,6 +36,7 @@
     ]
   },
   {
+    "id": "ADD_WITH_DOUBLE_COEFFICIENT",
     "find": "a x + b x",
     "steps": [
       {
@@ -47,6 +51,7 @@
     ]
   },
   {
+    "id": "DISTRIBUTE_LITERAL",
     "find": "n(a + b)",
     "steps": [
       {
@@ -61,6 +66,7 @@
     ]
   },
   {
+    "id": "ADD_SAME_DENOMINATOR",
     "find": "a/x + b/x",
     "steps": [
       {
@@ -69,6 +75,7 @@
     ]
   },
   {
+    "id": "ADD_DIFFERENT_DENOMINATOR",
     "find": "a/b + c/d",
     "steps": [
       {
@@ -77,6 +84,7 @@
     ]
   },
   {
+    "id": "NEGATIVE_ZERO",
     "find": "-0",
     "steps": [
       {
@@ -85,6 +93,7 @@
     ]
   },
   {
+    "id": "MULTIPLY_BY_ZERO",
     "find": "0x",
     "steps": [
       {
@@ -93,6 +102,7 @@
     ]
   },
   {
+    "id": "MULTIPLY_BY_ONE",
     "find": "1x",
     "steps": [
       {
@@ -101,6 +111,7 @@
     ]
   },
   {
+    "id": "MULTIPLY_BY_NEGATIVE_ONE",
     "find": "(-1)*x",
     "steps": [
       {
@@ -109,6 +120,7 @@
     ]
   },
   {
+    "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
     "find": "neg*x",
     "steps": [
       {
@@ -124,6 +136,7 @@
     ]
   },
   {
+    "id": "DOUBLE_NEGATIVE",
     "find": "-(-x)",
     "steps": [
       {

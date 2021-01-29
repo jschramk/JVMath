@@ -30,6 +30,7 @@ public class UnitTest {
     testSolve(eq("v^2 = v0^2 + 2 a x"));
     testSolve(eq("n^2 = 1/n"));
     testSolve(eq("(5x-1)/5 - (1 + x)/2 = 3 - (x - 1)/4"));
+    testSolve(eq("Rtotal = R1 R2/(R1 + R2)"));
 
   }
 

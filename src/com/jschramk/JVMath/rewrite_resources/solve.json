@@ -1,6 +1,6 @@
 [
   {
-    "id": "EQ_FLIP",
+    "id": "FLIP",
     "find": "y = x",
     "steps": [
       {
@@ -15,9 +15,7 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
@@ -98,9 +96,23 @@
     "find": "x/(x1 + a) = y",
     "steps": [
       {
-        "replace": "x = x1 y + a y"
+        "description": "Multiply both sides by ${$x1 + $a}$",
+        "replace": "(x (x1 + a))/(x1 + a) = y (x1 + a)"
       },
       {
+        "description": "Cancel the ${$x1 + $a}$'s in the left side numerator and denominator",
+        "replace": "x = y (x1 + a)"
+      },
+      {
+        "description": "Distribute the right side",
+        "replace": "x = y x1 + y a"
+      },
+      {
+        "description": "Subtract ${$y $x1}$ from both sides",
+        "replace": "x - y x1 = y x1 + y a - y x1"
+      },
+      {
+        "description": "Cancel the ${$y + $x1}$'s on the right side",
         "replace": "x - x1 y = a y"
       }
     ],
@@ -251,28 +263,76 @@
     ]
   },
   {
-    "find": "f1x = a/f2x",
+    "find": "x1 = a/x2",
     "steps": [
       {
-        "replace": "f1x f2x = (a f2x)/f2x",
-        "description": "Multiply both sides by ${$f2x}$"
+        "replace": "x1 x2 = (a x2)/x2",
+        "description": "Multiply both sides by ${$x2}$"
       },
       {
-        "replace": "f1x f2x = a",
-        "description": "Cancel the ${$f2x}$'s in the numerator and denominator on the right side"
+        "replace": "x1 x2 = a",
+        "description": "Cancel the ${$x2}$'s in the numerator and denominator on the right side"
       }
     ],
     "require": [
       {
-        "variable": "f1x",
+        "variable": "x1",
         "contains solve": true
       },
       {
-        "variable": "f2x",
+        "variable": "x2",
         "contains solve": true
       },
       {
         "variable": "a",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "x1 = a * x2",
+    "steps": [
+      {
+        "replace": "x1/x2 = a"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x1",
+        "contains solve": true
+      },
+      {
+        "variable": "x2",
+        "contains solve": true
+      },
+      {
+        "variable": "a",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "a x + b (-x) = y",
+    "steps": [
+      {
+        "replace": "(a - b) x  = y"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
+        "variable": "b",
+        "contains solve": false
+      },
+      {
+        "variable": "y",
         "contains solve": false
       }
     ]
@@ -313,6 +373,25 @@
     ]
   },
   {
+    "find": "e^x = y",
+    "steps": [
+      {
+        "replace": "x = log(y)",
+        "description": "Rewrite the equation as a natural logarithm"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
+      }
+    ]
+  },
+  {
     "find": "a^x = y",
     "steps": [
       {
@@ -327,15 +406,11 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
@@ -354,21 +429,15 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "b",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
@@ -387,27 +456,19 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a1",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "b",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
@@ -426,33 +487,23 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a1",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "b",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "b1",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
@@ -471,21 +522,15 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "b",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
@@ -504,21 +549,15 @@
       },
       {
         "variable": "y",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "a",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       },
       {
         "variable": "b",
-        "not contains": [
-          "x"
-        ]
+        "contains solve": false
       }
     ]
   },
