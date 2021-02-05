@@ -30,7 +30,7 @@ public class TestRuleSpeed {
 
     t1 = System.currentTimeMillis();
 
-    Operand result = RewriteEngine.simplify(in, true).getResult();
+    Operand result = RewriteEngine.simplify(in, null, true).getResult();
 
     t2 = System.currentTimeMillis();
 

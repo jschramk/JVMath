@@ -18,6 +18,15 @@
     ]
   },
   {
+    "id": "FACTOR",
+    "find": "a^2 + 2 a b + b^2",
+    "steps": [
+      {
+        "replace": "(a + b)^2"
+      }
+    ]
+  },
+  {
     "id": "SUBTRACT_SAME",
     "find": "x - x",
     "steps": [
@@ -33,6 +42,12 @@
       {
         "replace": "(1 + a)x"
       }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      }
     ]
   },
   {
@@ -46,7 +61,8 @@
     "require": [
       {
         "variable": "x",
-        "not type": "LITERAL"
+        "not type": "LITERAL",
+        "contains solve": true
       }
     ]
   },
@@ -193,10 +209,10 @@
     ]
   },
   {
-    "find": "(a b)^c",
+    "find": "a^c b^c",
     "steps": [
       {
-        "replace": "a^c b^c"
+        "replace": "(a b)^c"
       }
     ]
   },
@@ -385,18 +401,34 @@
     ]
   },
   {
-    "find": "root(a, b)",
+    "find": "b^(1/a)",
     "steps": [
       {
-        "replace": "b^(1/a)"
+        "replace": "root(a, b)"
       }
     ]
   },
   {
-    "find": "root(a)",
+    "find": "a^(0.5)",
     "steps": [
       {
-        "replace": "a^(1/2)"
+        "replace": "root(a)"
+      }
+    ]
+  },
+  {
+    "find": "root(2, x)",
+    "steps": [
+      {
+        "replace": "root(x)"
+      }
+    ]
+  },
+  {
+    "find": "root(a, x^a)",
+    "steps": [
+      {
+        "replace": "x"
       }
     ]
   },
@@ -485,6 +517,20 @@
     "steps": [
       {
         "replace": "a x^(n1 - n2)"
+      }
+    ]
+  },
+  {
+    "find": "derive(a, x)",
+    "steps": [
+      {
+        "replace": "0"
+      }
+    ],
+    "require": [
+      {
+        "variable": "a",
+        ""
       }
     ]
   }

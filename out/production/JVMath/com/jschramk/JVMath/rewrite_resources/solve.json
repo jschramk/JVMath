@@ -341,19 +341,11 @@
     "find": "x^a = y",
     "steps": [
       {
-        "replace": "(x^a)^(1/a) = y^(1/a)",
-        "description": "Raise both sides to the inverse ${$a}$ power"
+        "replace": "root(a, (x^a)) = root(a, y)",
+        "description": "Take the root ${$a}$ of both sides"
       },
       {
-        "replace": "x^(a*(1/a)) = y^(1/a)",
-        "description": "Simplify the double exponent on the left side"
-      },
-      {
-        "replace": "x^1 = y^(1/a)",
-        "description": "Cancel the ${$a}$'s in the numerator and denominator of left side exponent"
-      },
-      {
-        "replace": "x = y^(1/a)",
+        "replace": "x = root(a, y)",
         "description": "Simplify the left side"
       }
     ],
@@ -415,6 +407,7 @@
     ]
   },
   {
+    "id": "QUADRATIC",
     "find": "a x^2 + b x = y",
     "steps": [
       {
@@ -442,11 +435,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "(a x^2)/a1 + b x = y",
     "steps": [
       {
-        "replace": "x = ((-b - root(b^2 - 4 * (a/a1) * (-y) ))/(2a/a1), (-b + root(b^2 - 4 * (a/a1) * (-y) ))/(2a/a1))",
-        "description": "Apply the quadratic formula"
+        "replace": "(a/a1) x^2 + b x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -473,11 +467,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "(a x^2)/a1 + (b x)/b1 = y",
     "steps": [
       {
-        "replace": "x = ((-(b/b1) - root((b/b1)^2 - 4 * (a/a1) * (-y) ))/(2a/a1), (-(b/b1) + root((b/b1)^2 - 4 * (a/a1) * (-y) ))/(2a/a1))",
-        "description": "Apply the quadratic formula"
+        "replace": "(a/a1) x^2 + (b/b1) x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -508,38 +503,12 @@
     ]
   },
   {
-    "find": "x^2/a + b x = y",
-    "steps": [
-      {
-        "replace": "x = ((-b - root(b^2 - 4 * (1/a) * (-y) ))/(2/a), (-b + root(b^2 - 4 * (1/a) * (-y) ))/(2/a))",
-        "description": "Apply the quadratic formula"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      }
-    ]
-  },
-  {
+    "next": "QUADRATIC",
     "find": "x^2/a + x/b = y",
     "steps": [
       {
-        "replace": "x = ((-(1/b) - root((1/b)^2 - 4 * (1/a) * (-y) ))/(2/a), (-(1/b) + root((1/b)^2 - 4 * (1/a) * (-y) ))/(2/a))",
-        "description": "Apply the quadratic formula"
+        "replace": "(1/a) x^2 + (1/b) x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -562,11 +531,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "x^2/a + x = y",
     "steps": [
       {
-        "replace": "x = ((-1 - root(1 - 4 * (1/a) * (-y) ))/(2/a), (-1 + root(1 - 4 * (1/a) * (-y) ))/(2/a))",
-        "description": "Apply the quadratic formula"
+        "replace": "(1/a) x^2 + 1 x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -589,11 +559,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "x^2 + x/b = y",
     "steps": [
       {
-        "replace": "x = ((-(1/b) - root((1/b)^2 - 4 * (-y) ))/2, (-(1/b) + root((1/b)^2 - 4 * (-y) ))/2)",
-        "description": "Apply the quadratic formula"
+        "replace": "1 x^2 + (1/b) x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -616,11 +587,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "a x^2 + x = y",
     "steps": [
       {
-        "replace": "x = (( -1 - root(1 - 4 * a * (-y) ) )/(2a), ( -1 + root(1 - 4 * a * (-y) ) )/(2a))",
-        "description": "Apply the quadratic formula"
+        "replace": "a x^2 + 1 x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -639,11 +611,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "x^2 + b x = y",
     "steps": [
       {
-        "replace": "x = (( -b - root(b^2 - 4(-y)) )/2, ( -b + root(b^2 - 4(-y)) )/2)",
-        "description": "Apply the quadratic formula"
+        "replace": "1 x^2 + b x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -662,11 +635,12 @@
     ]
   },
   {
+    "next": "QUADRATIC",
     "find": "x^2 + x = y",
     "steps": [
       {
-        "replace": "x = ((-1 - root(1 - 4 (-y) ))/2, (-1 + root(1 - 4 (-y) ))/2)",
-        "description": "Apply the quadratic formula"
+        "replace": "1 x^2 + 1 x = y",
+        "description": "Rewrite as a standard quadratic"
       }
     ],
     "require": [
@@ -676,6 +650,46 @@
       },
       {
         "variable": "y",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "root(x) = y",
+    "steps": [
+      {
+        "replace": "x = y^2"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "root(a, x) = y",
+    "steps": [
+      {
+        "replace": "x = y^a"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
+      },
+      {
+        "variable": "a",
         "contains solve": false
       }
     ]

@@ -92,6 +92,10 @@ public class Operators {
       return "⋅";
     }
 
+    @Override public String getSymbolLaTeX() {
+      return " \\cdot ";
+    }
+
     @Override public boolean canEvaluate(Operand o1, Operand o2) {
       return o1.hasNoVariables() && o2.hasNoVariables();
     }
@@ -457,29 +461,35 @@ public class Operators {
 
   };
 
-  /*
-  public static final FunctionOperator DERIVATIVE = new FunctionOperator() {
+
+  public static final FunctionOperator DERIVE = new FunctionOperator() {
     @Override public String getName() {
       return "derive";
     }
 
-    @Override public boolean acceptsArgs(List<Operand> arg) {
-      return arg.size() == 2 && functionInstance.getChild(1) argof Variable;
+    @Override public List<String> getDescriptions() {
+      return Arrays.asList(
+          "${derive(3x + 5, x)}$: returns the derivative of ${3x + 5}$ with respect to ${x}$");
     }
 
-    @Override public Operand evaluate(List<Operand> arg) {
+    @Override public void checkArg(Operand arg) {
 
-      Variable variable = (Variable) functionInstance.getChild(1);
+      allowVectorLengths(arg, 2);
 
-      if (!functionInstance.getChild(0).getVariables().contains(variable.getName())) {
-        return new Literal(0);
+      if (!(arg.getChild(1) instanceof Variable)) {
+        throw new IllegalArgumentException("Second argument of derive should be a variable");
       }
 
-      //TODO: fix this
-      throw new UnsupportedOperationException("Numerical derivative not implemented yet");
-
     }
-  };*/
+
+    @Override public boolean canEvaluate(Operand arg) {
+      return false;
+    }
+
+    @Override public Operand evaluate(Operand arg) {
+      throw new UnsupportedOperationException("Cannot evaluate derivatives");
+    }
+  };
 
   public static final FunctionOperator STEP = new FunctionOperator() {
     @Override public String getName() {

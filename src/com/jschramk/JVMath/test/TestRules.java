@@ -53,7 +53,7 @@ public class TestRules {
 
         Operand operand = p.parse(line, Operand.class);
 
-        RewriteEngine.Output<Operand> out = RewriteEngine.simplify(operand, true);
+        RewriteEngine.Output<Operand> out = RewriteEngine.simplify(operand, null, true);
 
         System.out.println("Simplify " + operand + "\n");
 

@@ -6,17 +6,16 @@ import com.jschramk.JVMath.components.VariableDomain;
 
 import java.util.*;
 
-//TODO: refactor using instance ID instead of IdentityHashMap
 public class Knowns {
 
   private final Set<Integer> usedIds = new HashSet<>();
-  private final IdentityHashMap<Operand, Operand> instanceAnalogs = new IdentityHashMap<>();
-  private final Map<Operand, Operand> generalAnalogs = new HashMap<>();
+  private final Map<Integer, Operand> instanceMappings = new HashMap<>();
+  private final Map<Operand, Operand> generalMappings = new HashMap<>();
 
   public static boolean sameVariables(Knowns k1, Knowns k2) {
-    for (Operand known : k1.generalAnalogs.keySet()) {
-      if (known instanceof Variable && k2.containsGeneral(known)) {
-        if (!k1.getGeneral(known).equals(k2.getGeneral(known)))
+    for (Operand known : k1.generalMappings.keySet()) {
+      if (known instanceof Variable && k2.hasGeneralMapping(known)) {
+        if (!k1.getGeneralMapping(known).equals(k2.getGeneralMapping(known)))
           return false;
       }
     }
@@ -25,35 +24,39 @@ public class Knowns {
 
   public static Knowns combine(Knowns k1, Knowns k2) {
     Knowns result = new Knowns();
-    result.generalAnalogs.putAll(k1.generalAnalogs);
-    result.generalAnalogs.putAll(k2.generalAnalogs);
-    result.instanceAnalogs.putAll(k1.instanceAnalogs);
-    result.instanceAnalogs.putAll(k2.instanceAnalogs);
+    result.generalMappings.putAll(k1.generalMappings);
+    result.generalMappings.putAll(k2.generalMappings);
+    result.instanceMappings.putAll(k1.instanceMappings);
+    result.instanceMappings.putAll(k2.instanceMappings);
     result.usedIds.addAll(k1.usedIds);
     result.usedIds.addAll(k2.usedIds);
     return result;
   }
 
-  public boolean containsGeneral(Operand operand) {
-    return generalAnalogs.containsKey(operand);
+  public boolean hasGeneralMapping(Operand operand) {
+    return generalMappings.containsKey(operand);
   }
 
-  public boolean containsInstance(Operand operand) {
-    return instanceAnalogs.containsKey(operand);
+  public boolean hasInstanceMapping(Operand operand) {
+    return instanceMappings.containsKey(operand.getId());
   }
 
-  public Operand getGeneral(Operand operand) {
-    return generalAnalogs.get(operand);
+  public Operand getGeneralMapping(Operand operand) {
+    return generalMappings.get(operand);
   }
 
-  public Operand getInstance(Operand operand) {
-    return instanceAnalogs.get(operand);
+  public Operand getInstanceMapping(Operand operand) {
+    return instanceMappings.get(operand.getId());
   }
 
-  public void add(Operand operand, Operand analog) {
-    if (!generalAnalogs.containsKey(operand) || generalAnalogs.get(operand).equals(analog)) {
-      instanceAnalogs.put(operand, analog);
-      generalAnalogs.put(operand, analog);
+  public Operand getInstanceMapping(Integer id) {
+    return instanceMappings.get(id);
+  }
+
+  public void putMapping(Operand operand, Operand analog) {
+    instanceMappings.put(operand.getId(), analog);
+    if (!generalMappings.containsKey(operand) || generalMappings.get(operand).equals(analog)) {
+      generalMappings.put(operand, analog);
       usedIds.add(analog.getId());
     }
   }
@@ -68,7 +71,7 @@ public class Knowns {
 
     Map<String, Operand> variables = new HashMap<>();
 
-    for (Map.Entry<Operand, Operand> entry : generalAnalogs.entrySet()) {
+    for (Map.Entry<Operand, Operand> entry : generalMappings.entrySet()) {
 
       if (entry.getKey() instanceof Variable) {
         variables.put(((Variable) entry.getKey()).getName(), entry.getValue().copy());
@@ -84,22 +87,13 @@ public class Knowns {
     return usedIds;
   }
 
+  public Set<Integer> getMappedIds() {
+    return instanceMappings.keySet();
+  }
+
   @Override public String toString() {
-    return instanceAnalogs.toString();
+    return instanceMappings.toString();
   }
-
-  public void print() {
-    System.out.println("Knowns:");
-    if (instanceAnalogs.isEmpty()) {
-      System.out.println("none");
-    } else {
-      for (Map.Entry<Operand, Operand> entry : instanceAnalogs.entrySet()) {
-        System.out.println(entry.getKey().toInfoString() + " = " + entry.getValue().toInfoString());
-      }
-    }
-
-  }
-
 
   public VariableDomain toVariableDomain() {
 

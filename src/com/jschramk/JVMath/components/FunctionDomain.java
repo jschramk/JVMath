@@ -39,6 +39,9 @@ public class FunctionDomain {
     fd.addCategory("Matrices");
     fd.put("Matrices", Operators.TRANSPOSE);
 
+    /*fd.addCategory("Calculus");
+    fd.put("Calculus", Operators.DERIVE);*/
+
     fd.addCategory("More");
     fd.put("More", Operators.TO_RADIANS);
     fd.put("More", Operators.TO_DEGREES);

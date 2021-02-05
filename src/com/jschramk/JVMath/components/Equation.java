@@ -28,6 +28,10 @@ public class Equation {
     rightSide.fixTree();
   }
 
+  public int variableCount(String name) {
+    return leftSide.variableCount(name) + rightSide.variableCount(name);
+  }
+
   public boolean isSolved() {
 
     if (leftSide instanceof Variable) {
@@ -98,4 +102,7 @@ public class Equation {
     return leftSide + " = " + rightSide;
   }
 
+  public String toLaTex() {
+    return leftSide.toLaTeX() + " = " + rightSide.toLaTeX();
+  }
 }

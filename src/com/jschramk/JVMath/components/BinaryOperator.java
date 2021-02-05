@@ -4,6 +4,10 @@ public interface BinaryOperator {
 
   String getSymbol();
 
+  default String getSymbolLaTeX() {
+    return getSymbol();
+  }
+
   boolean canEvaluate(Operand o1, Operand o2);
 
   Operand evaluate(Operand o1, Operand o2);

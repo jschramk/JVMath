@@ -13,55 +13,9 @@ public abstract class Operand implements Iterable<Operand> {
 
   private static int NEXT_ID = 0;
 
-  protected int levelNumber = -1, id = NEXT_ID++;
-  protected Operand parent;
+  private int level = -1, id = NEXT_ID++;
+  private Operand parent;
   private Operand[] children;
-
-  private static Map<Class<?>, Integer> setupPriorities(Class<?>... order) {
-    Map<Class<?>, Integer> priorities = new HashMap<>();
-    for (int i = 0; i < order.length; i++) {
-      int pri = order.length - i;
-      System.out.println(pri);
-      priorities.put(order[i], pri);
-    }
-    return priorities;
-  }
-
-  public static boolean collectionCheck(Iterable<Operand> collection, boolean requireAll,
-      CollectionBoolean collectionBoolean) {
-
-    for (Operand o : collection) {
-
-      if (collectionBoolean.check(o)) {
-        if (!requireAll) {
-          return true;
-        }
-      } else {
-        if (requireAll) {
-          return false;
-        }
-      }
-
-    }
-
-    return requireAll;
-
-  }
-
-  public static List<Operand> collectionCreate(Iterable<Operand> collection,
-      CollectionCreate collectionCreate) {
-
-    List<Operand> result = new ArrayList<>();
-
-    for (Operand o : collection) {
-
-      result.add(collectionCreate.makeFrom(o));
-
-    }
-
-    return result;
-
-  }
 
   private static Map<Integer, Operand> getVariableReplaceMap(Operand operand,
       VariableDomain domain) {
@@ -91,13 +45,23 @@ public abstract class Operand implements Iterable<Operand> {
   }
 
   protected static String childPriorityString(Operand parent, Operand child) {
+    return childPriorityString(parent, child, false);
+  }
 
+  protected static String childPriorityString(Operand parent, Operand child, boolean latex) {
     if (needsParentheses(parent, child)) {
-      return "(" + child.toString() + ")";
+      if (latex) {
+        return " \\left( " + child.toLaTeX() + " \\right) ";
+      } else {
+        return "(" + child.toString() + ")";
+      }
     } else {
-      return child.toString();
+      if (latex) {
+        return child.toLaTeX();
+      } else {
+        return child.toString();
+      }
     }
-
   }
 
   public static boolean sameType(Operand o1, Operand o2) {
@@ -130,32 +94,6 @@ public abstract class Operand implements Iterable<Operand> {
         return false;
     }
     return true;
-  }
-
-  public static String toInfoString(Collection<Operand> operands) {
-
-    StringBuilder s = new StringBuilder();
-
-    s.append("[");
-
-    int start = s.length();
-    for (Operand operand : operands) {
-      if (s.length() > start)
-        s.append(", ");
-      s.append(operand.toInfoString());
-    }
-
-    s.append("]");
-    return s.toString();
-  }
-
-  private static boolean hasValidTree(Operand operand) {
-    try {
-      validateTree(operand);
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
   }
 
   public static void validateTree(Operand operand) {
@@ -197,7 +135,7 @@ public abstract class Operand implements Iterable<Operand> {
           "Operand \"" + child + "\" order number is not set, ID: " + child.getId());
     }*/
 
-    if (child.levelNumber == -1) {
+    if (child.level == -1) {
 
       throw new IllegalStateException(
           "Operand \"" + child + "\" level number is not set, ID: " + child.getId());
@@ -220,11 +158,11 @@ public abstract class Operand implements Iterable<Operand> {
               + "\"");
     }*/
 
-    if (child.parent == null && child.levelNumber != 0) {
+    if (child.parent == null && child.level != 0) {
       throw new IllegalStateException(
-          "Operand \"" + child + "\" has no parent but has level number of " + child.levelNumber
+          "Operand \"" + child + "\" has no parent but has level number of " + child.level
               + ", should be 0");
-    } else if (child.parent != null && child.levelNumber != child.parent.levelNumber + 1) {
+    } else if (child.parent != null && child.level != child.parent.level + 1) {
       throw new IllegalStateException("Operand \"" + child + "\" has an illegal level number\"");
     }
 
@@ -377,6 +315,39 @@ public abstract class Operand implements Iterable<Operand> {
 
   }
 
+  public int variableCount(String variable) {
+
+    if (this instanceof Variable) {
+
+      Variable var = (Variable) this;
+
+      if (var.getName().equals(variable)) {
+
+        return 1;
+
+      } else {
+
+        return 0;
+
+      }
+
+    } else if (hasChildren()) {
+
+      int sum = 0;
+
+      for (Operand child : this) {
+
+        sum += child.variableCount(variable);
+
+      }
+
+      return sum;
+
+    } else
+      return 0;
+
+  }
+
   public void setVariableDomain(VariableDomain domain) {
     if (getParent() != null) {
       throw new IllegalArgumentException("Operand must be top level parent");
@@ -473,7 +444,7 @@ public abstract class Operand implements Iterable<Operand> {
   private int recursiveFixTree(int currOrderNumber, int currLevelNumber) {
 
     //this.treeNumber = currOrderNumber++;
-    this.levelNumber = currLevelNumber;
+    this.level = currLevelNumber;
 
     if (hasChildren()) {
 
@@ -493,6 +464,32 @@ public abstract class Operand implements Iterable<Operand> {
 
   public int treeSize() {
     return recursiveTreeSize();
+  }
+
+  public int treeDepth() {
+    return recursiveTreeDepth();
+  }
+
+  private int recursiveTreeDepth() {
+
+    if (!hasChildren()) {
+
+      return 0;
+
+    } else {
+
+      int max = 0;
+
+      for (Operand child : this) {
+
+        max = Math.max(max, child.treeDepth());
+
+      }
+
+      return max + 1;
+
+    }
+
   }
 
   private int recursiveTreeSize() {
@@ -519,13 +516,13 @@ public abstract class Operand implements Iterable<Operand> {
     return new ChildIterator(this);
   }
 
-  public Set<Integer> getChildIds() {
+  /*public Set<Integer> getChildIds() {
     Set<Integer> ids = new HashSet<>();
     for (Operand child : this) {
       ids.add(child.id);
     }
     return ids;
-  }
+  }*/
 
   public Operand replace(int replaceId, Operand replaceWith) {
 
@@ -593,9 +590,9 @@ public abstract class Operand implements Iterable<Operand> {
 
   public Operand replace(Knowns replacements) {
 
-    if (replacements.containsGeneral(this)) {
+    if (replacements.hasGeneralMapping(this)) {
 
-      return replacements.getGeneral(this).copy();
+      return replacements.getGeneralMapping(this).copy();
 
     }
 
@@ -637,7 +634,7 @@ public abstract class Operand implements Iterable<Operand> {
     return replaced;
   }
 
-  public boolean containsMatrices() {
+  /*public boolean containsMatrices() {
 
     if (!isScalar())
       return true;
@@ -653,7 +650,7 @@ public abstract class Operand implements Iterable<Operand> {
 
     return false;
 
-  }
+  }*/
 
   private Operand recursiveReplaceCopy(Map<Integer, Operand> replacements) {
 
@@ -687,8 +684,8 @@ public abstract class Operand implements Iterable<Operand> {
 
   private Operand recursiveReplaceCopy(Knowns replacements) {
 
-    if (replacements.containsGeneral(this)) {
-      return replacements.getGeneral(this).copy();
+    if (replacements.hasGeneralMapping(this)) {
+      return replacements.getGeneralMapping(this).copy();
     }
 
     if (hasChildren()) {
@@ -813,8 +810,8 @@ public abstract class Operand implements Iterable<Operand> {
     return id;
   }
 
-  public int getLevelNumber() {
-    return levelNumber;
+  public int getLevel() {
+    return level;
   }
 
   protected abstract Operand shallowCopy();
@@ -910,8 +907,16 @@ public abstract class Operand implements Iterable<Operand> {
         "toString() not implemented for " + this.getClass().getName());
   }
 
+  public String toLaTeX() {
+    return toString();
+  }
+
   public String toInfoString() {
-    return this + " {Lvl: " + levelNumber + ", ID: " + Integer.toHexString(id) + "}";
+    return this + " {Lvl: " + level + ", ID: " + Integer.toHexString(id) + "}";
+  }
+
+  public String toIdString() {
+    return this + " {ID: " + Integer.toHexString(id) + "}";
   }
 
   public String toTreeString() {
@@ -1043,16 +1048,6 @@ public abstract class Operand implements Iterable<Operand> {
 
   public enum Type {
     VARIABLE, LITERAL, EXPONENT, FUNCTION, SUM, PRODUCT, DIVISION, NEGATION, MATRIX, FACTORIAL, CONSTANT
-  }
-
-
-  public interface CollectionCreate {
-    Operand makeFrom(Operand o);
-  }
-
-
-  public interface CollectionBoolean {
-    boolean check(Operand o);
   }
 
 

@@ -3,7 +3,7 @@ package com.jschramk.JVMath.components;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnaryOperation extends Operation {
+public class UnaryOperation extends Operand {
 
   private UnaryOperator operator;
 
@@ -53,7 +53,11 @@ public class UnaryOperation extends Operation {
   }
 
   @Override public String toString() {
-    return operator.getPrefix() + childPriorityString(this, getChild(0)) + operator
+    return operator.getPrefix() + childPriorityString(this, getChild(0)) + operator.getPostfix();
+  }
+
+  @Override public String toLaTeX() {
+    return operator.getPrefix() + childPriorityString(this, getChild(0), true) + operator
         .getPostfix();
   }
 

@@ -4,6 +4,7 @@ import com.jschramk.JVMath.components.Equation;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.exceptions.ParserException;
 import com.jschramk.JVMath.parse.Parser;
+import com.jschramk.JVMath.rewrite_engine.Requirement;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ public class RewriteResources {
 
   private static Map<String, Object> ruleSets = new HashMap<>();
   private static Map<Integer, Rule<?>> rulesById = new HashMap<>();
+  private static Map<Integer, Requirement> requirementsById = new HashMap<>();
 
   static {
 

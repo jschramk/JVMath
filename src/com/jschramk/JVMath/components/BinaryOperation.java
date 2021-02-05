@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BinaryOperation extends Operation {
+public class BinaryOperation extends Operand {
 
   private BinaryOperator operator;
 
@@ -109,6 +109,32 @@ public class BinaryOperation extends Operation {
     }
 
     return s.toString();
+  }
+
+  @Override public String toLaTeX() {
+
+    if (getOperator() == Operators.DIVISION) {
+
+      return "\\frac{" + getChild(0).toLaTeX() + "}{" + getChild(1).toLaTeX() + "}";
+
+    } else {
+
+      StringBuilder s = new StringBuilder();
+
+      for (int i = 0; i < childCount(); i++) {
+
+        if (i > 0) {
+          s.append(operator.getSymbolLaTeX());
+        }
+
+        s.append(childPriorityString(this, getChild(i), true));
+
+      }
+
+      return s.toString();
+    }
+
+
   }
 
   //TODO: test

@@ -24,9 +24,10 @@ public class Rule<T> {
   private static final String REPLACE = "replace";
   private static final String REQUIRE = "require";
   private static final String ID = "id";
+  private static final String NEXT = "next";
   private final List<Step<T>> steps = new ArrayList<>();
   private T find;
-  private int id = -1;
+  private int id = -1, nextId = -1;
   private Map<String, Requirement> requirements = new HashMap<>();
 
   public Rule(T find) {
@@ -42,10 +43,6 @@ public class Rule<T> {
     return rules;
   }
 
-  public Class<?> getType() {
-    return find.getClass();
-  }
-
   public static <T> Rule<T> convertRule(Parser parser, Rule<String> stringRule, Class<T> type)
       throws ParserException {
     T find = parser.parse(stringRule.find, type);
@@ -55,6 +52,7 @@ public class Rule<T> {
     }
     rule.requirements = stringRule.requirements;
     rule.id = stringRule.id;
+    rule.nextId = stringRule.nextId;
     return rule;
   }
 
@@ -99,6 +97,12 @@ public class Rule<T> {
 
     }
 
+    if (jsonObject.has(NEXT)) {
+
+      ret.setNextId(jsonObject.get(NEXT).getAsInt());
+
+    }
+
     if (jsonObject.has(REQUIRE)) {
 
       JsonArray requireArray = (JsonArray) jsonObject.get(REQUIRE);
@@ -115,12 +119,28 @@ public class Rule<T> {
 
   }
 
+  public Class<?> getType() {
+    return find.getClass();
+  }
+
+  public boolean hasNext() {
+    return nextId != -1;
+  }
+
   public int getId() {
     return id;
   }
 
   public void setId(int id) {
     this.id = id;
+  }
+
+  public int getNextId() {
+    return nextId;
+  }
+
+  public void setNextId(int nextId) {
+    this.nextId = nextId;
   }
 
   public Rule<T> step(Step<T> step) {

@@ -1,6 +1,6 @@
 package com.jschramk.JVMath.components;
 
-public class FunctionOperation extends Operation {
+public class FunctionOperation extends Operand {
 
   private FunctionOperator operator;
 

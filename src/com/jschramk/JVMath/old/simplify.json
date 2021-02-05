@@ -1,0 +1,298 @@
+[
+  {
+    "find": "x + 0",
+    "replace": "x"
+  },
+  {
+    "find": "x + x",
+    "replace": "2x"
+  },
+  {
+    "find": "x - x",
+    "replace": "0"
+  },
+  {
+    "find": "x + a * x",
+    "replace": "(1 + a)x"
+  },
+  {
+    "find": "a * x + b * x",
+    "replace": "(a + b)x"
+  },
+  {
+    "find": "a/b + c/d",
+    "replace": "(a * d + b * c)/(b * d)"
+  },
+  {
+    "find": "0x",
+    "replace": "0"
+  },
+  {
+    "find": "1x",
+    "replace": "x"
+  },
+  {
+    "find": "(-1)*x",
+    "replace": "-x"
+  },
+  {
+    "find": "-(-x)",
+    "replace": "x"
+  },
+  {
+    "find": "-(a*b)",
+    "replace": "(-a)*b"
+  },
+  {
+    "find": "-(a/b)",
+    "replace": "(-a)/b"
+  },
+  {
+    "find": "-(a + b)",
+    "replace": "-a - b"
+  },
+  {
+    "find": "x * x",
+    "replace": "x^2"
+  },
+  {
+    "find": "x * x^a",
+    "replace": "x^(1 + a)"
+  },
+  {
+    "find": "x^a * x^b",
+    "replace": "x^(a + b)"
+  },
+  {
+    "find": "(a/b)*(c/d)",
+    "replace": "(a c)/(b d)"
+  },
+  {
+    "find": "0/x",
+    "replace": "0"
+  },
+  {
+    "find": "x/x",
+    "replace": "1"
+  },
+  {
+    "find": "x/1",
+    "replace": "x"
+  },
+  {
+    "find": "a/b/c",
+    "replace": "a/(b * c)"
+  },
+  {
+    "find": "(a * b)/b",
+    "replace": "a"
+  },
+  {
+    "find": "(a * x)/(b * x)",
+    "replace": "a/b"
+  },
+  {
+    "find": "x/(a * x)",
+    "replace": "1/a"
+  },
+  {
+    "find": "a/(b/c)",
+    "replace": "(a * c)/b"
+  },
+  {
+    "find": "a(b/c)",
+    "replace": "(a * b)/c"
+  },
+  {
+    "find": "x^a/x",
+    "replace": "x^(a - 1)"
+  },
+  {
+    "find": "x^a/x^b",
+    "replace": "x^(a - b)"
+  },
+  {
+    "find": "0^x",
+    "replace": "0"
+  },
+  {
+    "find": "1^x",
+    "replace": "1"
+  },
+  {
+    "find": "x^0",
+    "replace": "1"
+  },
+  {
+    "find": "x^1",
+    "replace": "x"
+  },
+  {
+    "find": "x^-1",
+    "replace": "1/x"
+  },
+  {
+    "find": "x^-a",
+    "replace": "1/x^a"
+  },
+  {
+    "find": "(x^a)^b",
+    "replace": "x^(a*b)"
+  },
+  {
+    "find": "asin(sin(x))",
+    "replace": "x"
+  },
+  {
+    "find": "acos(cos(x))",
+    "replace": "x"
+  },
+  {
+    "find": "atan(tan(x))",
+    "replace": "x"
+  },
+  {
+    "find": "log(a, a^x)",
+    "replace": "x"
+  },
+  {
+    "find": "sin(x)^2 + cos(x)^2",
+    "replace": "1"
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    "find": "derive(x, x)",
+    "replace": "1",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      }
+    ]
+  },
+  {
+    "find": "derive(a/b, x)",
+    "replace": "( b derive(a, x) - a derive(b, x) ) / b^2",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      }
+    ]
+  },
+  {
+    "find": "derive(y, x)",
+    "replace": "0",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      },
+      {
+        "variable": "y",
+        "not contains": ["x"]
+      }
+    ]
+  },
+  {
+    "find": "derive(a + b, x)",
+    "replace": "derive(a, x) + derive(b, x)",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      }
+    ]
+  },
+  {
+    "find": "derive(a * b, x)",
+    "replace": "a * derive(b, x) + b * derive(a, x)",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      }
+    ]
+  },
+  {
+    "find": "derive(fx^a, x)",
+    "replace": "a fx^(a - 1) derive(fx, x)",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      },
+      {
+        "variable": "fx",
+        "contains": ["x"]
+      },
+      {
+        "variable": "a",
+        "not contains": ["x"]
+      }
+    ]
+  },
+  {
+    "find": "derive(sin(fx), x)",
+    "replace": "cos(fx) derive(fx, x)",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      },
+      {
+        "variable": "fx",
+        "contains": ["x"]
+      }
+    ]
+  },
+  {
+    "find": "derive(cos(fx), x)",
+    "replace": "-sin(fx) derive(fx, x)",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      },
+      {
+        "variable": "fx",
+        "contains": ["x"]
+      }
+    ]
+  },
+  {
+    "find": "derive(-fx, x)",
+    "replace": "-derive(fx, x)",
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      },
+      {
+        "variable": "fx",
+        "contains": ["x"]
+      }
+    ]
+  }
+
+
+
+
+
+]

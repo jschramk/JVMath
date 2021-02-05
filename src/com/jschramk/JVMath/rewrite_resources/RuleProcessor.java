@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class RuleProcessor {
 
-  private static int NEXT_RULE_ID = 0;
+  private static int NEXT_ID = 0;
 
   private static StringBuilder classStringBuilder = new StringBuilder();
   private static Map<String, Integer> operandIds = new HashMap<>();
@@ -38,7 +38,7 @@ public class RuleProcessor {
 
     JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(file));
 
-    editArray(array, parser);
+    editJsonArray(array, parser);
 
     Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
@@ -48,7 +48,11 @@ public class RuleProcessor {
 
     File out = new File(path);
 
-    if (!out.setWritable(true)) {
+    if (!out.exists() && !out.createNewFile()) {
+      throw new IOException("Unable to create file: " + out);
+    }
+
+    if (!out.canWrite() && !out.setWritable(true)) {
       throw new IOException("Unable to set file to writable: " + out);
     }
 
@@ -83,7 +87,11 @@ public class RuleProcessor {
 
     File file = new File("src/com/jschramk/JVMath/rewrite_resources/RuleId.java");
 
-    if (!file.setWritable(true)) {
+    if (!file.exists() && !file.createNewFile()) {
+      throw new IOException("Unable to create file: " + file);
+    }
+
+    if (!file.canWrite() && !file.setWritable(true)) {
       throw new IOException("Unable to set file to writable: " + file);
     }
 
@@ -121,7 +129,7 @@ public class RuleProcessor {
     }
   }
 
-  private static void editArray(JsonArray array, Parser parser) throws ParserException {
+  private static void editJsonArray(JsonArray array, Parser parser) throws ParserException {
 
     for (JsonElement element : array) {
 
@@ -139,7 +147,7 @@ public class RuleProcessor {
 
         String idString = object.get("id").getAsString();
 
-        int id = NEXT_RULE_ID++;
+        int id = NEXT_ID++;
 
         if (r.is(Operand.class)) {
           operandIds.put(idString, id);

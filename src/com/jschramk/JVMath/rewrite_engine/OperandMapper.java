@@ -2,7 +2,7 @@ package com.jschramk.JVMath.rewrite_engine;
 
 import com.jschramk.JVMath.components.Operand;
 
-public class AnalogMapper {
+public class OperandMapper {
 
   private Knowns knowns = new Knowns();
   private Unknowns unknowns = new Unknowns();

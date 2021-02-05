@@ -4,16 +4,18 @@ import com.jschramk.JVMath.components.BinaryOperation;
 import com.jschramk.JVMath.components.BinaryOperator;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.components.Variable;
-import com.jschramk.JVMath.utils.IdentityHashSet;
 
 import java.util.*;
 
 public class Unknowns {
 
-  private static final int MAX_ITERATIONS = 20;
-  private static final boolean DEBUG = false;
-  private final Map<Operand, Unknown> unknownMap = new HashMap<>();
+  private static final int UNKNOWN_MAP_INITIAL_CAPACITY = 10;
+  private static final float UNKNOWN_MAP_LOAD_FACTOR = 0.8f;
 
+  private static final int MAX_ITERATIONS = 20;
+  private final Map<Operand, Choices> unknownMap = new HashMap<>();
+
+  // returns true if all operands in the collection are he same (not the same instance)
   private static boolean allSameOperand(Collection<Operand> operands) {
     Iterator<Operand> iterator = operands.iterator();
     Operand first = iterator.next();
@@ -25,110 +27,96 @@ public class Unknowns {
     return true;
   }
 
+  // returns true if the collection is a single variable
   private static boolean singleVariable(Collection<Operand> operands) {
-
-    if (operands.size() != 1)
-      return false;
-
-    return operands.iterator().next() instanceof Variable;
-
+    return operands.size() == 1 && operands.iterator().next() instanceof Variable;
   }
 
   public void add(Operand unknown, Operand... choices) {
-    Unknown u;
+    Choices u;
     if (unknownMap.containsKey(unknown)) {
       u = unknownMap.get(unknown);
     } else {
-      u = new Unknown();
+      u = new Choices();
       unknownMap.put(unknown, u);
     }
     u.add(unknown, choices);
   }
 
-  //TODO: make sure this works
   public void remove(Operand unknown, Operand choice) {
-    if (unknownMap.containsKey(unknown) && unknownMap.get(unknown).instances.containsKey(unknown)) {
-      unknownMap.get(unknown).instances.get(unknown).removeIf(operand -> operand.equals(choice));
-    } else
+
+    if (unknownMap.containsKey(unknown)) {
+
+      unknownMap.get(unknown).removeChoice(unknown, choice);
+
+    } else {
+
+      // TODO: figure out why this is crucial
       add(unknown);
+
+    }
+
   }
 
   public void removeKnown(Knowns knowns) {
-    Iterator<Map.Entry<Operand, Unknown>> iterator = unknownMap.entrySet().iterator();
+
+    Iterator<Map.Entry<Operand, Choices>> iterator = unknownMap.entrySet().iterator();
+
     while (iterator.hasNext()) {
-      Map.Entry<Operand, Unknown> entry = iterator.next();
-      entry.getValue().instances.entrySet().removeIf(operandIdentityHashSetEntry -> knowns
-          .containsInstance(operandIdentityHashSetEntry.getKey()));
-      if (entry.getValue().instances.isEmpty()) {
+
+      Map.Entry<Operand, Choices> entry = iterator.next();
+
+      entry.getValue().removeKnown(knowns.getMappedIds());
+
+      if (entry.getValue().isEmpty()) {
         iterator.remove();
       }
+
     }
   }
 
   public void removeUsed(Knowns knowns) {
-    for (Map.Entry<Operand, Unknown> entry : unknownMap.entrySet()) {
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> instance : entry.getValue().instances
-          .entrySet()) {
-        instance.getValue().removeIf(operand -> knowns.getUsedIds().contains(operand.getId()));
-      }
+    for (Map.Entry<Operand, Choices> entry : unknownMap.entrySet()) {
+      entry.getValue().removeUsed(knowns.getUsedIds());
     }
   }
 
   public void removeImpossible(Knowns knowns) {
 
-    for (Map.Entry<Operand, Unknown> entry : unknownMap.entrySet()) {
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> instance : entry.getValue().instances
-          .entrySet()) {
+    for (Map.Entry<Operand, Choices> entry : unknownMap.entrySet()) {
 
-        Operand unknown = instance.getKey();
+      for (Map.Entry<Integer, OperandSet> instance : entry.getValue().instanceChoices.entrySet()) {
+
+        int unknownKey = instance.getKey();
+        Operand unknown = entry.getValue().getInstance(unknownKey);
 
         instance.getValue().removeIf(choice -> {
 
           boolean knownMismatch =
-              knowns.containsGeneral(unknown) && !knowns.getGeneral(unknown).equals(choice);
+              knowns.hasGeneralMapping(unknown) && !knowns.getGeneralMapping(unknown)
+                  .equals(choice);
 
           Operand parent = unknown.getParent();
 
-          boolean notChildOfParent = parent != null && knowns.containsInstance(parent) && !knowns
-              .getInstance(unknown.getParent()).hasChildInstance(choice);
+          boolean notChildOfParent = parent != null && knowns.hasInstanceMapping(parent) && !knowns
+              .getInstanceMapping(parent).hasChildInstance(choice);
 
-
-          //TODO: make sure this works
           boolean notParentOfChild = false;
 
           if (unknown.hasChildren()) {
 
             for (Operand child : unknown) {
 
-              if (knowns.containsInstance(child) && !choice
-                  .hasChildInstance(knowns.getInstance(child))) {
+              if (knowns.hasInstanceMapping(child) && !choice
+                  .hasChildInstance(knowns.getInstanceMapping(child))) {
 
                 notParentOfChild = true;
 
-                //TODO: verify break is ok here
                 break;
 
               }
 
             }
-
-          }
-
-
-          if (DEBUG && (knownMismatch || notChildOfParent || notParentOfChild)) {
-
-            System.out.print(unknown.toInfoString() + " ≠ " + choice.toInfoString() + ": ");
-
-            if (knownMismatch) {
-              System.out.println(unknown + " = " + knowns.getGeneral(unknown));
-            } else if (notChildOfParent) {
-
-              Operand analogParent = knowns.getInstance(unknown.getParent());
-
-              System.out.println(
-                  choice.toInfoString() + " ∉ " + analogParent + " " + analogParent.getChildIds());
-
-            } /*else if (notParentOfChild) {}*/
 
           }
 
@@ -142,7 +130,7 @@ public class Unknowns {
   }
 
   public void applyFilters() {
-    for (Map.Entry<Operand, Unknown> entry : unknownMap.entrySet()) {
+    for (Map.Entry<Operand, Choices> entry : unknownMap.entrySet()) {
       entry.getValue().applyIntersectionFilter();
       entry.getValue().applyCountFilter();
     }
@@ -151,36 +139,46 @@ public class Unknowns {
   // returns false iff mapping is impossible
   public boolean makeNextChoice(Knowns knowns) {
 
-    Map<IdentityHashSet<Operand>, IdentityHashSet<Operand>> choicesToUnknowns = new HashMap<>();
+    Map<OperandSet, OperandSet> choicesToUnknowns = new HashMap<>();
 
-    for (Map.Entry<Operand, Unknown> entry : unknownMap.entrySet()) {
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> instance : entry.getValue().instances
+    for (Map.Entry<Operand, Choices> unknownEntry : unknownMap.entrySet()) {
+
+      Choices operandChoices = unknownEntry.getValue();
+
+      for (Map.Entry<Integer, OperandSet> choicesEntry : operandChoices.instanceChoices
           .entrySet()) {
-        if (!choicesToUnknowns.containsKey(instance.getValue())) {
-          choicesToUnknowns.put(instance.getValue(), new IdentityHashSet<>());
+
+        Operand instance = operandChoices.getInstance(choicesEntry.getKey());
+        OperandSet instanceChoices = choicesEntry.getValue();
+
+        if (!choicesToUnknowns.containsKey(instanceChoices)) {
+          choicesToUnknowns.put(instanceChoices, new OperandSet());
         }
-        choicesToUnknowns.get(instance.getValue()).add(instance.getKey());
+
+        choicesToUnknowns.get(instanceChoices).add(instance);
+
       }
+
     }
 
-    IdentityHashSet<Operand> key = null;
+    OperandSet key = null;
     int minLevelNumber = Integer.MAX_VALUE;
     int minSizeDiff = Integer.MAX_VALUE;
 
-    for (Map.Entry<IdentityHashSet<Operand>, IdentityHashSet<Operand>> entry : choicesToUnknowns
-        .entrySet()) {
+    for (Map.Entry<OperandSet, OperandSet> entry : choicesToUnknowns.entrySet()) {
 
       int diff = entry.getKey().size() - entry.getValue().size();
 
       // if there are more unknowns than there are choices, return false
-      if (diff < 0)
+      if (diff < 0) {
         return false;
+      }
 
       if (entry.getKey().size() == 1 && entry.getValue().size() == 1) {
 
         // only one choice, do this next
-
         key = entry.getKey();
+
         break;
 
       } else if (singleVariable(entry.getValue()) && key == null) {
@@ -200,8 +198,8 @@ public class Unknowns {
         key = entry.getKey();
 
         for (Operand unknown : entry.getValue()) {
-          if (unknown.getLevelNumber() < minLevelNumber) {
-            minLevelNumber = unknown.getLevelNumber();
+          if (unknown.getLevel() < minLevelNumber) {
+            minLevelNumber = unknown.getLevel();
           }
         }
 
@@ -209,8 +207,8 @@ public class Unknowns {
 
         for (Operand unknown : entry.getValue()) {
 
-          if (unknown.getLevelNumber() < minLevelNumber) {
-            minLevelNumber = unknown.getLevelNumber();
+          if (unknown.getLevel() < minLevelNumber) {
+            minLevelNumber = unknown.getLevel();
             key = entry.getKey();
           }
 
@@ -220,29 +218,19 @@ public class Unknowns {
 
     }
 
-    if (DEBUG)
-      System.out.println("Min level number: " + minLevelNumber);
-
-    assert key != null;
+    if (key == null) {
+      throw new RuntimeException("null key");
+    }
 
     if (key.isEmpty()) {
+
+      System.out.println("empty key");
+
       return false;
     }
 
     List<Operand> choiceList = new ArrayList<>(key);
     List<Operand> assignList = new ArrayList<>(choicesToUnknowns.get(key));
-
-    if (DEBUG) {
-      System.out.println();
-      System.out.println("Choice Pool -> Assignment Pool:");
-      for (Map.Entry<IdentityHashSet<Operand>, IdentityHashSet<Operand>> entry : choicesToUnknowns
-          .entrySet()) {
-        System.out.println("\t" + Operand.toInfoString(entry.getKey()) + " -> " + Operand
-            .toInfoString(entry.getValue()));
-      }
-      System.out.println("Next: " + Operand.toInfoString(assignList));
-      System.out.println();
-    }
 
     if (assignList.size() > choiceList.size()) {
       return true;
@@ -260,7 +248,7 @@ public class Unknowns {
       if (i == assignList.size() - 1) {
 
         if (choiceList.size() == assignList.size() || sameOperand) {
-          knowns.add(assignList.get(i), choiceList.get(i));
+          knowns.putMapping(assignList.get(i), choiceList.get(i));
         } else {
 
           int end = choiceList.size();
@@ -271,7 +259,7 @@ public class Unknowns {
           List<Operand> leftover = choiceList.subList(start, end);
 
           if (!Operand.sameParent(leftover)) {
-            knowns.add(assignList.get(i), choiceList.get(i));
+            knowns.putMapping(assignList.get(i), choiceList.get(i));
             continue;
           }
 
@@ -280,7 +268,7 @@ public class Unknowns {
           Operand parent = leftover.get(0).getParent();
 
           if (assign.getType() != parentType && assign.getType() != Operand.Type.VARIABLE) {
-            knowns.add(assign, choiceList.get(i));
+            knowns.putMapping(assign, choiceList.get(i));
             continue;
           }
 
@@ -291,7 +279,7 @@ public class Unknowns {
             Operand operation =
                 new BinaryOperation(((BinaryOperation) parent).getOperator(), leftover);
 
-            knowns.add(assignList.get(i), operation);
+            knowns.putMapping(assignList.get(i), operation);
             knowns.addUsed(leftover);
 
           } else {
@@ -302,7 +290,7 @@ public class Unknowns {
 
       } else {
 
-        knowns.add(assignList.get(i), choiceList.get(i));
+        knowns.putMapping(assignList.get(i), choiceList.get(i));
 
       }
 
@@ -319,47 +307,19 @@ public class Unknowns {
   // returns false iff mapping is impossible
   public boolean mapAll(Knowns knowns) {
 
-    if (DEBUG) {
-
-      System.out.println("----------------------- START ------------------------");
-
-      knowns.print();
-      System.out.println();
-      print();
-
-    }
-
     for (int i = 0; i < MAX_ITERATIONS; i++) {
 
-      removeUsed(knowns);
       removeKnown(knowns);
+      removeUsed(knowns);
       removeImpossible(knowns);
       applyFilters();
 
-      if (DEBUG) {
-
-        System.out.println("Intermediate:");
-
-        print();
-      }
-
-      if (isEmpty())
+      if (isEmpty()) {
         break;
+      }
 
       if (!makeNextChoice(knowns)) {
         return false;
-      }
-
-      if (DEBUG) {
-        removeUsed(knowns);
-        removeKnown(knowns);
-        removeImpossible(knowns);
-        applyFilters();
-
-        System.out.println("-------------------- i = " + i + " RESULT --------------------");
-        knowns.print();
-        System.out.println();
-        print();
       }
 
     }
@@ -372,87 +332,136 @@ public class Unknowns {
 
   }
 
-  public void print() {
-    System.out.println("Unknowns:");
-    if (unknownMap.isEmpty()) {
-      System.out.println("none");
-    } else {
-      for (Map.Entry<Operand, Unknown> entry : unknownMap.entrySet()) {
-        System.out.println(entry.getKey() + ": " + entry.getValue());
+  // class that represents a single operand's possible mappings
+  private static class Choices {
+
+    // map of each instance of the operand for this unknown mapped to another map of the possible
+    // choices keyed on ID
+    private final Map<Integer, OperandSet> instanceChoices =
+        new HashMap<>(UNKNOWN_MAP_INITIAL_CAPACITY, UNKNOWN_MAP_LOAD_FACTOR);
+
+    private final Map<Integer, Operand> idsToOperands = new HashMap<>();
+
+    public boolean containsInstance(Operand operand) {
+      return instanceChoices.containsKey(operand.getId());
+    }
+
+    public Operand getInstance(int id) {
+      return idsToOperands.get(id);
+    }
+
+    public void removeChoice(Operand instance, Operand choice) {
+      if (containsInstance(instance)) {
+        // TODO: check if should compare operand itself rather than ID
+        instanceChoices.get(instance.getId())
+            .removeIf(operand -> operand.getId() == choice.getId());
       }
     }
-  }
 
-  public static class Unknown {
+    public boolean isEmpty() {
+      return instanceChoices.isEmpty();
+    }
 
-    private final IdentityHashMap<Operand, IdentityHashSet<Operand>> instances =
-        new IdentityHashMap<>();
+    public void removeUsed(Collection<Integer> ids) {
+
+      for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
+
+        entry.getValue().removeIf(operand -> ids.contains(operand.getId()));
+
+      }
+
+    }
+
+    public void removeKnown(Collection<Integer> ids) {
+      instanceChoices.entrySet()
+          .removeIf(integerOperandSetEntry -> ids.contains(integerOperandSetEntry.getKey()));
+    }
 
     public void add(Operand instance, Operand... choices) {
-      IdentityHashSet<Operand> choiceSet;
-      if (instances.containsKey(instance)) {
-        choiceSet = instances.get(instance);
+
+      idsToOperands.put(instance.getId(), instance);
+
+      OperandSet choiceSet;
+
+      if (instanceChoices.containsKey(instance.getId())) {
+
+        choiceSet = instanceChoices.get(instance.getId());
+
       } else {
-        choiceSet = new IdentityHashSet<>();
-        instances.put(instance, choiceSet);
+
+        choiceSet = new OperandSet();
+
+        instanceChoices.put(instance.getId(), choiceSet);
+
       }
-      choiceSet.addAll(Arrays.asList(choices));
+
+      // populate choice map with operands keyed by ID
+      for (Operand op : choices) {
+        choiceSet.add(op);
+      }
+
     }
 
     @Override public String toString() {
       StringBuilder s = new StringBuilder();
 
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> entry : instances.entrySet()) {
+      for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
 
         if (s.length() > 0) {
           s.append(", ");
         }
 
-        s.append('#');
-        s.append(entry.getKey().getId());
+        s.append(getInstance(entry.getKey()).toIdString());
         s.append(" = ");
-        s.append(Operand.toInfoString(entry.getValue()));
+        s.append(entry.getValue());
 
       }
 
       return s.toString();
     }
 
+    // removes all impossible mappings based on the set difference of all choices for this operand
     public void applyIntersectionFilter() {
-      Set<Operand> shared = new HashSet<>();
-      if (!instances.isEmpty()) {
-        shared.addAll(instances.values().iterator().next());
-      } else {
-        System.out.println("EMPTY INSTANCES");
+
+      if (instanceChoices.isEmpty()) {
+        return;
       }
 
-      // find all shared values
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> entry : instances.entrySet()) {
+      // start off by adding all of the choices from one instance to the set
+      Set<Operand> shared = new HashSet<>(instanceChoices.values().iterator().next());
+
+      // remove all values from initial set that are not in each instance's choices
+      for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
 
         Set<Operand> general = new HashSet<>(entry.getValue());
 
         shared.removeIf(operand -> !general.contains(operand));
+
       }
 
-      // remove unshared values
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> entry : instances.entrySet()) {
+      // remove unshared values from each instance's choice map
+      for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
 
-        entry.getValue().removeIf(operand -> !shared.contains(operand));
+        entry.getValue().removeIf(entry1 -> !shared.contains(entry1));
 
       }
 
     }
 
+    // removes all impossible mappings based on the number of instances of each choice relative
+    // to the number of instances that need to be mapped
     public void applyCountFilter() {
 
       Map<Operand, Integer> counts = new HashMap<>();
-      Set<Integer> used = new HashSet<>();
+      Set<Integer> usedIds = new HashSet<>();
 
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> entry : instances.entrySet()) {
+      // populate count map with the number of instances of each operand found in the choices for
+      // all instances that need to be mapped
+      for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
 
         for (Operand choice : entry.getValue()) {
 
-          if (used.contains(choice.getId())) {
+          if (usedIds.contains(choice.getId())) {
             continue;
           }
 
@@ -461,30 +470,19 @@ public class Unknowns {
           }
 
           counts.put(choice, counts.get(choice) + 1);
-          used.add(choice.getId());
+          usedIds.add(choice.getId());
 
         }
 
       }
 
-      for (Map.Entry<Operand, IdentityHashSet<Operand>> entry : instances.entrySet()) {
+      for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
 
-        entry.getValue().removeIf(choice -> {
+        entry.getValue().removeIf(operand -> {
 
+          int count = counts.get(operand);
 
-          Operand unknown = entry.getKey();
-
-          int count = counts.get(choice);
-
-          boolean notEnough = count < instances.size();
-
-          if (DEBUG && notEnough) {
-            System.out.println(
-                unknown.toInfoString() + " ≠ " + choice.toInfoString() + ": " + choice
-                    + " only has " + count + " instance(s)");
-          }
-
-          return notEnough;
+          return count < instanceChoices.size();
 
         });
 

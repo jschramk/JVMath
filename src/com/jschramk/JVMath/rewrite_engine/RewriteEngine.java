@@ -22,7 +22,7 @@ public class RewriteEngine {
   private static Operand getPopulatedReplacement(Operand original, Operand replacement,
       Knowns knowns) {
 
-    Operand populated = replacement.copy().replace(knowns);
+    Operand populated = replacement.replaceCopy(knowns);
 
     if (!(original instanceof BinaryOperation)) {
       return populated;
@@ -53,17 +53,14 @@ public class RewriteEngine {
 
   }
 
-  public static Output<Operand> applyExpressionRule(Operand to, Rule<Operand> rule, boolean steps) {
+  private static Output<Operand> applyExpressionRule(Operand to, Rule<Operand> rule, String target,
+      boolean steps) {
 
     to = to.fixedCopy();
 
-    StructureMatcher.Match match = findMatch(to, rule.getFind(), rule.getRequirements());
+    StructureMatcher.Match match = findMatch(rule.getFind(), to, rule.getRequirements(), target);
 
     if (match == null) {
-      return null;
-    }
-
-    if (!Requirement.meetsMappingRequirements(match.getKnowns(), rule.getRequirements())) {
       return null;
     }
 
@@ -72,8 +69,6 @@ public class RewriteEngine {
     Output<Operand> output = new Output<>();
 
     Operand operandStep;
-
-    output.incrementOperationCount(rule.stepCount());
 
     if (steps) {
 
@@ -117,7 +112,7 @@ public class RewriteEngine {
 
   }
 
-  public static Output<Equation> applyEquationRule(Equation to, Rule<Equation> rule,
+  private static Output<Equation> applyEquationRule(Equation to, Rule<Equation> rule,
       String solveFor, boolean steps) {
 
     to = to.fixedCopy();
@@ -139,17 +134,11 @@ public class RewriteEngine {
 
     Knowns allKnowns = Knowns.combine(leftMatch.getKnowns(), rightMatch.getKnowns());
 
-    if (!Requirement.meetsMappingRequirements(allKnowns, rule.getRequirements())) {
-      return null;
-    }
-
     Output<Equation> output = new Output<>();
 
     Map<String, Operand> variables = allKnowns.getVariables();
 
     Equation equationStep;
-
-    output.incrementOperationCount(rule.stepCount());
 
     if (steps) {
 
@@ -199,8 +188,8 @@ public class RewriteEngine {
 
   }
 
-  public static Output<Operand> applyExpressionRules(Operand operand,
-      List<Rule<Operand>> expressionRules, boolean condense, boolean steps) {
+  private static Output<Operand> applyExpressionRules(Operand operand,
+      List<Rule<Operand>> expressionRules, boolean condense, boolean steps, String target) {
 
     Operand curr = operand;
 
@@ -218,7 +207,7 @@ public class RewriteEngine {
 
         do { // apply the rule as many times as it can be applied
 
-          Output<Operand> applied = applyExpressionRule(curr, expressionRule, steps);
+          Output<Operand> applied = applyExpressionRule(curr, expressionRule, target, steps);
 
           if (applied == null)
             break;
@@ -227,8 +216,6 @@ public class RewriteEngine {
           appliedAny = true;
 
           curr = applied.getResult();
-
-          ret.incrementOperationCount(applied);
 
           if (steps)
             ret.addStep(new Step<>(curr, null));
@@ -240,8 +227,6 @@ public class RewriteEngine {
             if (!consolidated.equals(curr)) {
 
               curr = consolidated;
-
-              //ret.incrementOperationCount();
 
               if (steps)
                 ret.addStep(new Step<>(curr, null));
@@ -313,6 +298,7 @@ public class RewriteEngine {
       for (Rule<Equation> rule : rules) {
 
         int j = 0;
+        boolean appliedThis = false;
 
         do {
 
@@ -322,9 +308,55 @@ public class RewriteEngine {
             break;
 
           appliedRule = true;
+          appliedThis = true;
           appliedAny = true;
 
-          ret.incrementOperationCount(applied);
+          if (steps)
+            ret.appendSteps(applied);
+
+          curr = applied.getResult();
+
+          if (rule.hasNext()) {
+            break;
+          }
+
+          if (curr.variableCount(solveFor) > 1) {
+
+            Output<Equation> simplifiedOutput = simplify(curr, solveFor, false);
+
+            if (simplifiedOutput != null) {
+
+              curr = simplifiedOutput.getResult();
+
+              if (steps)
+                ret.appendSteps(simplifiedOutput);
+
+            }
+
+          }
+
+          j++;
+
+        } while (j < MAX_SINGLE_RULE_APPLICATIONS);
+
+        //TODO: update
+        if (appliedThis && rule.hasNext()) {
+
+          Rule<Equation> next = RewriteResources.getRule(rule.getNextId(), Equation.class);
+
+          Output<Equation> applied = applyEquationRule(curr, next, solveFor, steps);
+
+          if (applied == null) {
+
+            System.out.println("CURR: " + curr);
+            System.out.println("THIS RULE: " + rule.getFind());
+            System.out.println("NEXT RULE: " + next.getFind() + "\n");
+
+            throw new RuntimeException("Next rule not applied");
+          }
+
+          appliedRule = true;
+          appliedAny = true;
 
           if (steps)
             ret.appendSteps(applied);
@@ -337,16 +369,13 @@ public class RewriteEngine {
 
             curr = simplifiedOutput.getResult();
 
-            ret.incrementOperationCount(simplifiedOutput);
-
             if (steps)
               ret.appendSteps(simplifiedOutput);
 
           }
 
-          j++;
+        }
 
-        } while (j < MAX_SINGLE_RULE_APPLICATIONS);
 
       }
 
@@ -359,8 +388,6 @@ public class RewriteEngine {
         if (simplify != null) {
 
           curr = simplify.getResult();
-
-          ret.incrementOperationCount(simplify);
 
           if (steps)
             ret.appendSteps(simplify);
@@ -388,19 +415,22 @@ public class RewriteEngine {
   }
 
   public static Output<Operand> simplify(Operand operand) {
-    return simplify(operand, false);
+    return simplify(operand, null, false);
   }
 
-  public static Output<Operand> simplify(Operand operand, boolean steps) {
-    return applyExpressionRules(operand, RewriteResources.getRuleSet("simplify", Operand.class),
-        true, steps);
+  public static Output<Operand> simplify(Operand operand, String target, boolean steps) {
+
+    List<Rule<Operand>> rules = RewriteResources.getRuleSet("simplify", Operand.class);
+
+    return applyExpressionRules(operand, rules, true, steps, target);
+
   }
 
   public static Output<Equation> simplify(Equation equation) {
-    return simplify(equation, false);
+    return simplify(equation, null, false);
   }
 
-  public static Output<Equation> simplify(Equation equation, boolean steps) {
+  public static Output<Equation> simplify(Equation equation, String target, boolean steps) {
 
     Output<Equation> ret = new Output<>();
 
@@ -409,12 +439,11 @@ public class RewriteEngine {
 
     Equation curr = equation;
 
-    Output<Operand> leftOut = simplify(left, steps);
-    Output<Operand> rightOut = simplify(right, steps);
+    Output<Operand> leftOut = simplify(left, target, steps);
+    Output<Operand> rightOut = simplify(right, target, steps);
 
-    if (leftOut != null) {
-
-      ret.incrementOperationCount(leftOut);
+    if (leftOut != null && leftOut.getResult().variableCount(target) <= left
+        .variableCount(target)) {
 
       if (steps) {
 
@@ -438,9 +467,8 @@ public class RewriteEngine {
 
     }
 
-    if (rightOut != null) {
-
-      ret.incrementOperationCount(rightOut);
+    if (rightOut != null && rightOut.getResult().variableCount(target) <= right
+        .variableCount(target)) {
 
       if (steps) {
 
@@ -491,6 +519,11 @@ public class RewriteEngine {
 
       if (equationOutput != null) {
         System.out.println("\n\n\nlast equation step: " + equationOutput.getResult());
+
+        System.out.println(equation.getLeftSide().toTreeString());
+        System.out.println("\n");
+        System.out.println(equation.getRightSide().toTreeString());
+
       }
 
       throw new UnsolvableException("Unable to solve for " + solveFor + " in " + equation);
@@ -503,7 +536,6 @@ public class RewriteEngine {
 
   public static class Output<T> implements Iterable<Step<T>> {
 
-    private int operationCount = 0;
     private List<Step<T>> steps = new ArrayList<>();
 
     public Output() {
@@ -523,22 +555,6 @@ public class RewriteEngine {
 
     public int stepCount() {
       return steps.size();
-    }
-
-    public int operationCount() {
-      return operationCount;
-    }
-
-    public void incrementOperationCount(Output<?> output) {
-      incrementOperationCount(output.operationCount);
-    }
-
-    public void incrementOperationCount() {
-      incrementOperationCount(1);
-    }
-
-    public void incrementOperationCount(int i) {
-      operationCount += i;
     }
 
     public Step<T> getStep(int i) {
@@ -590,7 +606,5 @@ public class RewriteEngine {
     }
 
   }
-
-
 
 }

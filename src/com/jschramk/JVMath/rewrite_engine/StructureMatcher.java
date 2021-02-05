@@ -1,45 +1,50 @@
 package com.jschramk.JVMath.rewrite_engine;
 
 import com.jschramk.JVMath.components.*;
+import util.PerformanceTimer;
 
 import java.util.Map;
 
 public class StructureMatcher {
 
-  private static boolean matches(Operand ruleOperand, Operand actualOperand,
-      Map<String, Requirement> requirements, AnalogMapper mapper, String solveVariable) {
+  private static PerformanceTimer timer = new PerformanceTimer();
+
+  private static boolean matches(Operand rule, Operand check, Map<String, Requirement> requirements,
+      OperandMapper mapper, String solveVariable) {
 
     boolean matches = false; // default to false
 
-    if (ruleOperand instanceof Variable) { // rule operand is variable, check requirements
+    if (rule.treeDepth() > check.treeDepth()) {
 
-      Variable variableMatch = (Variable) ruleOperand;
+      // skip to end
 
-      matches = Requirement
-          .meetsPrerequisites(variableMatch.getName(), solveVariable, actualOperand, requirements);
+    } else if (rule instanceof Variable) { // rule operand is variable, check requirements
 
-    } else if (ruleOperand instanceof Literal) { // rule operand is literal, check if actual is the same literal
+      Variable var = (Variable) rule;
 
-      if (actualOperand instanceof Literal) {
+      matches = Requirement.meetsPrerequisites(var.getName(), solveVariable, check, requirements);
 
-        Literal ruleLiteral = (Literal) ruleOperand;
-        Literal actualLiteral = (Literal) actualOperand;
+    } else if (rule instanceof Literal) { // rule operand is literal, check if actual is the same literal
+
+      if (check instanceof Literal) {
+
+        Literal ruleLiteral = (Literal) rule;
+        Literal actualLiteral = (Literal) check;
 
         matches = ruleLiteral.getValue() == actualLiteral.getValue();
 
       }
 
-    } else if (Operand
-        .sameType(ruleOperand, actualOperand)) { // rule and actual operands are the  same type
+    } else if (Operand.sameType(rule, check)) { // rule and actual operands are the  same type
 
-      if (actualOperand instanceof BinaryOperation
-          && ((BinaryOperation) actualOperand).getOperator().getAssociativity()
+      if (check instanceof BinaryOperation
+          && ((BinaryOperation) check).getOperator().getAssociativity()
           == BinaryOperator.Associativity.COMMUTATIVE) {
 
         // add all possible matches for mapper to solve
-        for (Operand matchChild : ruleOperand) {
+        for (Operand matchChild : rule) {
 
-          for (Operand operandChild : actualOperand) {
+          for (Operand operandChild : check) {
 
             if (matches(matchChild, operandChild, requirements, mapper, solveVariable)) {
               matches = true;
@@ -51,14 +56,14 @@ public class StructureMatcher {
 
       } else { // the operand is not a commutative operation, check operands in order
 
-        if (actualOperand.childCount() == ruleOperand.childCount()) {
+        if (check.childCount() == rule.childCount()) {
 
           matches = true; // default to true and check for mismatch
 
-          for (int i = 0; i < actualOperand.childCount(); i++) {
+          for (int i = 0; i < check.childCount(); i++) {
 
-            Operand ruleChild = ruleOperand.getChild(i);
-            Operand actualChild = actualOperand.getChild(i);
+            Operand ruleChild = rule.getChild(i);
+            Operand actualChild = check.getChild(i);
 
             if (!matches(ruleChild, actualChild, requirements, mapper, solveVariable)) {
 
@@ -77,9 +82,9 @@ public class StructureMatcher {
     }
 
     if (matches) {
-      mapper.add(ruleOperand, actualOperand);
+      mapper.add(rule, check);
     } else {
-      mapper.remove(ruleOperand, actualOperand);
+      mapper.remove(rule, check);
     }
 
     return matches;
@@ -89,7 +94,7 @@ public class StructureMatcher {
   public static Match getMatch(Operand ruleOperand, Operand actualOperand,
       Map<String, Requirement> requirements, String solveVariable) {
 
-    AnalogMapper mapper = new AnalogMapper();
+    OperandMapper mapper = new OperandMapper();
 
     if (!matches(ruleOperand, actualOperand, requirements, mapper, solveVariable)) {
       return null;
@@ -105,16 +110,30 @@ public class StructureMatcher {
 
   }
 
-  public static Match findMatch(Operand ruleOperand, Operand actualOperand,
-      Map<String, Requirement> requirements) {
+  public static Match findMatch(Operand find, Operand in, Map<String, Requirement> requirements,
+      String target) {
 
-    return recursiveFindMatch(actualOperand, ruleOperand, requirements, null);
+    timer.start();
+
+    Match match = recursiveFindMatch(find, in, requirements, target);
+
+    timer.stop();
+
+    /*if (timer.ms() > 0.25) {
+      System.out.println("Find: " + find);
+      System.out.println("In: " + in);
+      System.out.println("Found: " + (match != null));
+      timer.printDelta("findMatch() time: ");
+      System.out.println("\n");
+    }*/
+
+    return match;
   }
 
-  private static Match recursiveFindMatch(Operand ruleOperand, Operand actualOperand,
-      Map<String, Requirement> requirements, String solveVariable) {
+  private static Match recursiveFindMatch(Operand find, Operand in,
+      Map<String, Requirement> requirements, String target) {
 
-    Match thisMatch = getMatch(ruleOperand, actualOperand, requirements, solveVariable);
+    Match thisMatch = getMatch(find, in, requirements, target);
 
     if (thisMatch != null) {
 
@@ -122,13 +141,13 @@ public class StructureMatcher {
 
     } else {
 
-      if (!actualOperand.hasChildren()) {
+      if (!in.hasChildren()) {
         return null;
       }
 
-      for (Operand child : actualOperand) {
+      for (Operand child : in) {
 
-        Match childMatch = recursiveFindMatch(ruleOperand, child, requirements, solveVariable);
+        Match childMatch = recursiveFindMatch(find, child, requirements, target);
 
         if (childMatch != null) {
           return childMatch;
