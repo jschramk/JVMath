@@ -40,11 +40,27 @@ public class UnitTest {
     testSolve(eq("y = a^2 + 2 a b + b^2"));
     testSolve(eq("Rtot = 1/(1/R1 + 1/R2 + 1/R3 + 1/R4)"));
     testSolve(eq("F = G M m/r^2"));
+    testSolve(eq("y = a b a^2 b^2"));
+    testSolve(eq("r = root(3, 3V/(4pi))"));
+    testSolve(eq("x^3 - 5 = root(3, x + 5)"));
+    testSolve(eq("4x^2 - 1 = 2/x"));
 
   }
 
-  private static Operand op(String input) throws ParserException {
-    return parser.parse(input, Operand.class);
+  private static void testSolve(Equation equation) {
+
+    for (String s : equation.getVariables()) {
+
+      if (!equation.isSolvedFor(s)) {
+
+        testSolve(equation, s);
+
+      }
+
+    }
+
+    System.out.println();
+
   }
 
   private static Equation eq(String input) throws ParserException {
@@ -75,21 +91,8 @@ public class UnitTest {
 
   }
 
-  private static void testSolve(Equation equation) {
-
-    for (String s : equation.getVariables()) {
-
-      if (!equation.isSolvedFor(s)) {
-
-        testSolve(equation, s);
-
-      }
-
-    }
-
-    System.out.println();
-
+  private static Operand op(String input) throws ParserException {
+    return parser.parse(input, Operand.class);
   }
-
 
 }

@@ -10,11 +10,27 @@ public class Literal extends Operand {
     this.value = value;
   }
 
-  @Override public int hashCode() {
-    return Double.hashCode(value);
+  public double getValue() {
+    return value;
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public Operand evaluate() {
+    return this;
+  }
+
+  @Override
+  protected Operand shallowCopy() {
+    return new Literal(value);
+  }
+
+  @Override
+  public String toString() {
+    return MathUtils.format(value, JVMathSettings.DECIMAL_PLACES);
+  }
+
+  @Override
+  public boolean equals(Object o) {
     if (!(o instanceof Operand)) {
       return false;
     }
@@ -30,23 +46,14 @@ public class Literal extends Operand {
     return literal.value == value;
   }
 
-  public double getValue() {
-    return value;
+  @Override
+  public int hashCode() {
+    return Double.hashCode(value);
   }
 
-  @Override public Type getType() {
+  @Override
+  public Type getType() {
     return Type.LITERAL;
   }
 
-  @Override public Operand evaluate() {
-    return this;
-  }
-
-  @Override protected Operand shallowCopy() {
-    return new Literal(value);
-  }
-
-  @Override public String toString() {
-    return MathUtils.format(value, JVMathSettings.DECIMAL_PLACES);
-  }
 }

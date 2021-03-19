@@ -23,16 +23,18 @@ public class ParseResult {
 
   }
 
+  private void verifyResult(Object result) {
+    if (result == null) {
+      throw new IllegalArgumentException("Result cannot be null");
+    }
+  }
+
   public <T> T to(Class<T> type) {
     return type.cast(result);
   }
 
   public boolean is(Class<?> type) {
     return Utils.classExtends(result.getClass(), type);
-  }
-
-  public double getParseTimeMillis() {
-    return parseNanoTime / 1e6;
   }
 
   public String getInput() {
@@ -43,7 +45,8 @@ public class ParseResult {
     return result.toString();
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
 
     StringBuilder s = new StringBuilder();
 
@@ -63,10 +66,8 @@ public class ParseResult {
     return s.toString();
   }
 
-  private void verifyResult(Object result) {
-    if (result == null) {
-      throw new IllegalArgumentException("Result cannot be null");
-    }
+  public double getParseTimeMillis() {
+    return parseNanoTime / 1e6;
   }
 
 }

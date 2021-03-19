@@ -6,6 +6,7 @@ public class JVMathSettings {
   public static AngularUnit ANGULAR_UNIT = AngularUnit.RADIANS;
 
 
+
   public enum AngularUnit {
     DEGREES, RADIANS
   }

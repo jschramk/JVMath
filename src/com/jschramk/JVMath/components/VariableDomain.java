@@ -15,15 +15,15 @@ public class VariableDomain {
     return vd;
   }
 
-  public void remove(String variable) {
-    values.remove(variable);
-    dependencies.removeVertex(variable);
-  }
-
   public void removeAll(Collection<String> variables) {
     for (String name : variables) {
       remove(name);
     }
+  }
+
+  public void remove(String variable) {
+    values.remove(variable);
+    dependencies.removeVertex(variable);
   }
 
   public void clear() {
@@ -62,8 +62,10 @@ public class VariableDomain {
   public Operand get(String variable) {
 
     if (!contains(variable)) {
-      throw new IllegalArgumentException(
-          String.format("Variable \"%s\" not in variable domain", variable));
+      throw new IllegalArgumentException(String.format(
+        "Variable \"%s\" not in variable domain",
+        variable
+      ));
     }
 
     if (!dependencies.getAdjacentVerticesOf(variable).isEmpty()) {
@@ -102,7 +104,8 @@ public class VariableDomain {
     return values.keySet().containsAll(variables);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
 
     StringBuilder s = new StringBuilder();
 

@@ -22,10 +22,6 @@ public class Script {
     return execute(new Scanner(input));
   }
 
-  public static List<String> execute(File input) throws ParserException, FileNotFoundException {
-    return execute(new Scanner(input));
-  }
-
   private static List<String> execute(Scanner scanner) throws ParserException {
     Script script = new Script();
     while (scanner.hasNextLine()) {
@@ -60,8 +56,8 @@ public class Script {
 
       String print = toPrint + " = ";
 
-      if (imported.getVariables().isEmpty() || variableDomain
-          .containsAll(imported.getVariables())) {
+      if (imported.getVariables()
+        .isEmpty() || variableDomain.containsAll(imported.getVariables())) {
 
         print += imported.evaluate();
 
@@ -88,8 +84,8 @@ public class Script {
         print += toPrint + " = ";
       }
 
-      if (imported.getVariables().isEmpty() || variableDomain
-          .containsAll(imported.getVariables())) {
+      if (imported.getVariables()
+        .isEmpty() || variableDomain.containsAll(imported.getVariables())) {
 
         if (!(imported instanceof Literal)) {
           print += imported + " = ";
@@ -129,6 +125,8 @@ public class Script {
 
   }
 
-
+  public static List<String> execute(File input) throws ParserException, FileNotFoundException {
+    return execute(new Scanner(input));
+  }
 
 }

@@ -14,26 +14,19 @@ import java.util.Map;
 
 public class DefaultParser extends Parser {
 
+  protected static final DefaultParser MAIN_INSTANCE = new DefaultParser(FunctionDomain.getDefault());
 
-  protected static final DefaultParser MAIN_INSTANCE =
-      new DefaultParser(FunctionDomain.getDefault());
-
-  private static final DFA<ParserUtils.Label, ParserUtils.Label> functionsDFA =
-      ParserUtils.getFunctionsDFA();
-  private static final DFA<ParserUtils.Label, ParserUtils.Label> exponentsDFA =
-      ParserUtils.getExponentsDFA();
-  private static final DFA<ParserUtils.Label, ParserUtils.Label> multiplicationsDivisionsDFA =
-      ParserUtils.getMultiplicationDivisionDFA();
-  private static final DFA<ParserUtils.Label, ParserUtils.Label> additionsDFA =
-      ParserUtils.getAdditionsDFA();
-  private static final DFA<ParserUtils.Label, ParserUtils.Label> negationsDFA =
-      ParserUtils.getNegationsDFA();
-  private final DFA<Character, ParserUtils.Label> primitivesDFA =
-      ParserUtils.getPrimitivesDFA(functionDomain.getAllFunctions());
-  private final DFA<Character, ParserUtils.Label> binaryOperationsDFA =
-      ParserUtils.getOperationsDFA(functionDomain.getAllFunctions());
-  private final DFA<ParserUtils.Label, ParserUtils.Label> unaryOperationsDFA =
-      ParserUtils.getUnaryOperationsDFA();
+  private static final DFA<ParserUtils.Label, ParserUtils.Label> functionsDFA = ParserUtils.getFunctionsDFA();
+  private static final DFA<ParserUtils.Label, ParserUtils.Label> exponentsDFA = ParserUtils.getExponentsDFA();
+  private static final DFA<ParserUtils.Label, ParserUtils.Label> multiplicationsDivisionsDFA = ParserUtils
+    .getMultiplicationDivisionDFA();
+  private static final DFA<ParserUtils.Label, ParserUtils.Label> additionsDFA = ParserUtils.getAdditionsDFA();
+  private static final DFA<ParserUtils.Label, ParserUtils.Label> negationsDFA = ParserUtils.getNegationsDFA();
+  private final DFA<Character, ParserUtils.Label> primitivesDFA = ParserUtils.getPrimitivesDFA(
+    functionDomain.getAllFunctions());
+  private final DFA<Character, ParserUtils.Label> binaryOperationsDFA = ParserUtils.getOperationsDFA(
+    functionDomain.getAllFunctions());
+  private final DFA<ParserUtils.Label, ParserUtils.Label> unaryOperationsDFA = ParserUtils.getUnaryOperationsDFA();
 
   private final Map<String, Operand> operands = new HashMap<>();
   //private final Map<String, String> variableKeys = new HashMap<>();
@@ -43,7 +36,8 @@ public class DefaultParser extends Parser {
     super(functionDomain);
   }
 
-  @Override public ParseResult parse(String input) throws ParserException {
+  @Override
+  public ParseResult parse(String input) throws ParserException {
 
     long t1 = System.nanoTime();
 
@@ -100,8 +94,8 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      String inside =
-          LabeledSegment.stringOf(input).substring(parens.getStart() + 1, parens.getEnd() - 1);
+      String inside = LabeledSegment.stringOf(input)
+        .substring(parens.getStart() + 1, parens.getEnd() - 1);
 
       operands.put(key, parseMatrix(inside));
 
@@ -215,8 +209,10 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      List<LabeledSegment<Character, ParserUtils.Label>> section =
-          types.subList(first.getStart(), first.getEnd());
+      List<LabeledSegment<Character, ParserUtils.Label>> section = types.subList(
+        first.getStart(),
+        first.getEnd()
+      );
 
       if (first.getLabel() == ParserUtils.Label.FACTORIAL) {
 
@@ -228,8 +224,11 @@ public class DefaultParser extends Parser {
 
       }
 
-      input = LabeledSegment.replace(input, types.get(first.getStart()).getStart(),
-          types.get(first.getEnd() - 1).getEnd(), LabeledSegment.characterListOf(key));
+      input = LabeledSegment.replace(input,
+        types.get(first.getStart()).getStart(),
+        types.get(first.getEnd() - 1).getEnd(),
+        LabeledSegment.characterListOf(key)
+      );
 
       types = ic0.findAll(input);
       classes = LabeledSegment.labelListOf(types);
@@ -256,8 +255,10 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      List<LabeledSegment<Character, ParserUtils.Label>> section =
-          types.subList(first.getStart(), first.getEnd());
+      List<LabeledSegment<Character, ParserUtils.Label>> section = types.subList(
+        first.getStart(),
+        first.getEnd()
+      );
 
       if (first.getLabel() == ParserUtils.Label.FUNCTION) {
 
@@ -285,8 +286,11 @@ public class DefaultParser extends Parser {
 
       }
 
-      input = LabeledSegment.replace(input, types.get(first.getStart()).getStart(),
-          types.get(first.getEnd() - 1).getEnd(), LabeledSegment.characterListOf(key));
+      input = LabeledSegment.replace(input,
+        types.get(first.getStart()).getStart(),
+        types.get(first.getEnd() - 1).getEnd(),
+        LabeledSegment.characterListOf(key)
+      );
 
       types = ic0.findAll(input);
       classes = LabeledSegment.labelListOf(types);
@@ -317,8 +321,10 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      List<LabeledSegment<Character, ParserUtils.Label>> section =
-          types.subList(last.getStart(), last.getEnd());
+      List<LabeledSegment<Character, ParserUtils.Label>> section = types.subList(
+        last.getStart(),
+        last.getEnd()
+      );
 
       if (last.getLabel() == ParserUtils.Label.EXPONENT_POS) {
 
@@ -340,8 +346,11 @@ public class DefaultParser extends Parser {
 
       }
 
-      input = LabeledSegment.replace(input, types.get(last.getStart()).getStart(),
-          types.get(last.getEnd() - 1).getEnd(), LabeledSegment.characterListOf(key));
+      input = LabeledSegment.replace(input,
+        types.get(last.getStart()).getStart(),
+        types.get(last.getEnd() - 1).getEnd(),
+        LabeledSegment.characterListOf(key)
+      );
 
       types = ic0.findAll(input);
       classes = LabeledSegment.labelListOf(types);
@@ -372,8 +381,10 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      List<LabeledSegment<Character, ParserUtils.Label>> section =
-          types.subList(first.getStart(), first.getEnd());
+      List<LabeledSegment<Character, ParserUtils.Label>> section = types.subList(
+        first.getStart(),
+        first.getEnd()
+      );
 
       if (first.getLabel() == ParserUtils.Label.MULTIPLY_POS_POS_IMPLICIT) {
 
@@ -426,8 +437,10 @@ public class DefaultParser extends Parser {
         Operand o0 = operands.get(LabeledSegment.stringOf(section.get(1).sectionOf(input)));
         Operand o1 = operands.get(LabeledSegment.stringOf(section.get(4).sectionOf(input)));
 
-        Operand result =
-            BinaryOperation.product(UnaryOperation.negation(o0), UnaryOperation.negation(o1));
+        Operand result = BinaryOperation.product(
+          UnaryOperation.negation(o0),
+          UnaryOperation.negation(o1)
+        );
 
         operands.put(key, result);
 
@@ -465,15 +478,20 @@ public class DefaultParser extends Parser {
         Operand o0 = operands.get(LabeledSegment.stringOf(section.get(1).sectionOf(input)));
         Operand o1 = operands.get(LabeledSegment.stringOf(section.get(4).sectionOf(input)));
 
-        Operand result =
-            BinaryOperation.division(UnaryOperation.negation(o0), UnaryOperation.negation(o1));
+        Operand result = BinaryOperation.division(
+          UnaryOperation.negation(o0),
+          UnaryOperation.negation(o1)
+        );
 
         operands.put(key, result);
 
       }
 
-      input = LabeledSegment.replace(input, types.get(first.getStart()).getStart(),
-          types.get(first.getEnd() - 1).getEnd(), LabeledSegment.characterListOf(key));
+      input = LabeledSegment.replace(input,
+        types.get(first.getStart()).getStart(),
+        types.get(first.getEnd() - 1).getEnd(),
+        LabeledSegment.characterListOf(key)
+      );
 
       types = ic0.findAll(input);
       classes = LabeledSegment.labelListOf(types);
@@ -504,8 +522,10 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      List<LabeledSegment<Character, ParserUtils.Label>> section =
-          types.subList(first.getStart(), first.getEnd());
+      List<LabeledSegment<Character, ParserUtils.Label>> section = types.subList(
+        first.getStart(),
+        first.getEnd()
+      );
 
       if (first.getLabel() == ParserUtils.Label.ADDITION_POS_POS) {
 
@@ -539,8 +559,10 @@ public class DefaultParser extends Parser {
         Operand o0 = operands.get(LabeledSegment.stringOf(section.get(1).sectionOf(input)));
         Operand o1 = operands.get(LabeledSegment.stringOf(section.get(4).sectionOf(input)));
 
-        Operand result =
-            BinaryOperation.sum(UnaryOperation.negation(o0), UnaryOperation.negation(o1));
+        Operand result = BinaryOperation.sum(
+          UnaryOperation.negation(o0),
+          UnaryOperation.negation(o1)
+        );
 
         operands.put(key, result);
 
@@ -567,8 +589,10 @@ public class DefaultParser extends Parser {
         Operand o0 = operands.get(LabeledSegment.stringOf(section.get(1).sectionOf(input)));
         Operand o1 = operands.get(LabeledSegment.stringOf(section.get(3).sectionOf(input)));
 
-        Operand result =
-            BinaryOperation.sum(UnaryOperation.negation(o0), UnaryOperation.negation(o1));
+        Operand result = BinaryOperation.sum(
+          UnaryOperation.negation(o0),
+          UnaryOperation.negation(o1)
+        );
 
         operands.put(key, result);
 
@@ -592,8 +616,11 @@ public class DefaultParser extends Parser {
 
       }
 
-      input = LabeledSegment.replace(input, types.get(first.getStart()).getStart(),
-          types.get(first.getEnd() - 1).getEnd(), LabeledSegment.characterListOf(key));
+      input = LabeledSegment.replace(input,
+        types.get(first.getStart()).getStart(),
+        types.get(first.getEnd() - 1).getEnd(),
+        LabeledSegment.characterListOf(key)
+      );
 
       types = ic0.findAll(input);
       classes = LabeledSegment.labelListOf(types);
@@ -624,8 +651,10 @@ public class DefaultParser extends Parser {
 
       String key = getNextOperandKey();
 
-      List<LabeledSegment<Character, ParserUtils.Label>> section =
-          types.subList(first.getStart(), first.getEnd());
+      List<LabeledSegment<Character, ParserUtils.Label>> section = types.subList(
+        first.getStart(),
+        first.getEnd()
+      );
 
       if (first.getLabel() == ParserUtils.Label.NEGATION) {
 
@@ -637,8 +666,11 @@ public class DefaultParser extends Parser {
 
       }
 
-      input = LabeledSegment.replace(input, types.get(first.getStart()).getStart(),
-          types.get(first.getEnd() - 1).getEnd(), LabeledSegment.characterListOf(key));
+      input = LabeledSegment.replace(input,
+        types.get(first.getStart()).getStart(),
+        types.get(first.getEnd() - 1).getEnd(),
+        LabeledSegment.characterListOf(key)
+      );
 
       types = ic0.findAll(input);
       classes = LabeledSegment.labelListOf(types);

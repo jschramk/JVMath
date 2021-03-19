@@ -56,10 +56,6 @@ public class Utils {
     return splitLevel(s, '(', ')', ',');
   }
 
-  public static String[] splitMatrixRows(String s) {
-    return splitLevel(s, '(', ')', ';');
-  }
-
   public static String[] splitLevel(String input, char inc, char dec, char split) {
 
     List<String> segments = new ArrayList<>();
@@ -87,6 +83,10 @@ public class Utils {
 
     return arr;
 
+  }
+
+  public static String[] splitMatrixRows(String s) {
+    return splitLevel(s, '(', ')', ';');
   }
 
   public static String toTreeString(Operand operand) {

@@ -655,24 +655,6 @@
     ]
   },
   {
-    "find": "root(x) = y",
-    "steps": [
-      {
-        "replace": "x = y^2"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
     "find": "root(a, x) = y",
     "steps": [
       {
@@ -690,6 +672,24 @@
       },
       {
         "variable": "a",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "root(x) = y",
+    "steps": [
+      {
+        "replace": "x = y^2"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
         "contains solve": false
       }
     ]

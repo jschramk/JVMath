@@ -4,8 +4,6 @@ import java.util.List;
 
 public interface FunctionOperator {
 
-  String getName();
-
   List<String> getDescriptions();
 
   void checkArg(Operand arg);
@@ -32,16 +30,16 @@ public interface FunctionOperator {
 
         Matrix m = (Matrix) arg;
 
-        if (m.rowCount() == 1 && m.colCount() == i)
-          return;
+        if (m.rowCount() == 1 && m.colCount() == i) return;
 
       }
 
     }
 
-    throw new IllegalArgumentException(
-        "Function \"" + getName() + "\" cannot take argument(s): " + arg);
+    throw new IllegalArgumentException("Function \"" + getName() + "\" cannot take argument(s): " + arg);
 
   }
+
+  String getName();
 
 }

@@ -55,8 +55,9 @@ public class RewriteResources {
 
 
 
-  private static <T> void loadRuleSet(String name, Parser parser, InputStream inputStream,
-      Class<T> type) throws ParserException {
+  private static <T> void loadRuleSet(
+    String name, Parser parser, InputStream inputStream, Class<T> type
+  ) throws ParserException {
 
     List<Rule<String>> stringRules = Rule.getRules(inputStream);
 
@@ -71,6 +72,5 @@ public class RewriteResources {
 
     ruleSets.put(name, equationRules);
   }
-
 
 }

@@ -2,11 +2,11 @@ package com.jschramk.JVMath.components;
 
 public interface BinaryOperator {
 
-  String getSymbol();
-
   default String getSymbolLaTeX() {
     return getSymbol();
   }
+
+  String getSymbol();
 
   boolean canEvaluate(Operand o1, Operand o2);
 
@@ -18,11 +18,11 @@ public interface BinaryOperator {
     return Operand.class;
   }
 
-  Associativity getAssociativity();
-
   default boolean isCommutative() {
     return getAssociativity() == Associativity.COMMUTATIVE;
   }
+
+  Associativity getAssociativity();
 
   enum Associativity {
     COMMUTATIVE, LEFT_TO_RIGHT, RIGHT_TO_LEFT

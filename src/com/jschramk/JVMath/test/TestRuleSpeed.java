@@ -36,8 +36,12 @@ public class TestRuleSpeed {
 
     dt = t2 - t1;
 
-    System.out.println(String
-        .format("Input: %s, Simplified: %s, Time: %d ms", in.toString(), result.toString(), dt));
+    System.out.println(String.format(
+      "Input: %s, Simplified: %s, Time: %d ms",
+      in.toString(),
+      result.toString(),
+      dt
+    ));
 
   }
 
@@ -55,11 +59,13 @@ public class TestRuleSpeed {
 
     dt = t2 - t1;
 
-    System.out.println(
-        String.format("Input: %s, Solved: %s, Time: %d ms", in.toString(), result.toString(), dt));
+    System.out.println(String.format(
+      "Input: %s, Solved: %s, Time: %d ms",
+      in.toString(),
+      result.toString(),
+      dt
+    ));
 
   }
-
-
 
 }

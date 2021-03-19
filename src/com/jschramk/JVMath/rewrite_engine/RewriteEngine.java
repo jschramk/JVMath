@@ -19,110 +19,24 @@ public class RewriteEngine {
 
   private static final int MAX_SINGLE_RULE_APPLICATIONS = 100, MAX_ALL_RULE_CHECKS = 100;
 
-  private static Operand getPopulatedReplacement(Operand original, Operand replacement,
-      Knowns knowns) {
-
-    Operand populated = replacement.replaceCopy(knowns);
-
-    if (!(original instanceof BinaryOperation)) {
-      return populated;
-    }
-
-    BinaryOperation operation = (BinaryOperation) original;
-
-    if (operation.getOperator().isCommutative()) {
-
-      BinaryOperator operator = operation.getOperator();
-
-      List<Operand> unusedChildren = new ArrayList<>();
-
-      for (Operand child : original) {
-        if (!knowns.getUsedIds().contains(child.getId())) {
-          unusedChildren.add(child.copy());
-        }
-      }
-
-      if (!unusedChildren.isEmpty()) {
-        unusedChildren.add(populated);
-        populated = new BinaryOperation(operator, unusedChildren);
-      }
-
-    }
-
-    return populated;
-
-  }
-
-  private static Output<Operand> applyExpressionRule(Operand to, Rule<Operand> rule, String target,
-      boolean steps) {
+  private static Output<Equation> applyEquationRule(
+    Equation to, Rule<Equation> rule, String solveFor, boolean steps
+  ) {
 
     to = to.fixedCopy();
 
-    StructureMatcher.Match match = findMatch(rule.getFind(), to, rule.getRequirements(), target);
+    StructureMatcher.Match leftMatch = StructureMatcher.getMatch(
+      rule.getFind().getLeftSide(),
+      to.getLeftSide(),
+      rule.getRequirements(),
+      solveFor
+    );
 
-    if (match == null) {
-      return null;
-    }
-
-    Map<String, Operand> variables = match.getKnowns().getVariables();
-
-    Output<Operand> output = new Output<>();
-
-    Operand operandStep;
-
-    if (steps) {
-
-      for (Step<Operand> step : rule.getSteps()) {
-
-        operandStep =
-            getPopulatedReplacement(match.getOriginal(), step.getReplace(), match.getKnowns());
-
-        operandStep = to.replaceCopy(match.getOriginal().getId(), operandStep);
-
-        String desc = step.getDescription();
-
-        if (desc != null) {
-          for (String name : variables.keySet()) {
-            desc = desc.replaceAll("\\$" + name, variables.get(name).toString());
-          }
-        }
-
-        Step<Operand> outStep = new Step<>(operandStep, desc);
-
-        output.addStep(outStep);
-
-      }
-
-    } else {
-
-      Step<Operand> step = rule.getLastStep();
-
-      operandStep =
-          getPopulatedReplacement(match.getOriginal(), step.getReplace(), match.getKnowns());
-
-      operandStep = to.replaceCopy(match.getOriginal().getId(), operandStep);
-
-      Step<Operand> outStep = new Step<>(operandStep, null);
-
-      output.addStep(outStep);
-
-    }
-
-    return output;
-
-  }
-
-  private static Output<Equation> applyEquationRule(Equation to, Rule<Equation> rule,
-      String solveFor, boolean steps) {
-
-    to = to.fixedCopy();
-
-    StructureMatcher.Match leftMatch = StructureMatcher
-        .getMatch(rule.getFind().getLeftSide(), to.getLeftSide(), rule.getRequirements(), solveFor);
-
-    StructureMatcher.Match rightMatch = StructureMatcher
-        .getMatch(rule.getFind().getRightSide(), to.getRightSide(), rule.getRequirements(),
-            solveFor);
+    StructureMatcher.Match rightMatch = StructureMatcher.getMatch(rule.getFind().getRightSide(),
+      to.getRightSide(),
+      rule.getRequirements(),
+      solveFor
+    );
 
     if (leftMatch == null || rightMatch == null) {
       return null;
@@ -188,100 +102,9 @@ public class RewriteEngine {
 
   }
 
-  private static Output<Operand> applyExpressionRules(Operand operand,
-      List<Rule<Operand>> expressionRules, boolean condense, boolean steps, String target) {
-
-    Operand curr = operand;
-
-    Output<Operand> ret = new Output<>();
-
-    boolean appliedAny = false;
-
-    for (int i = 0; i < MAX_ALL_RULE_CHECKS; i++) {
-
-      boolean appliedRule = false;
-
-      for (Rule<Operand> expressionRule : expressionRules) { // loop through each rule and try to apply
-
-        int j = 0;
-
-        do { // apply the rule as many times as it can be applied
-
-          Output<Operand> applied = applyExpressionRule(curr, expressionRule, target, steps);
-
-          if (applied == null)
-            break;
-
-          appliedRule = true;
-          appliedAny = true;
-
-          curr = applied.getResult();
-
-          if (steps)
-            ret.addStep(new Step<>(curr, null));
-
-          if (condense) {
-
-            Operand consolidated = curr.condenseLiterals();
-
-            if (!consolidated.equals(curr)) {
-
-              curr = consolidated;
-
-              if (steps)
-                ret.addStep(new Step<>(curr, null));
-
-            }
-
-          }
-
-          j++;
-
-        } while (j < MAX_SINGLE_RULE_APPLICATIONS);
-
-      }
-
-      if (!appliedRule)
-        break;
-
-    }
-
-
-    if (condense) {
-
-      Operand consolidated = curr.condenseLiterals();
-
-      if (!consolidated.equals(curr)) {
-
-        appliedAny = true;
-
-        curr = consolidated;
-
-        //ret.incrementOperationCount();
-
-        if (steps) {
-          ret.addStep(new Step<>(curr, null));
-        }
-
-
-      }
-
-    }
-
-    if (!steps && appliedAny) {
-      ret.addStep(new Step<>(curr, null));
-    }
-
-    if (ret.isEmpty()) {
-      return null;
-    }
-
-    return ret;
-
-  }
-
-  public static Output<Equation> applyEquationRules(Equation equation, List<Rule<Equation>> rules,
-      String solveFor, boolean steps) {
+  public static Output<Equation> applyEquationRules(
+    Equation equation, List<Rule<Equation>> rules, String solveFor, boolean steps
+  ) {
 
     Operand.validateTree(equation);
 
@@ -304,15 +127,13 @@ public class RewriteEngine {
 
           Output<Equation> applied = applyEquationRule(curr, rule, solveFor, steps);
 
-          if (applied == null)
-            break;
+          if (applied == null) break;
 
           appliedRule = true;
           appliedThis = true;
           appliedAny = true;
 
-          if (steps)
-            ret.appendSteps(applied);
+          if (steps) ret.appendSteps(applied);
 
           curr = applied.getResult();
 
@@ -328,8 +149,7 @@ public class RewriteEngine {
 
               curr = simplifiedOutput.getResult();
 
-              if (steps)
-                ret.appendSteps(simplifiedOutput);
+              if (steps) ret.appendSteps(simplifiedOutput);
 
             }
 
@@ -358,8 +178,7 @@ public class RewriteEngine {
           appliedRule = true;
           appliedAny = true;
 
-          if (steps)
-            ret.appendSteps(applied);
+          if (steps) ret.appendSteps(applied);
 
           curr = applied.getResult();
 
@@ -369,13 +188,11 @@ public class RewriteEngine {
 
             curr = simplifiedOutput.getResult();
 
-            if (steps)
-              ret.appendSteps(simplifiedOutput);
+            if (steps) ret.appendSteps(simplifiedOutput);
 
           }
 
         }
-
 
       }
 
@@ -389,8 +206,7 @@ public class RewriteEngine {
 
           curr = simplify.getResult();
 
-          if (steps)
-            ret.appendSteps(simplify);
+          if (steps) ret.appendSteps(simplify);
 
         } else {
 
@@ -426,6 +242,199 @@ public class RewriteEngine {
 
   }
 
+  private static Output<Operand> applyExpressionRules(
+    Operand operand,
+    List<Rule<Operand>> expressionRules,
+    boolean condense,
+    boolean steps,
+    String target
+  ) {
+
+    Operand curr = operand;
+
+    Output<Operand> ret = new Output<>();
+
+    boolean appliedAny = false;
+
+    for (int i = 0; i < MAX_ALL_RULE_CHECKS; i++) {
+
+      boolean appliedRule = false;
+
+      for (Rule<Operand> expressionRule : expressionRules) { // loop through each rule and try to apply
+
+        int j = 0;
+
+        do { // apply the rule as many times as it can be applied
+
+          Output<Operand> applied = applyExpressionRule(curr, expressionRule, target, steps);
+
+          if (applied == null) break;
+
+          appliedRule = true;
+          appliedAny = true;
+
+          curr = applied.getResult();
+
+          if (steps) ret.addStep(new Step<>(curr, null));
+
+          if (condense) {
+
+            Operand consolidated = curr.condenseLiterals();
+
+            if (!consolidated.equals(curr)) {
+
+              curr = consolidated;
+
+              if (steps) ret.addStep(new Step<>(curr, null));
+
+            }
+
+          }
+
+          j++;
+
+        } while (j < MAX_SINGLE_RULE_APPLICATIONS);
+
+      }
+
+      if (!appliedRule) break;
+
+    }
+
+
+    if (condense) {
+
+      Operand consolidated = curr.condenseLiterals();
+
+      if (!consolidated.equals(curr)) {
+
+        appliedAny = true;
+
+        curr = consolidated;
+
+        //ret.incrementOperationCount();
+
+        if (steps) {
+          ret.addStep(new Step<>(curr, null));
+        }
+
+      }
+
+    }
+
+    if (!steps && appliedAny) {
+      ret.addStep(new Step<>(curr, null));
+    }
+
+    if (ret.isEmpty()) {
+      return null;
+    }
+
+    return ret;
+
+  }
+
+  private static Output<Operand> applyExpressionRule(
+    Operand to, Rule<Operand> rule, String target, boolean steps
+  ) {
+
+    to = to.fixedCopy();
+
+    StructureMatcher.Match match = findMatch(rule.getFind(), to, rule.getRequirements(), target);
+
+    if (match == null) {
+      return null;
+    }
+
+    Map<String, Operand> variables = match.getKnowns().getVariables();
+
+    Output<Operand> output = new Output<>();
+
+    Operand operandStep;
+
+    if (steps) {
+
+      for (Step<Operand> step : rule.getSteps()) {
+
+        operandStep = getPopulatedReplacement(
+          match.getOriginal(),
+          step.getReplace(),
+          match.getKnowns()
+        );
+
+        operandStep = to.replaceCopy(match.getOriginal().getId(), operandStep);
+
+        String desc = step.getDescription();
+
+        if (desc != null) {
+          for (String name : variables.keySet()) {
+            desc = desc.replaceAll("\\$" + name, variables.get(name).toString());
+          }
+        }
+
+        Step<Operand> outStep = new Step<>(operandStep, desc);
+
+        output.addStep(outStep);
+
+      }
+
+    } else {
+
+      Step<Operand> step = rule.getLastStep();
+
+      operandStep = getPopulatedReplacement(
+        match.getOriginal(),
+        step.getReplace(),
+        match.getKnowns()
+      );
+
+      operandStep = to.replaceCopy(match.getOriginal().getId(), operandStep);
+
+      Step<Operand> outStep = new Step<>(operandStep, null);
+
+      output.addStep(outStep);
+
+    }
+
+    return output;
+
+  }
+
+  private static Operand getPopulatedReplacement(
+    Operand original, Operand replacement, Knowns knowns
+  ) {
+
+    Operand populated = replacement.replaceCopy(knowns);
+
+    if (!(original instanceof BinaryOperation)) {
+      return populated;
+    }
+
+    BinaryOperation operation = (BinaryOperation) original;
+
+    if (operation.getOperator().isCommutative()) {
+
+      BinaryOperator operator = operation.getOperator();
+
+      List<Operand> unusedChildren = new ArrayList<>();
+
+      for (Operand child : original) {
+        if (!knowns.getUsedIds().contains(child.getId())) {
+          unusedChildren.add(child.copy());
+        }
+      }
+
+      if (!unusedChildren.isEmpty()) {
+        unusedChildren.add(populated);
+        populated = new BinaryOperation(operator, unusedChildren);
+      }
+
+    }
+
+    return populated;
+
+  }
+
   public static Output<Equation> simplify(Equation equation) {
     return simplify(equation, null, false);
   }
@@ -442,8 +451,8 @@ public class RewriteEngine {
     Output<Operand> leftOut = simplify(left, target, steps);
     Output<Operand> rightOut = simplify(right, target, steps);
 
-    if (leftOut != null && leftOut.getResult().variableCount(target) <= left
-        .variableCount(target)) {
+    if (leftOut != null && leftOut.getResult()
+      .variableCount(target) <= left.variableCount(target)) {
 
       if (steps) {
 
@@ -467,8 +476,8 @@ public class RewriteEngine {
 
     }
 
-    if (rightOut != null && rightOut.getResult().variableCount(target) <= right
-        .variableCount(target)) {
+    if (rightOut != null && rightOut.getResult()
+      .variableCount(target) <= right.variableCount(target)) {
 
       if (steps) {
 
@@ -492,28 +501,29 @@ public class RewriteEngine {
 
     }
 
-    if (ret.isEmpty())
-      return null;
+    if (ret.isEmpty()) return null;
 
     return ret;
 
   }
 
   public static Output<Equation> solve(Equation equation, String solveFor)
-      throws UnsolvableException {
+    throws UnsolvableException {
     return solve(equation, solveFor, false);
   }
 
   public static Output<Equation> solve(Equation equation, String solveFor, boolean steps)
-      throws UnsolvableException {
+    throws UnsolvableException {
 
     if (equation.isSolvedFor(solveFor)) {
       throw new UnsolvableException("Equation is already solved for " + solveFor);
     }
 
-    Output<Equation> equationOutput =
-        applyEquationRules(equation, RewriteResources.getRuleSet("solve", Equation.class), solveFor,
-            steps);
+    Output<Equation> equationOutput = applyEquationRules(equation,
+      RewriteResources.getRuleSet("solve", Equation.class),
+      solveFor,
+      steps
+    );
 
     if (equationOutput == null || !equationOutput.getResult().isSolvedFor(solveFor)) {
 
@@ -545,7 +555,8 @@ public class RewriteEngine {
       this.steps = steps;
     }
 
-    @Override public Iterator<Step<T>> iterator() {
+    @Override
+    public Iterator<Step<T>> iterator() {
       return new OutputIterator(this);
     }
 
@@ -596,13 +607,16 @@ public class RewriteEngine {
         this.output = output;
       }
 
-      @Override public boolean hasNext() {
+      @Override
+      public boolean hasNext() {
         return i < output.stepCount();
       }
 
-      @Override public Step<T> next() {
+      @Override
+      public Step<T> next() {
         return output.getStep(i++);
       }
+
     }
 
   }

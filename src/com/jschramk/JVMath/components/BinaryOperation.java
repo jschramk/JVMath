@@ -44,74 +44,8 @@ public class BinaryOperation extends Operand {
     return new BinaryOperation(Operators.EXPONENT, base, power);
   }
 
-  private static Map<Operand, Integer> childCountMap(Operand operand) {
-    Map<Operand, Integer> countMap = new HashMap<>();
-    for (Operand child : operand) {
-      if (!countMap.containsKey(child)) {
-        countMap.put(child, 0);
-      }
-      countMap.put(child, countMap.get(child) + 1);
-    }
-    return countMap;
-  }
-
-  public BinaryOperator getOperator() {
-    return operator;
-  }
-
-  @Override public Operand evaluate() {
-
-    if (operator.getAssociativity() != BinaryOperator.Associativity.LEFT_TO_RIGHT) {
-
-      int size = childCount();
-
-      Operand curr =
-          operator.evaluate(getChild(size - 2).evaluate(), getChild(size - 1).evaluate());
-
-      for (int i = size - 3; i >= 0; i--) {
-        curr = operator.evaluate(getChild(i).evaluate(), curr.evaluate());
-      }
-
-      return curr;
-
-    } else {
-
-      Operand curr = operator.evaluate(getChild(0).evaluate(), getChild(1).evaluate());
-
-      for (int i = 2; i < childCount(); i++) {
-        curr = operator.evaluate(curr.evaluate(), getChild(i).evaluate());
-      }
-
-      return curr;
-
-    }
-
-  }
-
-  @Override public Type getType() {
-    return operator.getType();
-  }
-
-  @Override protected Operand shallowCopy() {
-    return new BinaryOperation(operator);
-  }
-
-  @Override public String toString() {
-
-    StringBuilder s = new StringBuilder();
-
-    for (int i = 0; i < childCount(); i++) {
-
-      if (i > 0) {
-        s.append(operator.getSymbol());
-      }
-      s.append(childPriorityString(this, getChild(i)));
-    }
-
-    return s.toString();
-  }
-
-  @Override public String toLaTeX() {
+  @Override
+  public String toLaTeX() {
 
     if (getOperator() == Operators.DIVISION) {
 
@@ -134,11 +68,69 @@ public class BinaryOperation extends Operand {
       return s.toString();
     }
 
+  }
+
+  public BinaryOperator getOperator() {
+    return operator;
+  }
+
+  @Override
+  public Type getType() {
+    return operator.getType();
+  }
+
+  @Override
+  public Operand evaluate() {
+
+    if (operator.getAssociativity() != BinaryOperator.Associativity.LEFT_TO_RIGHT) {
+
+      int size = childCount();
+
+      Operand curr = operator.evaluate(
+        getChild(size - 2).evaluate(),
+        getChild(size - 1).evaluate()
+      );
+
+      for (int i = size - 3; i >= 0; i--) {
+        curr = operator.evaluate(getChild(i).evaluate(), curr.evaluate());
+      }
+
+      return curr;
+
+    } else {
+
+      Operand curr = operator.evaluate(getChild(0).evaluate(), getChild(1).evaluate());
+
+      for (int i = 2; i < childCount(); i++) {
+        curr = operator.evaluate(curr.evaluate(), getChild(i).evaluate());
+      }
+
+      return curr;
+
+    }
+
+  }
+
+  @Override
+  protected Operand shallowCopy() {
+    return new BinaryOperation(operator);
+  }
+
+  //TODO: test
+  @Override
+  public int hashCode() {
+
+    if (operator.isCommutative()) {
+      return childCountMap(this).hashCode();
+    }
+
+    return childrenHashCode();
 
   }
 
   //TODO: test
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
 
     if (o instanceof BinaryOperation) {
 
@@ -160,15 +152,31 @@ public class BinaryOperation extends Operand {
 
   }
 
-  //TODO: test
-  @Override public int hashCode() {
+  private static Map<Operand, Integer> childCountMap(Operand operand) {
+    Map<Operand, Integer> countMap = new HashMap<>();
+    for (Operand child : operand) {
+      if (!countMap.containsKey(child)) {
+        countMap.put(child, 0);
+      }
+      countMap.put(child, countMap.get(child) + 1);
+    }
+    return countMap;
+  }
 
-    if (operator.isCommutative()) {
-      return childCountMap(this).hashCode();
+  @Override
+  public String toString() {
+
+    StringBuilder s = new StringBuilder();
+
+    for (int i = 0; i < childCount(); i++) {
+
+      if (i > 0) {
+        s.append(operator.getSymbol());
+      }
+      s.append(childPriorityString(this, getChild(i)));
     }
 
-    return childrenHashCode();
-
+    return s.toString();
   }
 
 }

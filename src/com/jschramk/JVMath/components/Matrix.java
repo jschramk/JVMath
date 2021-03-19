@@ -47,12 +47,12 @@ public class Matrix extends Operand {
 
   }
 
-  public int rowCount() {
-    return rows;
-  }
-
   public int colCount() {
     return cols;
+  }
+
+  public int rowCount() {
+    return rows;
   }
 
   public Operand getElement(int row, int col) {
@@ -69,7 +69,8 @@ public class Matrix extends Operand {
 
   }
 
-  @Override public Operand evaluate() {
+  @Override
+  public Operand evaluate() {
 
     List<Operand> evaluatedChildren = new ArrayList<>();
 
@@ -80,15 +81,13 @@ public class Matrix extends Operand {
     return new Matrix(evaluatedChildren, rowCount());
   }
 
-  @Override public Type getType() {
-    return Type.MATRIX;
-  }
-
-  @Override protected Operand shallowCopy() {
+  @Override
+  protected Operand shallowCopy() {
     return new Matrix(rows, cols);
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
 
     StringBuilder s = new StringBuilder();
     s.append('(');
@@ -112,7 +111,8 @@ public class Matrix extends Operand {
     return s.toString();
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
 
     if (!(o instanceof Matrix)) {
       return false;
@@ -124,8 +124,14 @@ public class Matrix extends Operand {
 
   }
 
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return childrenHashCode();
+  }
+
+  @Override
+  public Type getType() {
+    return Type.MATRIX;
   }
 
 }

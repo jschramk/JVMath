@@ -5,7 +5,7 @@ import com.jschramk.JVMath.components.Operand;
 public class OperandMapper {
 
   private Knowns knowns = new Knowns();
-  private Unknowns unknowns = new Unknowns();
+  private Unknowns unknowns = new Unknowns(knowns);
 
   public void add(Operand unknown, Operand choice) {
     unknowns.add(unknown, choice);
@@ -16,7 +16,7 @@ public class OperandMapper {
   }
 
   public Knowns getResult() {
-    if (!unknowns.mapAll(knowns)) {
+    if (!unknowns.mapAll()) {
       return null;
     }
     return knowns;

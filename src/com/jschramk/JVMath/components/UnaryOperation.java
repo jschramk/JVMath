@@ -24,7 +24,22 @@ public class UnaryOperation extends Operand {
     return operator;
   }
 
-  @Override public Operand evaluate() {
+  @Override
+  public String toLaTeX() {
+    return operator.getPrefix() + childPriorityString(
+      this,
+      getChild(0),
+      true
+    ) + operator.getPostfix();
+  }
+
+  @Override
+  public Type getType() {
+    return operator.getType();
+  }
+
+  @Override
+  public Operand evaluate() {
 
     Operand child = getChild(0);
 
@@ -44,24 +59,18 @@ public class UnaryOperation extends Operand {
 
   }
 
-  @Override public Type getType() {
-    return operator.getType();
-  }
-
-  @Override protected Operand shallowCopy() {
+  @Override
+  protected Operand shallowCopy() {
     return new UnaryOperation(operator);
   }
 
-  @Override public String toString() {
-    return operator.getPrefix() + childPriorityString(this, getChild(0)) + operator.getPostfix();
+  @Override
+  public int hashCode() {
+    return childrenHashCode();
   }
 
-  @Override public String toLaTeX() {
-    return operator.getPrefix() + childPriorityString(this, getChild(0), true) + operator
-        .getPostfix();
-  }
-
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
     if (o instanceof UnaryOperation) {
       UnaryOperation operation = (UnaryOperation) o;
       return operation.operator == operator && childrenEquals(operation);
@@ -69,7 +78,9 @@ public class UnaryOperation extends Operand {
     return false;
   }
 
-  @Override public int hashCode() {
-    return childrenHashCode();
+  @Override
+  public String toString() {
+    return operator.getPrefix() + childPriorityString(this, getChild(0)) + operator.getPostfix();
   }
+
 }

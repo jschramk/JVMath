@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="JVMath-dependencies">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Java/Projects/1/jschramk-data-structures-lib/out/artifacts/jschramk_data_structures_lib_jar/jschramk-data-structures-lib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Java/Projects/1/Lexer-Generator/out/artifacts/Lexer_Generator_jar/Lexer-Generator.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Java/Projects/1/MathUtils/out/artifacts/MathUtils/MathUtils.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Java/Projects/1/jschramk-utils-lib/out/artifacts/jschramk_utils_lib_jar/jschramk-utils-lib.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

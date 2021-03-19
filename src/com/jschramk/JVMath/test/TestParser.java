@@ -38,12 +38,17 @@ public class TestParser {
 
   }
 
+  private static void clearStats() {
+    sumTime = 0;
+    sumChars = 0;
+    numParsed = 0;
+  }
+
   private static void test(ParseResult result) {
     numParsed++;
     sumTime += result.getParseTimeMillis();
     sumChars += result.getInput().length();
   }
-
 
   private static void printStats() {
 
@@ -53,19 +58,13 @@ public class TestParser {
     double msPerKb = sumTime / (totalKb);
 
     //System.out.println("\tStatistics: ");
-    System.out.println("\tNumber of strings parsed: " + numParsed);
-    System.out.println("\tTotal parse time: " + MathUtils.format(sumTime) + " ms");
-    System.out.println("\tAverage input length: " + MathUtils.format(avgLength) + " chars");
-    System.out.println("\tAverage parse time: " + MathUtils.format(avgTime) + " ms");
-    System.out.println("\tTotal memory parsed: " + MathUtils.format(totalKb) + " kB");
-    System.out.println("\tAverage parse time per kB: " + MathUtils.format(msPerKb) + " ms");
+    System.out.println("\tNumber of strings parsed:   " + numParsed);
+    System.out.println("\tTotal parse time:           " + MathUtils.format(sumTime) + " ms");
+    System.out.println("\tAverage input length:       " + MathUtils.format(avgLength) + " chars");
+    System.out.println("\tAverage parse time:         " + MathUtils.format(avgTime) + " ms");
+    System.out.println("\tTotal memory parsed:        " + MathUtils.format(totalKb) + " kB");
+    System.out.println("\tAverage parse time per kB:  " + MathUtils.format(msPerKb) + " ms");
 
-  }
-
-  private static void clearStats() {
-    sumTime = 0;
-    sumChars = 0;
-    numParsed = 0;
   }
 
 }

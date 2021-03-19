@@ -18,19 +18,33 @@ public class FunctionOperation extends Operand {
     return operator;
   }
 
-  @Override public Type getType() {
+  @Override
+  public Type getType() {
     return Type.FUNCTION;
   }
 
-  @Override protected Operand shallowCopy() {
+  @Override
+  public Operand evaluate() {
+    return operator.evaluate(getChild(0));
+  }
+
+  @Override
+  public boolean canEvaluate() {
+    return operator.canEvaluate(getChild(0));
+  }
+
+  @Override
+  protected Operand shallowCopy() {
     return new FunctionOperation(operator);
   }
 
-  @Override public String toString() {
-    return operator.getName() + (getChild(0).isScalar() ? "(" + getChild(0) + ")" : getChild(0));
+  @Override
+  public int hashCode() {
+    return childrenHashCode();
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
 
     if (o instanceof FunctionOperation) {
 
@@ -44,15 +58,9 @@ public class FunctionOperation extends Operand {
 
   }
 
-  @Override public int hashCode() {
-    return childrenHashCode();
+  @Override
+  public String toString() {
+    return operator.getName() + (getChild(0).isScalar() ? "(" + getChild(0) + ")" : getChild(0));
   }
 
-  @Override public boolean canEvaluate() {
-    return operator.canEvaluate(getChild(0));
-  }
-
-  @Override public Operand evaluate() {
-    return operator.evaluate(getChild(0));
-  }
 }

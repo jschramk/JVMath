@@ -22,7 +22,8 @@ public class Step<T> {
     return description;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
 
     if (description != null) {
       return description + "\n" + replace;

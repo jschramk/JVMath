@@ -21,27 +21,26 @@ public class Constant extends Literal {
 
   }
 
-  public static Constant pi() {
-    return new Constant("π", Math.PI);
-  }
-
   public static Constant e() {
     return new Constant("e", Math.E);
   }
 
-  @Override public Type getType() {
-    return Type.CONSTANT;
+  public static Constant pi() {
+    return new Constant("π", Math.PI);
   }
 
-  @Override protected Operand shallowCopy() {
+  @Override
+  protected Operand shallowCopy() {
     return new Constant(displayName, getValue());
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return displayName;
   }
 
-  @Override public boolean equals(Object o) {
+  @Override
+  public boolean equals(Object o) {
     if (!(o instanceof Operand)) {
       return false;
     }
@@ -55,6 +54,11 @@ public class Constant extends Literal {
     Constant constant = (Constant) operand;
 
     return constant.value == value && constant.displayName.equals(displayName);
+  }
+
+  @Override
+  public Type getType() {
+    return Type.CONSTANT;
   }
 
   /*@Override public Operand evaluate() {

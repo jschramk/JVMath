@@ -52,6 +52,23 @@ public class FunctionDomain {
 
   }
 
+  private void addCategory(String name) {
+    categoryList.add(name);
+  }
+
+  private void put(String category, FunctionOperator operator) {
+    if (category == null) {
+      general.add(operator.getName());
+    } else {
+      if (!categories.containsKey(category)) {
+        categories.put(category, new ArrayList<>());
+      }
+      categories.get(category).add(operator.getName());
+    }
+    functionOperators.put(operator.getName(), operator);
+    allFunctions.add(operator.getName());
+  }
+
   public void print() {
     if (!getCommonFunctions().isEmpty()) {
 
@@ -91,11 +108,8 @@ public class FunctionDomain {
     }
   }
 
-  public List<String> getDescriptions(String name) {
-    if (!functionOperators.containsKey(name)) {
-      throw new IllegalArgumentException("Unknown function: " + name);
-    }
-    return functionOperators.get(name).getDescriptions();
+  public List<String> getCommonFunctions() {
+    return general;
   }
 
   public boolean hasDescriptions(String name) {
@@ -105,12 +119,15 @@ public class FunctionDomain {
     return functionOperators.get(name).getDescriptions() != null;
   }
 
-  public List<String> getCategories() {
-    return categoryList;
+  public List<String> getDescriptions(String name) {
+    if (!functionOperators.containsKey(name)) {
+      throw new IllegalArgumentException("Unknown function: " + name);
+    }
+    return functionOperators.get(name).getDescriptions();
   }
 
-  public List<String> getCommonFunctions() {
-    return general;
+  public List<String> getCategories() {
+    return categoryList;
   }
 
   public List<String> getFunctionsInCategory(String name) {
@@ -120,25 +137,8 @@ public class FunctionDomain {
     return categories.get(name);
   }
 
-  private void addCategory(String name) {
-    categoryList.add(name);
-  }
-
   private void put(FunctionOperator operator) {
     put(null, operator);
-  }
-
-  private void put(String category, FunctionOperator operator) {
-    if (category == null) {
-      general.add(operator.getName());
-    } else {
-      if (!categories.containsKey(category)) {
-        categories.put(category, new ArrayList<>());
-      }
-      categories.get(category).add(operator.getName());
-    }
-    functionOperators.put(operator.getName(), operator);
-    allFunctions.add(operator.getName());
   }
 
   public Set<String> getAllFunctions() {

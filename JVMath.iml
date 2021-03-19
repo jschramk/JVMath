@@ -9,10 +9,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Lexer-Generator" level="project" />
     <orderEntry type="library" name="com.google.code.gson:gson:2.8.6" level="project" />
-    <orderEntry type="library" name="MathUtils" level="project" />
-    <orderEntry type="library" name="jschramk-data-structures-lib" level="project" />
-    <orderEntry type="library" name="jschramk-utils-lib" level="project" />
+    <orderEntry type="library" name="JVMath-dependencies" level="project" />
+    <orderEntry type="library" name="org.antlr:antlr4-runtime:4.9" level="project" />
   </component>
 </module>

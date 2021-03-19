@@ -3,11 +3,11 @@
     <output-path>$PROJECT_DIR$/out/artifacts/JVMath</output-path>
     <root id="archive" name="JVMath.jar">
       <element id="module-output" name="JVMath" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../Lexer-Generator/out/artifacts/Lexer_Generator_jar/Lexer-Generator.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/google/code/gson/gson/2.8.6/gson-2.8.6.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../MathUtils/out/artifacts/MathUtils/MathUtils.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../jschramk-data-structures-lib/out/artifacts/jschramk_data_structures_lib_jar/jschramk-data-structures-lib.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../jschramk-utils-lib/out/artifacts/jschramk_utils_lib_jar/jschramk-utils-lib.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Java/Projects/1/jschramk-data-structures-lib/out/artifacts/jschramk_data_structures_lib_jar/jschramk-data-structures-lib.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Java/Projects/1/Lexer-Generator/out/artifacts/Lexer_Generator_jar/Lexer-Generator.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Java/Projects/1/MathUtils/out/artifacts/MathUtils/MathUtils.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../../../Java/Projects/1/jschramk-utils-lib/out/artifacts/jschramk_utils_lib_jar/jschramk-utils-lib.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

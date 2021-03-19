@@ -15,11 +15,18 @@ public class Knowns {
   public static boolean sameVariables(Knowns k1, Knowns k2) {
     for (Operand known : k1.generalMappings.keySet()) {
       if (known instanceof Variable && k2.hasGeneralMapping(known)) {
-        if (!k1.getGeneralMapping(known).equals(k2.getGeneralMapping(known)))
-          return false;
+        if (!k1.getGeneralMapping(known).equals(k2.getGeneralMapping(known))) return false;
       }
     }
     return true;
+  }
+
+  public boolean hasGeneralMapping(Operand operand) {
+    return generalMappings.containsKey(operand);
+  }
+
+  public Operand getGeneralMapping(Operand operand) {
+    return generalMappings.get(operand);
   }
 
   public static Knowns combine(Knowns k1, Knowns k2) {
@@ -33,16 +40,8 @@ public class Knowns {
     return result;
   }
 
-  public boolean hasGeneralMapping(Operand operand) {
-    return generalMappings.containsKey(operand);
-  }
-
   public boolean hasInstanceMapping(Operand operand) {
     return instanceMappings.containsKey(operand.getId());
-  }
-
-  public Operand getGeneralMapping(Operand operand) {
-    return generalMappings.get(operand);
   }
 
   public Operand getInstanceMapping(Operand operand) {
@@ -67,6 +66,31 @@ public class Knowns {
     }
   }
 
+  public Set<Integer> getUsedIds() {
+    return usedIds;
+  }
+
+  public Set<Integer> getMappedIds() {
+    return instanceMappings.keySet();
+  }
+
+  @Override
+  public String toString() {
+    return instanceMappings.toString();
+  }
+
+  public VariableDomain toVariableDomain() {
+
+    VariableDomain variableDomain = new VariableDomain();
+
+    for (String s : getVariables().keySet()) {
+      variableDomain.put(s, getVariables().get(s));
+    }
+
+    return variableDomain;
+
+  }
+
   public Map<String, Operand> getVariables() {
 
     Map<String, Operand> variables = new HashMap<>();
@@ -80,30 +104,6 @@ public class Knowns {
     }
 
     return variables;
-
-  }
-
-  public Set<Integer> getUsedIds() {
-    return usedIds;
-  }
-
-  public Set<Integer> getMappedIds() {
-    return instanceMappings.keySet();
-  }
-
-  @Override public String toString() {
-    return instanceMappings.toString();
-  }
-
-  public VariableDomain toVariableDomain() {
-
-    VariableDomain variableDomain = new VariableDomain();
-
-    for (String s : getVariables().keySet()) {
-      variableDomain.put(s, getVariables().get(s));
-    }
-
-    return variableDomain;
 
   }
 

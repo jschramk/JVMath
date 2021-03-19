@@ -7,14 +7,13 @@ import com.google.gson.JsonParser;
 import com.jschramk.JVMath.exceptions.ParserException;
 import com.jschramk.JVMath.parse.Parser;
 import com.jschramk.JVMath.rewrite_engine.Requirement;
+import com.jschramk.JVMath.rewrite_engine.Requirements;
 import com.jschramk.JVMath.rewrite_engine.Step;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Rule<T> {
 
@@ -28,7 +27,7 @@ public class Rule<T> {
   private final List<Step<T>> steps = new ArrayList<>();
   private T find;
   private int id = -1, nextId = -1;
-  private Map<String, Requirement> requirements = new HashMap<>();
+  private Requirements requirements;
 
   public Rule(T find) {
     this.find = find;
@@ -39,28 +38,6 @@ public class Rule<T> {
     List<Rule<String>> rules = new ArrayList<>();
     for (JsonElement element : array) {
       rules.add(fromJson((JsonObject) element));
-    }
-    return rules;
-  }
-
-  public static <T> Rule<T> convertRule(Parser parser, Rule<String> stringRule, Class<T> type)
-      throws ParserException {
-    T find = parser.parse(stringRule.find, type);
-    Rule<T> rule = new Rule<>(find);
-    for (Step<String> step : stringRule.steps) {
-      rule.step(parser.parse(step.getReplace(), type), step.getDescription());
-    }
-    rule.requirements = stringRule.requirements;
-    rule.id = stringRule.id;
-    rule.nextId = stringRule.nextId;
-    return rule;
-  }
-
-  public static <T> List<Rule<T>> convertRules(Parser parser, List<Rule<String>> stringRules,
-      Class<T> type) throws ParserException {
-    List<Rule<T>> rules = new ArrayList<>();
-    for (Rule<String> stringRule : stringRules) {
-      rules.add(convertRule(parser, stringRule, type));
     }
     return rules;
   }
@@ -119,6 +96,47 @@ public class Rule<T> {
 
   }
 
+  public Rule<T> step(Step<T> step) {
+    steps.add(step);
+    return this;
+  }
+
+  public Rule<T> require(Requirement requirement) {
+    if (requirements == null) {
+      requirements = new Requirements();
+    }
+    requirements.add(requirement);
+    return this;
+  }
+
+  public static <T> List<Rule<T>> convertRules(
+    Parser parser, List<Rule<String>> stringRules, Class<T> type
+  ) throws ParserException {
+    List<Rule<T>> rules = new ArrayList<>();
+    for (Rule<String> stringRule : stringRules) {
+      rules.add(convertRule(parser, stringRule, type));
+    }
+    return rules;
+  }
+
+  public static <T> Rule<T> convertRule(Parser parser, Rule<String> stringRule, Class<T> type)
+    throws ParserException {
+    T find = parser.parse(stringRule.find, type);
+    Rule<T> rule = new Rule<>(find);
+    for (Step<String> step : stringRule.steps) {
+      rule.step(parser.parse(step.getReplace(), type), step.getDescription());
+    }
+    rule.requirements = stringRule.requirements;
+    rule.id = stringRule.id;
+    rule.nextId = stringRule.nextId;
+    return rule;
+  }
+
+  public Rule<T> step(T replace, String description) {
+    steps.add(new Step<>(replace, description));
+    return this;
+  }
+
   public Class<?> getType() {
     return find.getClass();
   }
@@ -143,24 +161,8 @@ public class Rule<T> {
     this.nextId = nextId;
   }
 
-  public Rule<T> step(Step<T> step) {
-    steps.add(step);
-    return this;
-  }
-
   public Rule<T> step(T replace) {
     return step(replace, null);
-  }
-
-  public Rule<T> step(T replace, String description) {
-    steps.add(new Step<>(replace, description));
-    return this;
-  }
-
-  public Rule<T> require(Requirement requirement) {
-    assert !requirements.containsKey(requirement.getVariable());
-    requirements.put(requirement.getVariable(), requirement);
-    return this;
   }
 
   public List<Step<T>> getSteps() {
@@ -179,42 +181,8 @@ public class Rule<T> {
     return find;
   }
 
-  public Map<String, Requirement> getRequirements() {
+  public Requirements getRequirements() {
     return requirements;
   }
-
-  @Override public String toString() {
-
-    StringBuilder s = new StringBuilder();
-
-    s.append("Start: ");
-    s.append(find);
-    s.append('\n');
-
-    for (Step<T> step : steps) {
-
-      s.append(step);
-      s.append('\n');
-
-    }
-
-    if (!requirements.isEmpty()) {
-
-      s.append("Requirements: \n");
-
-      for (Map.Entry<String, Requirement> entry : requirements.entrySet()) {
-
-        s.append(entry.getValue());
-        s.append('\n');
-
-      }
-
-    }
-
-    return s.toString();
-
-  }
-
-
 
 }

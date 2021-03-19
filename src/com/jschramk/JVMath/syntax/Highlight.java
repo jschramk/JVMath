@@ -31,6 +31,10 @@ public class Highlight {
     return sectionsIn(input, "${", "}$");
   }
 
+  public String getString() {
+    return string;
+  }
+
   private static List<Highlight> sectionsIn(String input, String start, String end) {
 
     List<Highlight> sections = new ArrayList<>();
@@ -43,8 +47,7 @@ public class Highlight {
 
       int startPos = input.indexOf(start, last);
 
-      if (startPos == -1)
-        break;
+      if (startPos == -1) break;
 
       sub = input.substring(last, startPos);
 
@@ -54,8 +57,7 @@ public class Highlight {
 
       int endPos = input.indexOf(end, startPos);
 
-      if (endPos == -1)
-        break;
+      if (endPos == -1) break;
 
       last = endPos + end.length();
 
@@ -77,17 +79,13 @@ public class Highlight {
 
   }
 
-  public String getString() {
-    return string;
-  }
-
   public boolean shouldHighlight() {
     return highlight;
   }
 
-  @Override public String toString() {
+  @Override
+  public String toString() {
     return "\"" + string + "\": " + highlight;
   }
-
 
 }

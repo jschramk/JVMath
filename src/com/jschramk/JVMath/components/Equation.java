@@ -23,6 +23,14 @@ public class Equation {
     return new Equation(getLeftSide().fixedCopy(), getRightSide().fixedCopy());
   }
 
+  public Operand getLeftSide() {
+    return leftSide;
+  }
+
+  public Operand getRightSide() {
+    return rightSide;
+  }
+
   public void fixTree() {
     leftSide.fixTree();
     rightSide.fixTree();
@@ -30,6 +38,18 @@ public class Equation {
 
   public int variableCount(String name) {
     return leftSide.variableCount(name) + rightSide.variableCount(name);
+  }
+
+  public boolean isSolvedFor(String variable) {
+
+    if (!isSolved()) {
+      return false;
+    }
+
+    Variable var = (Variable) leftSide;
+
+    return var.getName().equals(variable);
+
   }
 
   public boolean isSolved() {
@@ -48,26 +68,6 @@ public class Equation {
 
   }
 
-  public boolean isSolvedFor(String variable) {
-
-    if (!isSolved()) {
-      return false;
-    }
-
-    Variable var = (Variable) leftSide;
-
-    return var.getName().equals(variable);
-
-  }
-
-  public Operand getLeftSide() {
-    return leftSide;
-  }
-
-  public Operand getRightSide() {
-    return rightSide;
-  }
-
   public Equation reversed() {
     return new Equation(rightSide, leftSide);
   }
@@ -83,26 +83,30 @@ public class Equation {
     return variables;
   }
 
-  @Override public boolean equals(Object o) {
-
-    if (this == o)
-      return true;
-    if (!(o instanceof Equation))
-      return false;
-    Equation equation = (Equation) o;
-    return Objects.equals(leftSide, equation.leftSide) && Objects
-        .equals(rightSide, equation.rightSide);
-  }
-
-  @Override public int hashCode() {
+  @Override
+  public int hashCode() {
     return Objects.hash(leftSide, rightSide);
   }
 
-  @Override public String toString() {
+  @Override
+  public boolean equals(Object o) {
+
+    if (this == o) return true;
+    if (!(o instanceof Equation)) return false;
+    Equation equation = (Equation) o;
+    return Objects.equals(leftSide, equation.leftSide) && Objects.equals(
+      rightSide,
+      equation.rightSide
+    );
+  }
+
+  @Override
+  public String toString() {
     return leftSide + " = " + rightSide;
   }
 
   public String toLaTex() {
     return leftSide.toLaTeX() + " = " + rightSide.toLaTeX();
   }
+
 }

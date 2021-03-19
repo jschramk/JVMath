@@ -105,30 +105,6 @@ public class RuleProcessor {
 
   }
 
-  private static void startTopClass() {
-    classStringBuilder.append("package com.jschramk.JVMath.rewrite_resources").append(';');
-    classStringBuilder.append("public class ").append("RuleId");
-  }
-
-  private static void startClassDef() {
-    classStringBuilder.append('{');
-  }
-
-  private static void endClassDef() {
-    classStringBuilder.append('}');
-  }
-
-  private static void startSubclass(String name) {
-    classStringBuilder.append("public static class ").append(name);
-  }
-
-  private static void addMap(Map<String, Integer> map) {
-    for (Map.Entry<String, Integer> entry : map.entrySet()) {
-      classStringBuilder.append("public static final int ").append(entry.getKey()).append(" = ")
-          .append(entry.getValue()).append(";");
-    }
-  }
-
   private static void editJsonArray(JsonArray array, Parser parser) throws ParserException {
 
     for (JsonElement element : array) {
@@ -173,9 +149,7 @@ public class RuleProcessor {
 
         if (!object1.has("description") && r.is(Equation.class)) {
 
-          System.out.println(
-              "WARNING: No description for find: \"" + find + "\", step replace \"" + replace
-                  + "\"");
+          System.out.println("WARNING: No description for find: \"" + find + "\", step replace \"" + replace + "\"");
 
         }
 
@@ -203,6 +177,33 @@ public class RuleProcessor {
 
     }
 
+  }
+
+  private static void startTopClass() {
+    classStringBuilder.append("package com.jschramk.JVMath.rewrite_resources").append(';');
+    classStringBuilder.append("public class ").append("RuleId");
+  }
+
+  private static void startClassDef() {
+    classStringBuilder.append('{');
+  }
+
+  private static void startSubclass(String name) {
+    classStringBuilder.append("public static class ").append(name);
+  }
+
+  private static void addMap(Map<String, Integer> map) {
+    for (Map.Entry<String, Integer> entry : map.entrySet()) {
+      classStringBuilder.append("public static final int ")
+        .append(entry.getKey())
+        .append(" = ")
+        .append(entry.getValue())
+        .append(";");
+    }
+  }
+
+  private static void endClassDef() {
+    classStringBuilder.append('}');
   }
 
 }

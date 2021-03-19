@@ -1,46 +1,54 @@
 package com.jschramk.JVMath.rewrite_engine;
 
 import com.jschramk.JVMath.components.BinaryOperation;
-import com.jschramk.JVMath.components.BinaryOperator;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.components.Variable;
+import util.PerformanceTimer;
+import util.PrettyPrinter;
 
 import java.util.*;
 
 public class Unknowns {
 
-  private static final int UNKNOWN_MAP_INITIAL_CAPACITY = 10;
-  private static final float UNKNOWN_MAP_LOAD_FACTOR = 0.8f;
+  private static final PerformanceTimer timer = new PerformanceTimer();
 
   private static final int MAX_ITERATIONS = 20;
   private final Map<Operand, Choices> unknownMap = new HashMap<>();
+  private final Knowns knowns;
+  private final Assigner assigner;
 
-  // returns true if all operands in the collection are he same (not the same instance)
-  private static boolean allSameOperand(Collection<Operand> operands) {
+  public Unknowns(Knowns knowns) {
+    this.knowns = knowns;
+    this.assigner = new Assigner(knowns, this);
+  }
+
+  // returns true if all operands in the collection are the same (not the same instance)
+  private static boolean isMultipleSameOperand(Collection<Operand> operands) {
+
+    if (operands.size() < 2) {
+      return false;
+    }
+
     Iterator<Operand> iterator = operands.iterator();
     Operand first = iterator.next();
+
     while (iterator.hasNext()) {
+
       if (!iterator.next().equals(first)) {
+
         return false;
+
       }
+
     }
+
     return true;
+
   }
 
   // returns true if the collection is a single variable
-  private static boolean singleVariable(Collection<Operand> operands) {
+  private static boolean isSingleVariable(Collection<Operand> operands) {
     return operands.size() == 1 && operands.iterator().next() instanceof Variable;
-  }
-
-  public void add(Operand unknown, Operand... choices) {
-    Choices u;
-    if (unknownMap.containsKey(unknown)) {
-      u = unknownMap.get(unknown);
-    } else {
-      u = new Choices();
-      unknownMap.put(unknown, u);
-    }
-    u.add(unknown, choices);
   }
 
   public void remove(Operand unknown, Operand choice) {
@@ -51,14 +59,70 @@ public class Unknowns {
 
     } else {
 
-      // TODO: figure out why this is crucial
+      // this is crucial because it allows the mapping to fail in some cases, while still
+      // allowing it to pass if another choice is added later
       add(unknown);
 
     }
 
   }
 
-  public void removeKnown(Knowns knowns) {
+  public void add(Operand unknown, Operand... possibleMappings) {
+
+    Choices choices;
+
+    if (unknownMap.containsKey(unknown)) {
+
+      choices = unknownMap.get(unknown);
+
+    } else {
+
+      choices = new Choices();
+
+      unknownMap.put(unknown, choices);
+
+    }
+
+    choices.add(unknown, possibleMappings);
+  }
+
+  // returns false if mapping is impossible
+  public boolean mapAll() {
+
+    for (int i = 0; i < MAX_ITERATIONS; i++) {
+
+      removeKnown();
+      removeUsed();
+      removeImpossible();
+      applyFilters();
+
+      if (timer.ms() > 1) {
+        timer.printDelta("filters:");
+      }
+
+      if (isEmpty()) {
+        break;
+      }
+
+      if (!assigner.assignNext()) {
+        return false;
+      }
+
+    }
+
+    if (!isEmpty()) {
+      throw new RuntimeException("Unable to compute or reject mapping within iteration limit");
+    }
+
+    if (timer.ms() > 1) {
+      timer.printDelta("mapping accepted:");
+    }
+
+    return true;
+
+  }
+
+  public void removeKnown() {
 
     Iterator<Map.Entry<Operand, Choices>> iterator = unknownMap.entrySet().iterator();
 
@@ -73,15 +137,16 @@ public class Unknowns {
       }
 
     }
+
   }
 
-  public void removeUsed(Knowns knowns) {
+  public void removeUsed() {
     for (Map.Entry<Operand, Choices> entry : unknownMap.entrySet()) {
       entry.getValue().removeUsed(knowns.getUsedIds());
     }
   }
 
-  public void removeImpossible(Knowns knowns) {
+  public void removeImpossible() {
 
     for (Map.Entry<Operand, Choices> entry : unknownMap.entrySet()) {
 
@@ -92,35 +157,13 @@ public class Unknowns {
 
         instance.getValue().removeIf(choice -> {
 
-          boolean knownMismatch =
-              knowns.hasGeneralMapping(unknown) && !knowns.getGeneralMapping(unknown)
-                  .equals(choice);
+          boolean c1 = notEqualToGeneralKnown(choice, unknown);
 
-          Operand parent = unknown.getParent();
+          boolean c2 = notChildOfKnownParent(choice, unknown);
 
-          boolean notChildOfParent = parent != null && knowns.hasInstanceMapping(parent) && !knowns
-              .getInstanceMapping(parent).hasChildInstance(choice);
+          boolean c3 = notParentOfKnownChild(choice, unknown);
 
-          boolean notParentOfChild = false;
-
-          if (unknown.hasChildren()) {
-
-            for (Operand child : unknown) {
-
-              if (knowns.hasInstanceMapping(child) && !choice
-                  .hasChildInstance(knowns.getInstanceMapping(child))) {
-
-                notParentOfChild = true;
-
-                break;
-
-              }
-
-            }
-
-          }
-
-          return knownMismatch || notChildOfParent || notParentOfChild;
+          return c1 || c2 || c3;
 
         });
 
@@ -136,226 +179,77 @@ public class Unknowns {
     }
   }
 
-  // returns false iff mapping is impossible
-  public boolean makeNextChoice(Knowns knowns) {
-
-    Map<OperandSet, OperandSet> choicesToUnknowns = new HashMap<>();
-
-    for (Map.Entry<Operand, Choices> unknownEntry : unknownMap.entrySet()) {
-
-      Choices operandChoices = unknownEntry.getValue();
-
-      for (Map.Entry<Integer, OperandSet> choicesEntry : operandChoices.instanceChoices
-          .entrySet()) {
-
-        Operand instance = operandChoices.getInstance(choicesEntry.getKey());
-        OperandSet instanceChoices = choicesEntry.getValue();
-
-        if (!choicesToUnknowns.containsKey(instanceChoices)) {
-          choicesToUnknowns.put(instanceChoices, new OperandSet());
-        }
-
-        choicesToUnknowns.get(instanceChoices).add(instance);
-
-      }
-
-    }
-
-    OperandSet key = null;
-    int minLevelNumber = Integer.MAX_VALUE;
-    int minSizeDiff = Integer.MAX_VALUE;
-
-    for (Map.Entry<OperandSet, OperandSet> entry : choicesToUnknowns.entrySet()) {
-
-      int diff = entry.getKey().size() - entry.getValue().size();
-
-      // if there are more unknowns than there are choices, return false
-      if (diff < 0) {
-        return false;
-      }
-
-      if (entry.getKey().size() == 1 && entry.getValue().size() == 1) {
-
-        // only one choice, do this next
-        key = entry.getKey();
-
-        break;
-
-      } else if (singleVariable(entry.getValue()) && key == null) {
-
-        // there is just one unknown and it is a variable, take note and keep looking
-        key = entry.getKey();
-
-      } else if (allSameOperand(entry.getValue()) && entry.getValue().size() > 1) {
-
-        key = entry.getKey();
-
-        break;
-
-      } else if (diff < minSizeDiff) {
-
-        minSizeDiff = diff;
-        key = entry.getKey();
-
-        for (Operand unknown : entry.getValue()) {
-          if (unknown.getLevel() < minLevelNumber) {
-            minLevelNumber = unknown.getLevel();
-          }
-        }
-
-      } else if (diff == minSizeDiff) {
-
-        for (Operand unknown : entry.getValue()) {
-
-          if (unknown.getLevel() < minLevelNumber) {
-            minLevelNumber = unknown.getLevel();
-            key = entry.getKey();
-          }
-
-        }
-
-      }
-
-    }
-
-    if (key == null) {
-      throw new RuntimeException("null key");
-    }
-
-    if (key.isEmpty()) {
-
-      System.out.println("empty key");
-
-      return false;
-    }
-
-    List<Operand> choiceList = new ArrayList<>(key);
-    List<Operand> assignList = new ArrayList<>(choicesToUnknowns.get(key));
-
-    if (assignList.size() > choiceList.size()) {
-      return true;
-    }
-
-    boolean sameOperand = allSameOperand(assignList) && assignList.size() > 1;
-
-    if (sameOperand) {
-      Operand choice = choiceList.get(0);
-      choiceList.removeIf(operand -> !operand.equals(choice));
-    }
-
-    for (int i = 0; i < assignList.size(); i++) {
-
-      if (i == assignList.size() - 1) {
-
-        if (choiceList.size() == assignList.size() || sameOperand) {
-          knowns.putMapping(assignList.get(i), choiceList.get(i));
-        } else {
-
-          int end = choiceList.size();
-          int start = assignList.size() - 1;
-
-          Operand assign = assignList.get(i);
-
-          List<Operand> leftover = choiceList.subList(start, end);
-
-          if (!Operand.sameParent(leftover)) {
-            knowns.putMapping(assignList.get(i), choiceList.get(i));
-            continue;
-          }
-
-          Operand.Type parentType = leftover.get(0).getParent().getType();
-
-          Operand parent = leftover.get(0).getParent();
-
-          if (assign.getType() != parentType && assign.getType() != Operand.Type.VARIABLE) {
-            knowns.putMapping(assign, choiceList.get(i));
-            continue;
-          }
-
-          if (parent instanceof BinaryOperation
-              && ((BinaryOperation) parent).getOperator().getAssociativity()
-              == BinaryOperator.Associativity.COMMUTATIVE) {
-
-            Operand operation =
-                new BinaryOperation(((BinaryOperation) parent).getOperator(), leftover);
-
-            knowns.putMapping(assignList.get(i), operation);
-            knowns.addUsed(leftover);
-
-          } else {
-            throw new IllegalArgumentException("Could not create sub-operation");
-          }
-
-        }
-
-      } else {
-
-        knowns.putMapping(assignList.get(i), choiceList.get(i));
-
-      }
-
-    }
-
-    return true;
-
-  }
-
   public boolean isEmpty() {
     return unknownMap.isEmpty();
   }
 
-  // returns false iff mapping is impossible
-  public boolean mapAll(Knowns knowns) {
+  private boolean notEqualToGeneralKnown(Operand choice, Operand unknown) {
 
-    for (int i = 0; i < MAX_ITERATIONS; i++) {
+    if (!knowns.hasGeneralMapping(unknown)) {
+      return false;
+    }
 
-      removeKnown(knowns);
-      removeUsed(knowns);
-      removeImpossible(knowns);
-      applyFilters();
+    return !knowns.getGeneralMapping(unknown).equals(choice);
+  }
 
-      if (isEmpty()) {
-        break;
-      }
+  private boolean notChildOfKnownParent(Operand choice, Operand unknown) {
 
-      if (!makeNextChoice(knowns)) {
-        return false;
+    Operand parent = unknown.getParent();
+
+    if (parent == null) {
+      return false;
+    }
+
+    if (!knowns.hasInstanceMapping(parent)) {
+      return false;
+    }
+
+    return !knowns.getInstanceMapping(parent).hasChildInstance(choice);
+  }
+
+  private boolean notParentOfKnownChild(Operand choice, Operand unknown) {
+
+    if (unknown.hasChildren()) {
+
+      for (Operand child : unknown) {
+
+        if (!knowns.hasInstanceMapping(child)) {
+          continue;
+        }
+
+        if (!choice.hasChildInstance(knowns.getInstanceMapping(child))) {
+          return true;
+        }
+
       }
 
     }
 
-    if (!isEmpty()) {
-      throw new RuntimeException("Unable to compute or reject mapping within iteration limit");
-    }
-
-    return true;
+    return false;
 
   }
+
+
 
   // class that represents a single operand's possible mappings
   private static class Choices {
 
     // map of each instance of the operand for this unknown mapped to another map of the possible
     // choices keyed on ID
-    private final Map<Integer, OperandSet> instanceChoices =
-        new HashMap<>(UNKNOWN_MAP_INITIAL_CAPACITY, UNKNOWN_MAP_LOAD_FACTOR);
+    private final Map<Integer, OperandSet> instanceChoices = new HashMap<>(10, 0.8f);
 
     private final Map<Integer, Operand> idsToOperands = new HashMap<>();
-
-    public boolean containsInstance(Operand operand) {
-      return instanceChoices.containsKey(operand.getId());
-    }
-
-    public Operand getInstance(int id) {
-      return idsToOperands.get(id);
-    }
 
     public void removeChoice(Operand instance, Operand choice) {
       if (containsInstance(instance)) {
         // TODO: check if should compare operand itself rather than ID
         instanceChoices.get(instance.getId())
-            .removeIf(operand -> operand.getId() == choice.getId());
+          .removeIf(operand -> operand.getId() == choice.getId());
       }
+    }
+
+    public boolean containsInstance(Operand operand) {
+      return instanceChoices.containsKey(operand.getId());
     }
 
     public boolean isEmpty() {
@@ -374,7 +268,7 @@ public class Unknowns {
 
     public void removeKnown(Collection<Integer> ids) {
       instanceChoices.entrySet()
-          .removeIf(integerOperandSetEntry -> ids.contains(integerOperandSetEntry.getKey()));
+        .removeIf(integerOperandSetEntry -> ids.contains(integerOperandSetEntry.getKey()));
     }
 
     public void add(Operand instance, Operand... choices) {
@@ -402,7 +296,8 @@ public class Unknowns {
 
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
       StringBuilder s = new StringBuilder();
 
       for (Map.Entry<Integer, OperandSet> entry : instanceChoices.entrySet()) {
@@ -418,6 +313,10 @@ public class Unknowns {
       }
 
       return s.toString();
+    }
+
+    public Operand getInstance(int id) {
+      return idsToOperands.get(id);
     }
 
     // removes all impossible mappings based on the set difference of all choices for this operand
@@ -487,6 +386,235 @@ public class Unknowns {
         });
 
       }
+
+    }
+
+  }
+
+
+
+  // class that represents a set of choices that must be mapped to a set of unknowns
+  private static class Assigner {
+
+    private Knowns knowns;
+    private Unknowns unknowns;
+    private Map<OperandSet, OperandSet> map = new HashMap<>(10, 0.8f);
+
+    private Assigner(Knowns knowns, Unknowns unknowns) {
+      this.knowns = knowns;
+      this.unknowns = unknowns;
+      reset();
+    }
+
+    private void reset() {
+
+      map.clear();
+
+      for (Map.Entry<Operand, Choices> unknownEntry : unknowns.unknownMap.entrySet()) {
+
+        Choices operandChoices = unknownEntry.getValue();
+
+        for (Map.Entry<Integer, OperandSet> choicesEntry : operandChoices.instanceChoices.entrySet()) {
+
+          Operand instance = operandChoices.getInstance(choicesEntry.getKey());
+          OperandSet instanceChoices = choicesEntry.getValue();
+
+          if (!map.containsKey(instanceChoices)) {
+            map.put(instanceChoices, new OperandSet());
+          }
+
+          map.get(instanceChoices).add(instance);
+
+        }
+
+      }
+
+    }
+
+    // returns false if mapping is impossible
+    private boolean assignNext() {
+
+      reset();
+
+      //System.out.println(this);
+      //System.out.println();
+
+      OperandSet key = chooseNextMappingKey();
+
+      if (key == null || key.isEmpty()) {
+        return false;
+      }
+
+      List<Operand> choiceList = new ArrayList<>(key);
+      List<Operand> assignList = new ArrayList<>(map.get(key));
+
+      if (assignList.size() > choiceList.size()) {
+        return true;
+      }
+
+      assign(choiceList, assignList);
+
+      return true;
+
+    }
+
+    private OperandSet chooseNextMappingKey() {
+
+      OperandSet key = null;
+      int minLevelNumber = Integer.MAX_VALUE;
+      int minSizeDiff = Integer.MAX_VALUE;
+
+      for (Map.Entry<OperandSet, OperandSet> entry : map.entrySet()) {
+
+        OperandSet choices = entry.getKey();
+        OperandSet unknowns = entry.getValue();
+
+        int diff = entry.getKey().size() - entry.getValue().size();
+
+        // if there are more unknowns than there are choices, return null
+        if (diff < 0) {
+          return null;
+        }
+
+        if (choices.size() == 1 && unknowns.size() == 1) {
+
+          // only one choice, do this next
+          key = entry.getKey();
+
+          break;
+
+        } else if (isSingleVariable(unknowns) && key == null) {
+
+          // there is just one unknown and it is a variable, take note and keep looking
+          key = choices;
+
+        } else if (isMultipleSameOperand(unknowns)) {
+
+          //
+          key = entry.getKey();
+
+          break;
+
+        } else if (diff < minSizeDiff) {
+
+          minSizeDiff = diff;
+          key = entry.getKey();
+
+          for (Operand unknown : entry.getValue()) {
+            if (unknown.getLevel() < minLevelNumber) {
+              minLevelNumber = unknown.getLevel();
+            }
+          }
+
+        } else if (diff == minSizeDiff) {
+
+          for (Operand unknown : entry.getValue()) {
+
+            if (unknown.getLevel() < minLevelNumber) {
+              minLevelNumber = unknown.getLevel();
+              key = entry.getKey();
+            }
+
+          }
+
+        }
+
+      }
+
+      if (key == null) {
+        throw new RuntimeException("next mapping key never set");
+      }
+
+      return key;
+
+    }
+
+    private void assign(List<Operand> choiceList, List<Operand> assignList) {
+
+      boolean sameOperand = isMultipleSameOperand(assignList);
+
+      if (sameOperand) {
+        Operand choice = choiceList.get(0);
+        choiceList.removeIf(operand -> !operand.equals(choice));
+      }
+
+      for (int i = 0; i < assignList.size(); i++) {
+
+        if (i == assignList.size() - 1) {
+
+          if (choiceList.size() == assignList.size() || sameOperand) {
+
+            knowns.putMapping(assignList.get(i), choiceList.get(i));
+
+          } else {
+
+            int end = choiceList.size();
+            int start = assignList.size() - 1;
+
+            Operand assign = assignList.get(i);
+
+            List<Operand> leftover = choiceList.subList(start, end);
+
+            if (!Operand.sameParent(leftover)) {
+
+              knowns.putMapping(assignList.get(i), choiceList.get(i));
+
+              continue;
+
+            }
+
+            Operand parent = leftover.get(0).getParent();
+
+            if (!Operand.sameType(assign, parent) && !(assign instanceof Variable)) {
+
+              knowns.putMapping(assign, choiceList.get(i));
+
+              continue;
+
+            }
+
+            if (Operand.isCommutativeBinaryOperation(parent)) {
+
+              BinaryOperation parentOperation = (BinaryOperation) parent;
+
+              Operand operation = new BinaryOperation(parentOperation.getOperator(), leftover);
+
+              knowns.putMapping(assignList.get(i), operation);
+              knowns.addUsed(leftover);
+
+            } else {
+
+              throw new RuntimeException("Could not create sub-operation");
+
+            }
+
+          }
+
+        } else {
+
+          knowns.putMapping(assignList.get(i), choiceList.get(i));
+
+        }
+
+      }
+
+    }
+
+    @Override
+    public String toString() {
+
+      PrettyPrinter p = new PrettyPrinter();
+      p.setSpace(3);
+
+      for (Map.Entry<OperandSet, OperandSet> entry : map.entrySet()) {
+
+        p.row(entry.getKey());
+        p.col("->");
+        p.col(entry.getValue());
+
+      }
+
+      return p.toString();
 
     }
 

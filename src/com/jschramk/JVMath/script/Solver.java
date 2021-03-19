@@ -36,6 +36,11 @@ public class Solver {
 
   }
 
+  public Solver find(Operand operand) {
+    find.add(operand);
+    return this;
+  }
+
   public Solver given(String s) throws ParserException {
 
     if (parser == null) {
@@ -46,11 +51,6 @@ public class Solver {
 
     return this;
 
-  }
-
-  public Solver find(Operand operand) {
-    find.add(operand);
-    return this;
   }
 
   public Solver given(Equation equation) {
@@ -106,8 +106,7 @@ public class Solver {
 
     }
 
-    if (toUse == null)
-      return;
+    if (toUse == null) return;
 
     System.out.println("using " + toUse + " to find " + s);
 

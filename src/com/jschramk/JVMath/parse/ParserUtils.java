@@ -164,13 +164,11 @@ public class ParserUtils {
     for (int i = 0; i < input.size(); i++) {
 
       if (input.get(i) == '(') {
-        if (level == 0)
-          start = i;
+        if (level == 0) start = i;
         level++;
       } else if (input.get(i) == ')') {
         level--;
-        if (level == 0)
-          return new LabeledSegment<>(start, i + 1, null);
+        if (level == 0) return new LabeledSegment<>(start, i + 1, null);
       }
 
     }
@@ -182,7 +180,41 @@ public class ParserUtils {
 
   public enum Label {
 
-    CONSTANT, EXCLAMATION, FACTORIAL, MULTIPLY_NEG_POS, MULTIPLY_NEG_NEG, DIVIDE_NEG_POS, DIVIDE_NEG_NEG, MULTIPLY_NEG_POS_IMPLICIT, SUBTRACT_POS_NEG, SUBTRACT_NEG_POS, ADDITION_POS_NEG, ADDITION_NEG_NEG, ADDITION_NEG_POS, SUBTRACT_NEG_NEG, SUBTRACT_POS_POS, ADDITION_IMPLICIT, LITERAL, VARIABLE, OPERAND, FUNCTION, PLUS, MINUS, TIMES, DIVIDED_BY, TO_THE, FUNCTION_NAME, EXPONENT_POS, EXPONENT_NEG, MULTIPLY_POS_POS, MULTIPLY_POS_NEG, MULTIPLY_POS_POS_IMPLICIT, DIVIDE_POS_POS, DIVIDE_POS_NEG, ADDITION_POS_POS, NEGATION
+    CONSTANT,
+    EXCLAMATION,
+    FACTORIAL,
+    MULTIPLY_NEG_POS,
+    MULTIPLY_NEG_NEG,
+    DIVIDE_NEG_POS,
+    DIVIDE_NEG_NEG,
+    MULTIPLY_NEG_POS_IMPLICIT,
+    SUBTRACT_POS_NEG,
+    SUBTRACT_NEG_POS,
+    ADDITION_POS_NEG,
+    ADDITION_NEG_NEG,
+    ADDITION_NEG_POS,
+    SUBTRACT_NEG_NEG,
+    SUBTRACT_POS_POS,
+    ADDITION_IMPLICIT,
+    LITERAL,
+    VARIABLE,
+    OPERAND,
+    FUNCTION,
+    PLUS,
+    MINUS,
+    TIMES,
+    DIVIDED_BY,
+    TO_THE,
+    FUNCTION_NAME,
+    EXPONENT_POS,
+    EXPONENT_NEG,
+    MULTIPLY_POS_POS,
+    MULTIPLY_POS_NEG,
+    MULTIPLY_POS_POS_IMPLICIT,
+    DIVIDE_POS_POS,
+    DIVIDE_POS_NEG,
+    ADDITION_POS_POS,
+    NEGATION
 
   }
 

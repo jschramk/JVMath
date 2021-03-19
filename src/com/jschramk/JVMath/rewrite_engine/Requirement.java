@@ -5,8 +5,6 @@ import com.jschramk.JVMath.components.Literal;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.rewrite_resources.ExternalRequirements;
 
-import java.util.Map;
-
 public class Requirement {
 
   private static final String EXTERNAL = "external";
@@ -25,7 +23,6 @@ public class Requirement {
   private Double requiredNotValue = null;
   private RequirementChecker checker;
 
-
   private Requirement(String name) {
     this.variable = name;
   }
@@ -42,8 +39,8 @@ public class Requirement {
 
       try {
 
-        requirement.checker =
-            (RequirementChecker) ExternalRequirements.class.getField(name).get(null);
+        requirement.checker = (RequirementChecker) ExternalRequirements.class.getField(name)
+          .get(null);
 
         return requirement;
 
@@ -70,21 +67,6 @@ public class Requirement {
     }
 
     return requirement;
-
-  }
-
-  public static boolean meetsPrerequisites(String variable, String solveVariable, Operand operand,
-      Map<String, Requirement> requirements) {
-
-    if (requirements == null) {
-      return true;
-    }
-
-    if (requirements.containsKey(variable)) {
-      return requirements.get(variable).meetsMatchRequirements(operand, solveVariable);
-    }
-
-    return true;
 
   }
 
@@ -132,22 +114,22 @@ public class Requirement {
     }
 
     if (targetVariable != null && containsTargetVariable != operand.getVariables()
-        .contains(targetVariable)) {
+      .contains(targetVariable)) {
       return false;
     }
 
-    if (operand instanceof Literal && requiredValue != null
-        && operand.computeToDouble() != requiredValue) {
+    if (operand instanceof Literal && requiredValue != null && operand.computeToDouble() != requiredValue) {
       return false;
     }
 
-    return !(operand instanceof Literal) || requiredNotValue == null
-        || operand.computeToDouble() != requiredNotValue;
+    return !(operand instanceof Literal) || requiredNotValue == null || operand.computeToDouble() != requiredNotValue;
 
   }
 
   public interface RequirementChecker {
+
     boolean passes(Operand operand, String targetVariable);
+
   }
 
 }

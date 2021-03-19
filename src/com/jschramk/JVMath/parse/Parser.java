@@ -19,10 +19,10 @@ public abstract class Parser {
     return functionDomain;
   }
 
-  public abstract ParseResult parse(String input) throws ParserException;
-
   public <T> T parse(String input, Class<T> type) throws ParserException {
     return parse(input).to(type);
   }
+
+  public abstract ParseResult parse(String input) throws ParserException;
 
 }

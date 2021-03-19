@@ -519,19 +519,5 @@
         "replace": "a x^(n1 - n2)"
       }
     ]
-  },
-  {
-    "find": "derive(a, x)",
-    "steps": [
-      {
-        "replace": "0"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        ""
-      }
-    ]
   }
 ]
