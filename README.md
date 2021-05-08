@@ -5,8 +5,14 @@ JVMath is a computer algebra system (CAS) for Java. It includes a parser and sup
 
 ### Table of Contents
 [Expression Representation](#expression-representation)
+
 [Expression Storage](#expression-storage)
+
 [Operand Types](#operand-types)
+
+[JSON Representation](#json-representation)
+
+[Example](#example)
 
 ## Expression Representation
 Expressions are internally represented as trees. Evaluation takes place starting from the outermost leaves and ends at the root. Each node in the tree has a certain type, and each type has a relative priority to the other types, allowing for expression trees to be converted to strings without loss of operation hierarchy. Nodes that have a lower priority than their parent must be wrapped by parentheses when concerting the tree to a string.
@@ -38,7 +44,7 @@ Below is an example of an expression in string form and its corresponding JSON r
 ```
 (y + 1) * x^2
 ```
-```
+```json
 {
   "type": 4,
   "children": [
