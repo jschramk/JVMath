@@ -34,7 +34,9 @@ Code|Type
 6|Exponent
 7|Negation
 8|Function
-9|Other
+9|Matrix
+10|Other
+
 
 ## JSON Representation
 JSON representation of expressions is relatively straightforward. Each tree node is represented as a JSON object with fields for its type, its value (if applicable), and its children (if applicable). Nodes that have a value field, such as variables, generally do not have children. Similarly, nodes with children generally do not have a value. Nodes that represent operations act more as containers for other nodes, while nodes that represent variables or literals act as leaves in the tree. In some cases, a value field may accompany a node with children, such as with named functions where the value field contains the function name and the children field contains its arguments.
