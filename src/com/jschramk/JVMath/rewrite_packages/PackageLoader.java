@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RewriteResources {
+public class PackageLoader {
 
 private static Map<String, Object> ruleSets = new HashMap<>();
 private static Map<Integer, Rule<?>> rulesById = new HashMap<>();
@@ -22,10 +22,10 @@ static {
 
     try {
 
-        InputStream simplify = RewriteResources.class.getResourceAsStream(
-            "simplify_processed.json");
-        InputStream solve = RewriteResources.class.getResourceAsStream(
-            "solve_processed.json");
+        InputStream simplify = PackageLoader.class.getResourceAsStream(
+            "simplify.processed.json");
+        InputStream solve = PackageLoader.class.getResourceAsStream(
+            "solve.processed.json");
 
         Parser parser = Parser.getDefault();
 

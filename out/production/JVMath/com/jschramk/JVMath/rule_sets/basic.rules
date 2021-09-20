@@ -5,7 +5,6 @@
 @FLIP
 solve (y = x) {
     x = y : Flip the equation so ${$x}$ is on the left side
-    @ADD_COEFFICIENTS
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -13,7 +12,7 @@ solve (y = x) {
 
 solve (x * a = y) {
     (x * a)/a = y/a : Divide both sides by ${$a}$
-    x = y/a : Cancel ${#a} in the numerator and denominator on the left side
+    x = y/a : Cancel ${$a}S in the numerator and denominator on the left side
 } where {
     x: is f(#target)
     y: not f(#target)

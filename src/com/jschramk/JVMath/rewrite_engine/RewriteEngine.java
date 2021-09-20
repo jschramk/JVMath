@@ -5,7 +5,7 @@ import com.jschramk.JVMath.components.BinaryOperator;
 import com.jschramk.JVMath.components.Equation;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.exceptions.UnsolvableException;
-import com.jschramk.JVMath.rewrite_packages.RewriteResources;
+import com.jschramk.JVMath.rewrite_packages.PackageLoader;
 import com.jschramk.JVMath.rewrite_resources.Rule;
 
 import java.util.ArrayList;
@@ -162,7 +162,7 @@ public class RewriteEngine {
         //TODO: update
         if (appliedThis && rule.hasNext()) {
 
-          Rule<Equation> next = RewriteResources.getRule(rule.getNextId(), Equation.class);
+          Rule<Equation> next = PackageLoader.getRule(rule.getNextId(), Equation.class);
 
           Output<Equation> applied = applyEquationRule(curr, next, solveFor, steps);
 
@@ -236,7 +236,7 @@ public class RewriteEngine {
 
   public static Output<Operand> simplify(Operand operand, String target, boolean steps) {
 
-    List<Rule<Operand>> rules = RewriteResources.getRuleSet("simplify", Operand.class);
+    List<Rule<Operand>> rules = PackageLoader.getRuleSet("simplify", Operand.class);
 
     return applyExpressionRules(operand, rules, true, steps, target);
 
@@ -520,7 +520,7 @@ public class RewriteEngine {
     }
 
     Output<Equation> equationOutput = applyEquationRules(equation,
-      RewriteResources.getRuleSet("solve", Equation.class),
+      PackageLoader.getRuleSet("solve", Equation.class),
       solveFor,
       steps
     );

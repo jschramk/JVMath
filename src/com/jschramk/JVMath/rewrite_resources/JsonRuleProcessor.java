@@ -1,6 +1,7 @@
 package com.jschramk.JVMath.rewrite_resources;
 
 import com.google.gson.*;
+import com.jschramk.JVMath.compile.Compile;
 import com.jschramk.JVMath.components.Equation;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.exceptions.ParserException;
@@ -11,10 +12,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class RuleProcessor {
+public class JsonRuleProcessor {
 
 private static int NEXT_ID = 0;
 
@@ -22,50 +26,60 @@ private static StringBuilder classStringBuilder = new StringBuilder();
 private static Map<String, Integer> operandIds = new HashMap<>();
 private static Map<String, Integer> equationIds = new HashMap<>();
 
-public static void processFiles(String... paths)
+public static void processFiles(String inputDir, String outputDir)
     throws IOException, ParserException {
+
+    Path inDir = Paths.get(inputDir);
+
+    Path outDir = Paths.get(outputDir);
 
     Parser p = Parser.getDefault();
 
+    List<String> paths = Compile.getFilesOfType(inDir, "json");
+
     for (String s : paths) {
-        processFile(new File(s), p);
+
+        File in = new File(s);
+
+        String outName = outDir.toAbsolutePath() +
+            "\\" +
+            in.getName().replaceFirst("\\.json", ".processed.json");
+
+        File out = new File(outName);
+
+        processFile(in, out, p);
     }
 
     writeIdFile();
 
 }
 
-private static void processFile(File file, Parser parser)
+private static void processFile(File input, File output, Parser parser)
     throws IOException, ParserException {
 
-    JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(file));
+    JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(input));
 
-    editJsonArray(array, parser);
+    processJson(input, array, parser);
 
     Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-    String path = file.getCanonicalPath();
-
-    path = path.replaceFirst(".json", "_processed.json");
-
-    File out = new File(path);
-
-    if (!out.exists() && !out.createNewFile()) {
-        throw new IOException("Unable to create file: " + out);
+    if (!output.exists() && !output.createNewFile()) {
+        throw new IOException("Unable to create file: " + output);
     }
 
-    if (!out.canWrite() && !out.setWritable(true)) {
-        throw new IOException("Unable to set file to writable: " + out);
+    if (!output.canWrite() && !output.setWritable(true)) {
+        throw new IOException("Unable to set file to writable: " + output);
     }
 
-    FileWriter writer = new FileWriter(out);
+    FileWriter writer = new FileWriter(output);
 
     writer.write(gson.toJson(array));
 
     writer.close();
 
-    if (!out.setWritable(false)) {
-        System.out.println("WARNING: Unable to set file to read only: " + out);
+    if (!output.setWritable(false)) {
+        System.out.println("WARNING: Unable to set file to read only: " +
+            output);
     }
 
 }
@@ -107,7 +121,7 @@ private static void writeIdFile() throws IOException {
 
 }
 
-private static void editJsonArray(JsonArray array, Parser parser)
+private static void processJson(File f, JsonArray array, Parser parser)
     throws ParserException {
 
     for (JsonElement element : array) {
@@ -152,11 +166,14 @@ private static void editJsonArray(JsonArray array, Parser parser)
 
             if (!object1.has("description") && r.is(Equation.class)) {
 
-                System.out.println("WARNING: No description for find: \"" +
-                    find +
-                    "\", step replace \"" +
-                    replace +
-                    "\"");
+                String msg = String.format(
+                    "WARNING (%s): No description for find[ %s ], step: replace[ %s ]",
+                    f.getName(),
+                    find,
+                    replace
+                );
+
+                System.out.println(msg);
 
             }
 
@@ -172,8 +189,7 @@ private static void editJsonArray(JsonArray array, Parser parser)
 
             String idString = object.get("next").getAsString();
 
-            int id = operandIds.getOrDefault(
-                idString,
+            int id = operandIds.getOrDefault(idString,
                 equationIds.getOrDefault(idString, -1)
             );
 

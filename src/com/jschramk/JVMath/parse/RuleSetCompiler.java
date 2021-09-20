@@ -6,6 +6,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jschramk.JVMath.antlr_gen.rule_parse.ruleSetLexer;
 import com.jschramk.JVMath.antlr_gen.rule_parse.ruleSetParser;
+import com.jschramk.JVMath.compile.Compile;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -14,23 +15,13 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RuleSetCompiler {
-
-
-public static void main(String[] args) throws IOException {
-
-    compileFile(
-        "src/com/jschramk/JVMath/rule_sets/basic.rules",
-        "src/com/jschramk/JVMath/rewrite_jsons/test_out.json"
-    );
-
-}
-
-
 
 private static class Step {
 
@@ -133,6 +124,8 @@ private static class Rule {
     public JsonObject toJson() {
 
         JsonObject ret = new JsonObject();
+
+        ret.addProperty("find", find);
 
         if (id != null) {
             ret.addProperty("id", id);
@@ -389,15 +382,33 @@ public static List<Rule> compile(ruleSetParser.ParseContext ctx) {
 
 }
 
-public static void compileFile(String inputPath, String outputPath)
+public static void compileFiles(String inputDir, String outputDir)
     throws IOException {
 
+    Path inDir = Paths.get(inputDir);
 
-    // get input and output files
-    File input = new File(inputPath);
-    File output = new File(outputPath);
+    Path outDir = Paths.get(outputDir);
 
-    System.out.println("Compiling file: " + input.getName());
+    List<String> paths = Compile.getFilesOfType(inDir, "rules");
+
+    for (String s : paths) {
+
+        File in = new File(s);
+
+        String outName = outDir.toAbsolutePath() +
+            "\\" +
+            in.getName().replaceFirst("\\.rules", ".json");
+
+        File out = new File(outName);
+
+        compileFile(in, out);
+
+    }
+}
+
+public static void compileFile(File input, File output) throws IOException {
+
+    System.out.println("Compiling: " + input.getName());
 
     // get input stream
     CharStream in = CharStreams.fromPath(input.toPath());
@@ -432,7 +443,7 @@ public static void compileFile(String inputPath, String outputPath)
 
     f.close();
 
-    System.out.println("Wrote file: " + output.getName());
+    System.out.println("Wrote: " + output.getName());
 
 }
 
