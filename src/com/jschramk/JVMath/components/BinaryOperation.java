@@ -1,5 +1,7 @@
 package com.jschramk.JVMath.components;
 
+import com.google.gson.JsonObject;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +77,7 @@ public class BinaryOperation extends Operand {
   }
 
   @Override
-  public Type getType() {
+  public Enums.OperandType getType() {
     return operator.getType();
   }
 
@@ -178,5 +180,10 @@ public class BinaryOperation extends Operand {
 
     return s.toString();
   }
+
+  /*@Override
+  public JsonObject toShallowJson() {
+    return new JsonObject();
+  }*/
 
 }

@@ -88,7 +88,7 @@ public abstract class Operand implements Iterable<Operand> {
 
   }
 
-  private static int typePriority(Type type) {
+  private static int typePriority(Enums.OperandType type) {
 
     switch (type) {
 
@@ -116,7 +116,7 @@ public abstract class Operand implements Iterable<Operand> {
 
   }
 
-  public abstract Type getType();
+  public abstract Enums.OperandType getType();
 
   public static boolean sameType(Operand o1, Operand o2) {
 
@@ -125,14 +125,14 @@ public abstract class Operand implements Iterable<Operand> {
     } else if (o1 instanceof Variable) {
       return o2 instanceof Variable;
     } else if (o1 instanceof UnaryOperation) {
-      return o2 instanceof UnaryOperation && ((UnaryOperation) o1).getOperator() == ((UnaryOperation) o2)
-        .getOperator();
+      return o2 instanceof UnaryOperation &&
+        ((UnaryOperation) o1).getOperator() == ((UnaryOperation) o2).getOperator();
     } else if (o1 instanceof BinaryOperation) {
-      return o2 instanceof BinaryOperation && ((BinaryOperation) o1).getOperator() == ((BinaryOperation) o2)
-        .getOperator();
+      return o2 instanceof BinaryOperation &&
+        ((BinaryOperation) o1).getOperator() == ((BinaryOperation) o2).getOperator();
     } else if (o1 instanceof FunctionOperation) {
-      return o2 instanceof FunctionOperation && ((FunctionOperation) o1).getOperator() == ((FunctionOperation) o2)
-        .getOperator();
+      return o2 instanceof FunctionOperation &&
+        ((FunctionOperation) o1).getOperator() == ((FunctionOperation) o2).getOperator();
     } else if (o1 instanceof Matrix) {
       return o2 instanceof Matrix;
     }
@@ -168,15 +168,24 @@ public abstract class Operand implements Iterable<Operand> {
         throw new IllegalArgumentException("Operand to validate must be top level parent");
       } else {
 
-        throw new IllegalStateException("\n\nOperand:\n\t" + child.toInfoString() + "\nhas parent:\n\t" + child.parent
-          .toInfoString() + "\nbut its parent should be:\n\t" + parent.toInfoString() + "\n\n" + Utils
-          .toTreeString(parent));
+        throw new IllegalStateException("\n\nOperand:\n\t" +
+          child.toInfoString() +
+          "\nhas parent:\n\t" +
+          child.parent.toInfoString() +
+          "\nbut its parent should be:\n\t" +
+          parent.toInfoString() +
+          "\n\n" +
+          Utils.toTreeString(parent));
       }
 
     }
 
     if (visitedIds.contains(child.id)) {
-      throw new IllegalStateException("Operand \"" + child + "\" with ID " + child.id + " was used more than once in tree");
+      throw new IllegalStateException("Operand \"" +
+        child +
+        "\" with ID " +
+        child.id +
+        " was used more than once in tree");
     }
 
     visitedIds.add(child.id);
@@ -185,8 +194,10 @@ public abstract class Operand implements Iterable<Operand> {
 
       System.out.println(child.level);
 
-      throw new IllegalStateException("Operand \"" + child + "\" level number is not set, ID: " + child
-        .getId());
+      throw new IllegalStateException("Operand \"" +
+        child +
+        "\" level number is not set, ID: " +
+        child.getId());
     }
 
     /*if (visitedOrderNumbers.contains(child.treeNumber)) {
@@ -207,7 +218,11 @@ public abstract class Operand implements Iterable<Operand> {
     }*/
 
     if (child.parent == null && child.level != 0) {
-      throw new IllegalStateException("Operand \"" + child + "\" has no parent but has level number of " + child.level + ", should be 0");
+      throw new IllegalStateException("Operand \"" +
+        child +
+        "\" has no parent but has level number of " +
+        child.level +
+        ", should be 0");
     } else if (child.parent != null && child.level != child.parent.level + 1) {
       throw new IllegalStateException("Operand \"" + child + "\" has an illegal level number\"");
     }
@@ -438,8 +453,8 @@ public abstract class Operand implements Iterable<Operand> {
   public void fixTree() {
 
     if (parent != null) {
-      throw new RuntimeException("fixTree() can only be called on top level parent, parent: " + parent
-        .toInfoString());
+      throw new RuntimeException("fixTree() can only be called on top level parent, parent: " +
+        parent.toInfoString());
     }
 
     recursiveFixTree((short) 0);
@@ -707,17 +722,16 @@ public abstract class Operand implements Iterable<Operand> {
 
     } else {
 
-      throw new UnsupportedOperationException("Unable to compute double value for class " + evaluated
-        .getClass()
-        .getName());
+      throw new UnsupportedOperationException("Unable to compute double value for class " +
+        evaluated.getClass().getName());
 
     }
 
   }
 
   public Operand evaluate() {
-    throw new UnsupportedOperationException("evaluate() not implemented for " + this.getClass()
-      .getName());
+    throw new UnsupportedOperationException("evaluate() not implemented for " +
+      this.getClass().getName());
   }
 
   public Operand importVariables(VariableDomain domain) {
@@ -823,7 +837,9 @@ public abstract class Operand implements Iterable<Operand> {
     Operand ret = shallowCopy();
 
     if (ret.hasChildren()) {
-      throw new IllegalStateException("Shallow copy of operand: \"" + this + "\" already has children, should be null");
+      throw new IllegalStateException("Shallow copy of operand: \"" +
+        this +
+        "\" already has children, should be null");
     }
 
     if (hasChildren()) {
@@ -925,20 +941,20 @@ public abstract class Operand implements Iterable<Operand> {
 
   @Override
   public int hashCode() {
-    throw new UnsupportedOperationException("hashCode() not implemented for " + this.getClass()
-      .getName());
+    throw new UnsupportedOperationException("hashCode() not implemented for " +
+      this.getClass().getName());
   }
 
   @Override
   public boolean equals(Object o) {
-    throw new UnsupportedOperationException("equals() not implemented for " + this.getClass()
-      .getName());
+    throw new UnsupportedOperationException("equals() not implemented for " +
+      this.getClass().getName());
   }
 
   @Override
   public String toString() {
-    throw new UnsupportedOperationException("toString() not implemented for " + this.getClass()
-      .getName());
+    throw new UnsupportedOperationException("toString() not implemented for " +
+      this.getClass().getName());
   }
 
   protected void setChildren(List<Operand> children) {
@@ -1049,19 +1065,33 @@ public abstract class Operand implements Iterable<Operand> {
     newChild.parent = this;
   }
 
-  public enum Type {
-    VARIABLE,
-    LITERAL,
-    EXPONENT,
-    FUNCTION,
-    SUM,
-    PRODUCT,
-    DIVISION,
-    NEGATION,
-    MATRIX,
-    FACTORIAL,
-    CONSTANT
-  }
+
+
+  /*public abstract JsonObject toShallowJson();
+
+  public JsonObject toJson() {
+
+    JsonObject object = toShallowJson();
+
+    object.addProperty("type", getType().toString());
+
+    if(hasChildren()) {
+
+      JsonArray childrenArray = new JsonArray();
+
+      for(Operand child : this) {
+
+        childrenArray.add(child.toJson());
+
+      }
+
+      object.add("children", childrenArray);
+
+    }
+
+    return object;
+
+  }*/
 
 
 

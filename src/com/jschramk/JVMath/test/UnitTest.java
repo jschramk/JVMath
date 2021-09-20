@@ -42,6 +42,7 @@ public class UnitTest {
     testSolve(eq("F = G M m/r^2"));
     testSolve(eq("y = a b a^2 b^2"));
     testSolve(eq("r = root(3, 3V/(4pi))"));
+    testSolve(eq("x^2 - x = 5"));
     testSolve(eq("x^3 - 5 = root(3, x + 5)"));
     testSolve(eq("4x^2 - 1 = 2/x"));
 

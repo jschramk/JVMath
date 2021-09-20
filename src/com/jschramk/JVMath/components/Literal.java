@@ -29,6 +29,16 @@ public class Literal extends Operand {
     return MathUtils.format(value, JVMathSettings.DECIMAL_PLACES);
   }
 
+  /*@Override
+  public JsonObject toShallowJson() {
+
+    JsonObject object = new JsonObject();
+
+    object.addProperty("value", value);
+
+    return object;
+  }*/
+
   @Override
   public boolean equals(Object o) {
     if (!(o instanceof Operand)) {
@@ -37,7 +47,7 @@ public class Literal extends Operand {
 
     Operand operand = (Operand) o;
 
-    if (operand.getType() != Type.LITERAL) {
+    if (operand.getType() != Enums.OperandType.LITERAL) {
       return false;
     }
 
@@ -52,8 +62,8 @@ public class Literal extends Operand {
   }
 
   @Override
-  public Type getType() {
-    return Type.LITERAL;
+  public Enums.OperandType getType() {
+    return Enums.OperandType.LITERAL;
   }
 
 }

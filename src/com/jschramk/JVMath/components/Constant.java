@@ -47,7 +47,7 @@ public class Constant extends Literal {
 
     Operand operand = (Operand) o;
 
-    if (operand.getType() != Type.CONSTANT) {
+    if (operand.getType() != Enums.OperandType.CONSTANT) {
       return false;
     }
 
@@ -57,8 +57,8 @@ public class Constant extends Literal {
   }
 
   @Override
-  public Type getType() {
-    return Type.CONSTANT;
+  public Enums.OperandType getType() {
+    return Enums.OperandType.CONSTANT;
   }
 
   /*@Override public Operand evaluate() {

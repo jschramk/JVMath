@@ -14,6 +14,6 @@ public interface UnaryOperator {
     return Operand.class;
   }
 
-  Operand.Type getType();
+  Enums.OperandType getType();
 
 }

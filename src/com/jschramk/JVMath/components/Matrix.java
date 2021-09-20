@@ -111,6 +111,18 @@ public class Matrix extends Operand {
     return s.toString();
   }
 
+  /*@Override
+  public JsonObject toShallowJson() {
+
+    JsonObject object = new JsonObject();
+
+    object.addProperty("rows", rows);
+    object.addProperty("cols", cols);
+
+    return object;
+
+  }*/
+
   @Override
   public boolean equals(Object o) {
 
@@ -130,8 +142,8 @@ public class Matrix extends Operand {
   }
 
   @Override
-  public Type getType() {
-    return Type.MATRIX;
+  public Enums.OperandType getType() {
+    return Enums.OperandType.MATRIX;
   }
 
 }

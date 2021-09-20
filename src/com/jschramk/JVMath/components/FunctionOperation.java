@@ -19,8 +19,8 @@ public class FunctionOperation extends Operand {
   }
 
   @Override
-  public Type getType() {
-    return Type.FUNCTION;
+  public Enums.OperandType getType() {
+    return Enums.OperandType.FUNCTION;
   }
 
   @Override
@@ -62,5 +62,15 @@ public class FunctionOperation extends Operand {
   public String toString() {
     return operator.getName() + (getChild(0).isScalar() ? "(" + getChild(0) + ")" : getChild(0));
   }
+
+  /*@Override
+  public JsonObject toShallowJson() {
+
+    JsonObject object = new JsonObject();
+
+    object.addProperty("function", operator.getName());
+
+    return object;
+  }*/
 
 }

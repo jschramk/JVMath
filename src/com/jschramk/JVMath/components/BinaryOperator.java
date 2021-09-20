@@ -12,7 +12,7 @@ public interface BinaryOperator {
 
   Operand evaluate(Operand o1, Operand o2);
 
-  Operand.Type getType();
+  Enums.OperandType getType();
 
   default Class<?> returnType(Operand o) {
     return Operand.class;

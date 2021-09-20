@@ -16,25 +16,27 @@ import java.util.Map;
 
 public class RuleProcessor {
 
-  private static int NEXT_ID = 0;
+private static int NEXT_ID = 0;
 
-  private static StringBuilder classStringBuilder = new StringBuilder();
-  private static Map<String, Integer> operandIds = new HashMap<>();
-  private static Map<String, Integer> equationIds = new HashMap<>();
+private static StringBuilder classStringBuilder = new StringBuilder();
+private static Map<String, Integer> operandIds = new HashMap<>();
+private static Map<String, Integer> equationIds = new HashMap<>();
 
-  public static void processFiles(File... files) throws IOException, ParserException {
+public static void processFiles(String... paths)
+    throws IOException, ParserException {
 
     Parser p = Parser.getDefault();
 
-    for (File f : files) {
-      processFile(f, p);
+    for (String s : paths) {
+        processFile(new File(s), p);
     }
 
     writeIdFile();
 
-  }
+}
 
-  private static void processFile(File file, Parser parser) throws IOException, ParserException {
+private static void processFile(File file, Parser parser)
+    throws IOException, ParserException {
 
     JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(file));
 
@@ -49,11 +51,11 @@ public class RuleProcessor {
     File out = new File(path);
 
     if (!out.exists() && !out.createNewFile()) {
-      throw new IOException("Unable to create file: " + out);
+        throw new IOException("Unable to create file: " + out);
     }
 
     if (!out.canWrite() && !out.setWritable(true)) {
-      throw new IOException("Unable to set file to writable: " + out);
+        throw new IOException("Unable to set file to writable: " + out);
     }
 
     FileWriter writer = new FileWriter(out);
@@ -63,12 +65,12 @@ public class RuleProcessor {
     writer.close();
 
     if (!out.setWritable(false)) {
-      System.out.println("WARNING: Unable to set file to read only: " + out);
+        System.out.println("WARNING: Unable to set file to read only: " + out);
     }
 
-  }
+}
 
-  private static void writeIdFile() throws IOException {
+private static void writeIdFile() throws IOException {
 
     startTopClass();
     startClassDef();
@@ -88,11 +90,11 @@ public class RuleProcessor {
     File file = new File("src/com/jschramk/JVMath/rewrite_resources/RuleId.java");
 
     if (!file.exists() && !file.createNewFile()) {
-      throw new IOException("Unable to create file: " + file);
+        throw new IOException("Unable to create file: " + file);
     }
 
     if (!file.canWrite() && !file.setWritable(true)) {
-      throw new IOException("Unable to set file to writable: " + file);
+        throw new IOException("Unable to set file to writable: " + file);
     }
 
     FileWriter writer = new FileWriter(file);
@@ -100,110 +102,119 @@ public class RuleProcessor {
     writer.close();
 
     if (!file.setWritable(false)) {
-      System.out.println("WARNING: Unable to set file to read only: " + file);
+        System.out.println("WARNING: Unable to set file to read only: " + file);
     }
 
-  }
+}
 
-  private static void editJsonArray(JsonArray array, Parser parser) throws ParserException {
+private static void editJsonArray(JsonArray array, Parser parser)
+    throws ParserException {
 
     for (JsonElement element : array) {
 
-      JsonObject object = (JsonObject) element;
+        JsonObject object = (JsonObject) element;
 
-      String find = object.get("find").getAsString();
+        String find = object.get("find").getAsString();
 
-      ParseResult r;
+        ParseResult r;
 
-      r = parser.parse(find);
+        r = parser.parse(find);
 
-      object.addProperty("find", r.getResultString());
+        object.addProperty("find", r.getResultString());
 
-      if (object.has("id")) {
+        if (object.has("id")) {
 
-        String idString = object.get("id").getAsString();
+            String idString = object.get("id").getAsString();
 
-        int id = NEXT_ID++;
+            int id = NEXT_ID++;
 
-        if (r.is(Operand.class)) {
-          operandIds.put(idString, id);
-        } else {
-          equationIds.put(idString, id);
-        }
+            if (r.is(Operand.class)) {
+                operandIds.put(idString, id);
+            } else {
+                equationIds.put(idString, id);
+            }
 
-        object.addProperty("id", id);
-
-      }
-
-      JsonArray steps = (JsonArray) object.get("steps");
-
-      for (JsonElement element1 : steps) {
-
-        JsonObject object1 = (JsonObject) element1;
-
-        String replace = object1.get("replace").getAsString();
-
-        r = parser.parse(replace);
-
-        object1.addProperty("replace", r.getResultString());
-
-        if (!object1.has("description") && r.is(Equation.class)) {
-
-          System.out.println("WARNING: No description for find: \"" + find + "\", step replace \"" + replace + "\"");
+            object.addProperty("id", id);
 
         }
 
-      }
+        JsonArray steps = (JsonArray) object.get("steps");
+
+        for (JsonElement element1 : steps) {
+
+            JsonObject object1 = (JsonObject) element1;
+
+            String replace = object1.get("replace").getAsString();
+
+            r = parser.parse(replace);
+
+            object1.addProperty("replace", r.getResultString());
+
+            if (!object1.has("description") && r.is(Equation.class)) {
+
+                System.out.println("WARNING: No description for find: \"" +
+                    find +
+                    "\", step replace \"" +
+                    replace +
+                    "\"");
+
+            }
+
+        }
 
     }
 
     for (JsonElement element : array) {
 
-      JsonObject object = (JsonObject) element;
+        JsonObject object = (JsonObject) element;
 
-      if (object.has("next")) {
+        if (object.has("next")) {
 
-        String idString = object.get("next").getAsString();
+            String idString = object.get("next").getAsString();
 
-        int id = operandIds.getOrDefault(idString, equationIds.getOrDefault(idString, -1));
+            int id = operandIds.getOrDefault(
+                idString,
+                equationIds.getOrDefault(idString, -1)
+            );
 
-        if (id == -1) {
-          throw new RuntimeException("Unknown next rule ID: " + idString);
+            if (id == -1) {
+                throw new RuntimeException("Unknown next rule ID: " + idString);
+            }
+
+            object.addProperty("next", id);
+
         }
-
-        object.addProperty("next", id);
-
-      }
 
     }
 
-  }
+}
 
-  private static void startTopClass() {
-    classStringBuilder.append("package com.jschramk.JVMath.rewrite_resources").append(';');
+private static void startTopClass() {
+    classStringBuilder.append("package com.jschramk.JVMath.rewrite_resources")
+        .append(';');
     classStringBuilder.append("public class ").append("RuleId");
-  }
+}
 
-  private static void startClassDef() {
+private static void startClassDef() {
     classStringBuilder.append('{');
-  }
+}
 
-  private static void startSubclass(String name) {
+private static void startSubclass(String name) {
     classStringBuilder.append("public static class ").append(name);
-  }
+}
 
-  private static void addMap(Map<String, Integer> map) {
+private static void addMap(Map<String, Integer> map) {
     for (Map.Entry<String, Integer> entry : map.entrySet()) {
-      classStringBuilder.append("public static final int ")
-        .append(entry.getKey())
-        .append(" = ")
-        .append(entry.getValue())
-        .append(";");
+        classStringBuilder.append("public static final int ")
+            .append(entry.getKey())
+            .append(" = ")
+            .append(entry.getValue())
+            .append(";");
     }
-  }
+}
 
-  private static void endClassDef() {
+private static void endClassDef() {
     classStringBuilder.append('}');
-  }
+}
 
 }

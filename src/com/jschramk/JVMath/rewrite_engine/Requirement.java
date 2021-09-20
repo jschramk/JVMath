@@ -1,6 +1,7 @@
 package com.jschramk.JVMath.rewrite_engine;
 
 import com.google.gson.JsonObject;
+import com.jschramk.JVMath.components.Enums;
 import com.jschramk.JVMath.components.Literal;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.rewrite_resources.ExternalRequirements;
@@ -16,8 +17,8 @@ public class Requirement {
   private static final String VARIABLE_NAME = "variable";
 
   private String variable;
-  private Operand.Type requiredType;
-  private Operand.Type requiredNotType;
+  private Enums.OperandType requiredType;
+  private Enums.OperandType requiredNotType;
   private boolean containsTargetVariable;
   private Double requiredValue = null;
   private Double requiredNotValue = null;
@@ -51,10 +52,10 @@ public class Requirement {
     }
 
     if (object.has(REQUIRED_TYPE)) {
-      requirement.type(Operand.Type.valueOf(object.get(REQUIRED_TYPE).getAsString()));
+      requirement.type(Enums.OperandType.valueOf(object.get(REQUIRED_TYPE).getAsString()));
     }
     if (object.has(REQUIRED_NOT_TYPE)) {
-      requirement.notType(Operand.Type.valueOf(object.get(REQUIRED_NOT_TYPE).getAsString()));
+      requirement.notType(Enums.OperandType.valueOf(object.get(REQUIRED_NOT_TYPE).getAsString()));
     }
     if (object.has(CONTAINS_TARGET_VARIABLE)) {
       requirement.containsTarget(object.get(CONTAINS_TARGET_VARIABLE).getAsBoolean());
@@ -70,12 +71,12 @@ public class Requirement {
 
   }
 
-  public Requirement type(Operand.Type requiredType) {
+  public Requirement type(Enums.OperandType requiredType) {
     this.requiredType = requiredType;
     return this;
   }
 
-  public Requirement notType(Operand.Type requiredType) {
+  public Requirement notType(Enums.OperandType requiredType) {
     this.requiredNotType = requiredType;
     return this;
   }

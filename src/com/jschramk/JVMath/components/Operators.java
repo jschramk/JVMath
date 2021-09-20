@@ -13,7 +13,7 @@ public class Operators {
   public static final UnaryOperator NEGATION = new UnaryOperator() {
     @Override
     public String getPrefix() {
-      return "-";
+      return "- ";
     }
 
     @Override
@@ -34,8 +34,8 @@ public class Operators {
     }
 
     @Override
-    public Operand.Type getType() {
-      return Operand.Type.NEGATION;
+    public Enums.OperandType getType() {
+      return Enums.OperandType.NEGATION;
     }
   };
 
@@ -65,8 +65,8 @@ public class Operators {
     }
 
     @Override
-    public Operand.Type getType() {
-      return Operand.Type.FACTORIAL;
+    public Enums.OperandType getType() {
+      return Enums.OperandType.FACTORIAL;
     }
 
   };
@@ -92,8 +92,8 @@ public class Operators {
     }
 
     @Override
-    public Operand.Type getType() {
-      return Operand.Type.SUM;
+    public Enums.OperandType getType() {
+      return Enums.OperandType.SUM;
     }
 
     @Override
@@ -125,8 +125,8 @@ public class Operators {
     }
 
     @Override
-    public Operand.Type getType() {
-      return Operand.Type.PRODUCT;
+    public Enums.OperandType getType() {
+      return Enums.OperandType.PRODUCT;
     }
 
     @Override
@@ -154,8 +154,8 @@ public class Operators {
     }
 
     @Override
-    public Operand.Type getType() {
-      return Operand.Type.DIVISION;
+    public Enums.OperandType getType() {
+      return Enums.OperandType.DIVISION;
     }
 
     @Override
@@ -183,8 +183,8 @@ public class Operators {
     }
 
     @Override
-    public Operand.Type getType() {
-      return Operand.Type.EXPONENT;
+    public Enums.OperandType getType() {
+      return Enums.OperandType.EXPONENT;
     }
 
     @Override

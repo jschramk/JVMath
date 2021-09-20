@@ -1,5 +1,7 @@
 package com.jschramk.JVMath.components;
 
+import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class UnaryOperation extends Operand {
   }
 
   @Override
-  public Type getType() {
+  public Enums.OperandType getType() {
     return operator.getType();
   }
 
@@ -82,5 +84,15 @@ public class UnaryOperation extends Operand {
   public String toString() {
     return operator.getPrefix() + childPriorityString(this, getChild(0)) + operator.getPostfix();
   }
+
+  /*@Override
+  public JsonObject toShallowJson() {
+
+    JsonObject object = new JsonObject();
+
+    object.addProperty("prefix", operator.getPrefix());
+
+    return null;
+  }*/
 
 }

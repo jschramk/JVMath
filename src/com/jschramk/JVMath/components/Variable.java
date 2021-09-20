@@ -13,8 +13,8 @@ public class Variable extends Operand {
   }
 
   @Override
-  public Type getType() {
-    return Type.VARIABLE;
+  public Enums.OperandType getType() {
+    return Enums.OperandType.VARIABLE;
   }
 
   public void setVariableDomain(VariableDomain variableDomain) {

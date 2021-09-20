@@ -5,7 +5,7 @@ import com.jschramk.JVMath.components.BinaryOperator;
 import com.jschramk.JVMath.components.Equation;
 import com.jschramk.JVMath.components.Operand;
 import com.jschramk.JVMath.exceptions.UnsolvableException;
-import com.jschramk.JVMath.rewrite_resources.RewriteResources;
+import com.jschramk.JVMath.rewrite_packages.RewriteResources;
 import com.jschramk.JVMath.rewrite_resources.Rule;
 
 import java.util.ArrayList;

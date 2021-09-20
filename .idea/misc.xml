@@ -28,10 +28,21 @@
         <PerGrammarGenerationSettings>
           <option name="fileName" value="$PROJECT_DIR$/src/com/jschramk/JVMath/parse/jvmathArithmetic.g4" />
           <option name="autoGen" value="true" />
+          <option name="outputDir" value="C:\Users\Jacob Schramkowski\OneDrive\Projects\JavaScript\JSMath\antlr" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="" />
+          <option name="language" value="JavaScript" />
+          <option name="generateListener" value="false" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/com/jschramk/JVMath/parse/ruleSet.g4" />
+          <option name="autoGen" value="true" />
           <option name="outputDir" value="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src" />
           <option name="libDir" value="" />
           <option name="encoding" value="" />
-          <option name="pkg" value="com.jschramk.JVMath.antlr_gen" />
+          <option name="pkg" value="com.jschramk.JVMath.antlr_gen.rule_parse" />
           <option name="language" value="Java" />
           <option name="generateListener" value="false" />
           <option name="generateVisitor" value="true" />
