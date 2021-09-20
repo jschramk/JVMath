@@ -44,10 +44,6 @@ public static List<String> getFilesOfType(Path path, String fileExtension)
 
     try (Stream<Path> walk = Files.walk(path)) {
         result = walk.filter(p -> !Files.isDirectory(p))
-            // this is a path, not string,
-            // this only test if path end with a certain path
-            //.filter(p -> p.endsWith(fileExtension))
-            // convert path to string first
             .map(p -> p.toString().toLowerCase())
             .filter(f -> f.endsWith(fileExtension))
             .collect(Collectors.toList());

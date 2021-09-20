@@ -14,7 +14,7 @@ public class ParserException extends Exception {
     if (input.isEmpty()) {
       return new ParserException("Unable to parse empty input");
     } else {
-      return new ParserException("Input \"" + input + "\" is malformed");
+      return new ParserException("Unable to parse \"" + input + "\"");
     }
 
   }

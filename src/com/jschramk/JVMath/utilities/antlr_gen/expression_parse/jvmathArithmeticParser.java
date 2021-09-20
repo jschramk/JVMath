@@ -1,5 +1,5 @@
 // Generated from C:/Users/Jacob Schramkowski/OneDrive/Projects/Solvable/JVMath/src/com/jschramk/JVMath/parse\jvmathArithmetic.g4 by ANTLR 4.9
-package com.jschramk.JVMath.utilities.antlr_gen;
+package com.jschramk.JVMath.utilities.antlr_gen.expression_parse;
 
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.atn.ATN;

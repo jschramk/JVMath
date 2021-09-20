@@ -2,9 +2,9 @@ package com.jschramk.JVMath.utilities.parse;
 
 import com.jschramk.JVMath.runtime.parse.ParseResult;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.utilities.antlr_gen.jvmathArithmeticLexer;
-import com.jschramk.JVMath.utilities.antlr_gen.jvmathArithmeticParser;
-import com.jschramk.JVMath.utilities.antlr_gen.jvmathArithmeticVisitor;
+import com.jschramk.JVMath.utilities.antlr_gen.expression_parse.jvmathArithmeticLexer;
+import com.jschramk.JVMath.utilities.antlr_gen.expression_parse.jvmathArithmeticParser;
+import com.jschramk.JVMath.utilities.antlr_gen.expression_parse.jvmathArithmeticVisitor;
 import com.jschramk.JVMath.runtime.components.*;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import org.antlr.v4.runtime.CharStream;
