@@ -1,0 +1,523 @@
+[
+  {
+    "id": "ADD_ZERO",
+    "find": "x + 0",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "id": "ADD_SAME",
+    "find": "x + x",
+    "steps": [
+      {
+        "replace": "2x"
+      }
+    ]
+  },
+  {
+    "id": "FACTOR",
+    "find": "a^2 + 2 a b + b^2",
+    "steps": [
+      {
+        "replace": "(a + b)^2"
+      }
+    ]
+  },
+  {
+    "id": "SUBTRACT_SAME",
+    "find": "x - x",
+    "steps": [
+      {
+        "replace": "0"
+      }
+    ]
+  },
+  {
+    "id": "ADD_WITH_COEFFICIENT",
+    "find": "x + a * x",
+    "steps": [
+      {
+        "replace": "(1 + a)x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      }
+    ]
+  },
+  {
+    "id": "ADD_WITH_DOUBLE_COEFFICIENT",
+    "find": "a x + b x",
+    "steps": [
+      {
+        "replace": "(a + b)x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "not type": "LITERAL",
+        "contains solve": true
+      }
+    ]
+  },
+  {
+    "id": "DISTRIBUTE_LITERAL",
+    "find": "n(a + b)",
+    "steps": [
+      {
+        "replace": "n a + n b"
+      }
+    ],
+    "require": [
+      {
+        "variable": "n",
+        "type": "LITERAL"
+      }
+    ]
+  },
+  {
+    "id": "ADD_SAME_DENOMINATOR",
+    "find": "a/x + b/x",
+    "steps": [
+      {
+        "replace": "(a+b)/x"
+      }
+    ]
+  },
+  {
+    "id": "ADD_DIFFERENT_DENOMINATOR",
+    "find": "a/b + c/d",
+    "steps": [
+      {
+        "replace": "(a d + b c)/(b d)"
+      }
+    ]
+  },
+  {
+    "id": "NEGATIVE_ZERO",
+    "find": "-0",
+    "steps": [
+      {
+        "replace": "0"
+      }
+    ]
+  },
+  {
+    "id": "MULTIPLY_BY_ZERO",
+    "find": "0x",
+    "steps": [
+      {
+        "replace": "0"
+      }
+    ]
+  },
+  {
+    "id": "MULTIPLY_BY_ONE",
+    "find": "1x",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "id": "MULTIPLY_BY_NEGATIVE_ONE",
+    "find": "(-1)*x",
+    "steps": [
+      {
+        "replace": "-x"
+      }
+    ]
+  },
+  {
+    "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
+    "find": "neg*x",
+    "steps": [
+      {
+        "replace": "-x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "neg",
+        "type": "LITERAL",
+        "value": -1
+      }
+    ]
+  },
+  {
+    "id": "DOUBLE_NEGATIVE",
+    "find": "-(-x)",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "-(a*b)",
+    "steps": [
+      {
+        "replace": "(-a)*b"
+      }
+    ]
+  },
+  {
+    "find": "-(a/b)",
+    "steps": [
+      {
+        "replace": "(-a)/b"
+      }
+    ]
+  },
+  {
+    "find": "-(a + b)",
+    "steps": [
+      {
+        "replace": "-a - b"
+      }
+    ]
+  },
+  {
+    "find": "x * x",
+    "steps": [
+      {
+        "replace": "x^2"
+      }
+    ]
+  },
+  {
+    "find": "x * x^a",
+    "steps": [
+      {
+        "replace": "x^(1 + a)"
+      }
+    ]
+  },
+  {
+    "find": "x^a * x^b",
+    "steps": [
+      {
+        "replace": "x^(a + b)"
+      }
+    ]
+  },
+  {
+    "find": "a^c b^c",
+    "steps": [
+      {
+        "replace": "(a b)^c"
+      }
+    ]
+  },
+  {
+    "find": "(a/b)*(c/d)",
+    "steps": [
+      {
+        "replace": "(a c)/(b d)"
+      }
+    ]
+  },
+  {
+    "find": "0/x",
+    "steps": [
+      {
+        "replace": "0"
+      }
+    ]
+  },
+  {
+    "find": "x/x",
+    "steps": [
+      {
+        "replace": "1"
+      }
+    ]
+  },
+  {
+    "find": "x/1",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "a/b/c",
+    "steps": [
+      {
+        "replace": "a/(b * c)"
+      }
+    ]
+  },
+  {
+    "find": "(a * b)/b",
+    "steps": [
+      {
+        "replace": "a"
+      }
+    ]
+  },
+  {
+    "find": "(a * x)/(b * x)",
+    "steps": [
+      {
+        "replace": "a/b"
+      }
+    ]
+  },
+  {
+    "find": "x/(a * x)",
+    "steps": [
+      {
+        "replace": "1/a"
+      }
+    ]
+  },
+  {
+    "find": "a/(b/c)",
+    "steps": [
+      {
+        "replace": "(a * c)/b"
+      }
+    ]
+  },
+  {
+    "find": "a(b/c)",
+    "steps": [
+      {
+        "replace": "(a * b)/c"
+      }
+    ]
+  },
+  {
+    "find": "x^a/x",
+    "steps": [
+      {
+        "replace": "x^(a - 1)"
+      }
+    ]
+  },
+  {
+    "find": "x^a/x^b",
+    "steps": [
+      {
+        "replace": "x^(a - b)"
+      }
+    ]
+  },
+  {
+    "find": "0^x",
+    "steps": [
+      {
+        "replace": "0"
+      }
+    ]
+  },
+  {
+    "find": "1^x",
+    "steps": [
+      {
+        "replace": "1"
+      }
+    ]
+  },
+  {
+    "find": "x^0",
+    "steps": [
+      {
+        "replace": "1"
+      }
+    ]
+  },
+  {
+    "find": "x^1",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "x^-1",
+    "steps": [
+      {
+        "replace": "1/x"
+      }
+    ]
+  },
+  {
+    "find": "x^-a",
+    "steps": [
+      {
+        "replace": "1/x^a"
+      }
+    ]
+  },
+  {
+    "find": "(x^a)^b",
+    "steps": [
+      {
+        "replace": "x^(a*b)"
+      }
+    ]
+  },
+  {
+    "find": "asin(sin(x))",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "acos(cos(x))",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "atan(tan(x))",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "log(a, a^x)",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "b^(1/a)",
+    "steps": [
+      {
+        "replace": "root(a, b)"
+      }
+    ]
+  },
+  {
+    "find": "a^(0.5)",
+    "steps": [
+      {
+        "replace": "root(a)"
+      }
+    ]
+  },
+  {
+    "find": "root(2, x)",
+    "steps": [
+      {
+        "replace": "root(x)"
+      }
+    ]
+  },
+  {
+    "find": "root(a, x^a)",
+    "steps": [
+      {
+        "replace": "x"
+      }
+    ]
+  },
+  {
+    "find": "sin(x)^2 + cos(x)^2",
+    "steps": [
+      {
+        "replace": "1"
+      }
+    ]
+  },
+  {
+    "find": "log(a, b^c)",
+    "steps": [
+      {
+        "replace": "c log(a, b)"
+      }
+    ]
+  },
+  {
+    "find": "log(a^b)",
+    "steps": [
+      {
+        "replace": "b log(a)"
+      }
+    ]
+  },
+  {
+    "find": "a(b + c) + d(f + g)",
+    "steps": [
+      {
+        "replace": "a b + a c + d f + d g"
+      }
+    ]
+  },
+  {
+    "find": "a(-x)",
+    "steps": [
+      {
+        "replace": "(-a) x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "type": "VARIABLE"
+      },
+      {
+        "variable": "a",
+        "not type": "VARIABLE"
+      }
+    ]
+  },
+  {
+    "find": "a/b + c",
+    "steps": [
+      {
+        "replace": "(a + b c)/b"
+      }
+    ],
+    "require": [
+      {
+        "variable": "b",
+        "type": "LITERAL"
+      }
+    ]
+  },
+  {
+    "find": "(a x^n1)/(b x^n2)",
+    "steps": [
+      {
+        "replace": "a x^(n1 - n2)/b"
+      }
+    ]
+  },
+  {
+    "find": "x^n1/(b x^n2)",
+    "steps": [
+      {
+        "replace": "x^(n1 - n2)/b"
+      }
+    ]
+  },
+  {
+    "find": "(a x^n1)/x^n2",
+    "steps": [
+      {
+        "replace": "a x^(n1 - n2)"
+      }
+    ]
+  }
+]

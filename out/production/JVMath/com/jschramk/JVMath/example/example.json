@@ -1,0 +1,31 @@
+{
+  "type": 4,
+  "children": [
+    {
+      "type": 2,
+      "children": [
+        {
+          "type": 1,
+          "value": "y"
+        },
+        {
+          "type": 0,
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": 6,
+      "children": [
+        {
+          "type": 1,
+          "value": "x"
+        },
+        {
+          "type": 0,
+          "value": 2
+        }
+      ]
+    }
+  ]
+}
