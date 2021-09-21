@@ -40,8 +40,8 @@ public class Requirement {
 
       try {
 
-        requirement.checker = (RequirementChecker) ExternalRequirements.class.getField(name)
-          .get(null);
+        requirement.checker =
+            (RequirementChecker) ExternalRequirements.class.getField(name).get(null);
 
         return requirement;
 
@@ -115,15 +115,17 @@ public class Requirement {
     }
 
     if (targetVariable != null && containsTargetVariable != operand.getVariables()
-      .contains(targetVariable)) {
+        .contains(targetVariable)) {
       return false;
     }
 
-    if (operand instanceof Literal && requiredValue != null && operand.computeToDouble() != requiredValue) {
+    if (operand instanceof Literal && requiredValue != null
+        && operand.computeToDouble() != requiredValue) {
       return false;
     }
 
-    return !(operand instanceof Literal) || requiredNotValue == null || operand.computeToDouble() != requiredNotValue;
+    return !(operand instanceof Literal) || requiredNotValue == null
+        || operand.computeToDouble() != requiredNotValue;
 
   }
 

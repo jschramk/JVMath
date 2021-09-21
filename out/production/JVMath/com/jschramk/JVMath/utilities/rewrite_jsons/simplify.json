@@ -1,7 +1,7 @@
 [
   {
-    "id": "ADD_ZERO",
     "find": "x + 0",
+    "id": "ADD_ZERO",
     "steps": [
       {
         "replace": "x"
@@ -9,8 +9,8 @@
     ]
   },
   {
-    "id": "ADD_SAME",
     "find": "x + x",
+    "id": "ADD_SAME",
     "steps": [
       {
         "replace": "2x"
@@ -18,8 +18,8 @@
     ]
   },
   {
-    "id": "FACTOR",
     "find": "a^2 + 2 a b + b^2",
+    "id": "FACTOR",
     "steps": [
       {
         "replace": "(a + b)^2"
@@ -27,8 +27,8 @@
     ]
   },
   {
-    "id": "SUBTRACT_SAME",
     "find": "x - x",
+    "id": "SUBTRACT_SAME",
     "steps": [
       {
         "replace": "0"
@@ -36,8 +36,8 @@
     ]
   },
   {
-    "id": "ADD_WITH_COEFFICIENT",
     "find": "x + a * x",
+    "id": "ADD_WITH_COEFFICIENT",
     "steps": [
       {
         "replace": "(1 + a)x"
@@ -51,8 +51,8 @@
     ]
   },
   {
-    "id": "ADD_WITH_DOUBLE_COEFFICIENT",
     "find": "a x + b x",
+    "id": "ADD_WITH_DOUBLE_COEFFICIENT",
     "steps": [
       {
         "replace": "(a + b)x"
@@ -61,14 +61,14 @@
     "require": [
       {
         "variable": "x",
-        "not type": "LITERAL",
-        "contains solve": true
+        "contains solve": true,
+        "not type": "LITERAL"
       }
     ]
   },
   {
-    "id": "DISTRIBUTE_LITERAL",
     "find": "n(a + b)",
+    "id": "DISTRIBUTE_LITERAL",
     "steps": [
       {
         "replace": "n a + n b"
@@ -82,8 +82,8 @@
     ]
   },
   {
-    "id": "ADD_SAME_DENOMINATOR",
     "find": "a/x + b/x",
+    "id": "ADD_SAME_DENOMINATOR",
     "steps": [
       {
         "replace": "(a+b)/x"
@@ -91,8 +91,8 @@
     ]
   },
   {
-    "id": "ADD_DIFFERENT_DENOMINATOR",
     "find": "a/b + c/d",
+    "id": "ADD_DIFFERENT_DENOMINATOR",
     "steps": [
       {
         "replace": "(a d + b c)/(b d)"
@@ -100,8 +100,8 @@
     ]
   },
   {
-    "id": "NEGATIVE_ZERO",
     "find": "-0",
+    "id": "NEGATIVE_ZERO",
     "steps": [
       {
         "replace": "0"
@@ -109,8 +109,8 @@
     ]
   },
   {
-    "id": "MULTIPLY_BY_ZERO",
     "find": "0x",
+    "id": "MULTIPLY_BY_ZERO",
     "steps": [
       {
         "replace": "0"
@@ -118,8 +118,8 @@
     ]
   },
   {
-    "id": "MULTIPLY_BY_ONE",
     "find": "1x",
+    "id": "MULTIPLY_BY_ONE",
     "steps": [
       {
         "replace": "x"
@@ -127,8 +127,8 @@
     ]
   },
   {
-    "id": "MULTIPLY_BY_NEGATIVE_ONE",
     "find": "(-1)*x",
+    "id": "MULTIPLY_BY_NEGATIVE_ONE",
     "steps": [
       {
         "replace": "-x"
@@ -136,8 +136,8 @@
     ]
   },
   {
-    "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
     "find": "neg*x",
+    "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
     "steps": [
       {
         "replace": "-x"
@@ -147,13 +147,13 @@
       {
         "variable": "neg",
         "type": "LITERAL",
-        "value": -1
+        "value": -1.0
       }
     ]
   },
   {
-    "id": "DOUBLE_NEGATIVE",
     "find": "-(-x)",
+    "id": "DOUBLE_NEGATIVE",
     "steps": [
       {
         "replace": "x"
@@ -473,12 +473,12 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "type": "VARIABLE"
-      },
-      {
         "variable": "a",
         "not type": "VARIABLE"
+      },
+      {
+        "variable": "x",
+        "type": "VARIABLE"
       }
     ]
   },

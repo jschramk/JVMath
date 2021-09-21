@@ -23,258 +23,250 @@ import java.util.regex.Pattern;
 
 public class RuleSetCompiler {
 
-private static class Step {
+  private static class Step {
 
     private String replace, description;
 
     public Step(String replace, String description) {
-        this.replace = replace;
-        this.description = description;
+      this.replace = replace;
+      this.description = description;
     }
 
     public String getReplace() {
-        return replace;
+      return replace;
     }
 
     public String getDescription() {
-        return description;
+      return description;
     }
 
-    @Override
-    public String toString() {
-        return replace + (description != null ? " : " + description : "");
+    @Override public String toString() {
+      return replace + (description != null ? " : " + description : "");
     }
 
-}
+  }
 
 
 
-private static class Requirement {
+  private static class CodeRequirement {
 
-    private boolean requireContainsTarget;
+    private JsonObject object = new JsonObject();
 
-    public Requirement(boolean requireContainsTarget) {
-        this.requireContainsTarget = requireContainsTarget;
+    public CodeRequirement(String variable) {
+      this.object.addProperty("variable", variable);
     }
 
-    public boolean isRequireContainsTarget() {
-        return requireContainsTarget;
+    public JsonObject toJson() {
+      return object;
     }
 
-}
-
-
-
-private static class Filter {
-
-    private Map<String, Requirement> variableRequirements = new HashMap<>();
-
-    public Requirement getRequirement(String variable) {
-        return variableRequirements.get(variable);
+    public void requireContainsTarget(boolean b) {
+      this.object.addProperty("contains solve", b);
     }
 
-    public void putRequirement(String variable, Requirement requirement) {
-        variableRequirements.put(variable, requirement);
+    public void requireType(String type) {
+      this.object.addProperty("type", type);
+    }
+
+    public void requireNotType(String type) {
+      this.object.addProperty("not type", type);
+    }
+
+    public void requireValue(double value) {
+      this.object.addProperty("value", value);
+    }
+
+    public void requireNotValue(double value) {
+      this.object.addProperty("not value", value);
+    }
+
+  }
+
+
+
+  private static class Filter {
+
+    private Map<String, CodeRequirement> variableRequirements = new HashMap<>();
+
+    public CodeRequirement getRequirement(String variable) {
+      return variableRequirements.get(variable);
+    }
+
+    public void putRequirement(String variable, CodeRequirement codeRequirement) {
+      variableRequirements.put(variable, codeRequirement);
     }
 
     public Set<String> getVariables() {
-        return variableRequirements.keySet();
+      return variableRequirements.keySet();
     }
 
-}
+  }
 
 
 
-private static class CodeRule {
+  private static class CodeRule {
 
     private String id, action, find, target, next;
     private List<Step> steps = new ArrayList<>();
     private Filter filter;
 
-    public CodeRule(
-        String id, String action, String find, String target, String... steps
-    ) {
-        this.id = id;
-        this.action = action;
-        this.find = find;
-        this.target = target;
+    public CodeRule(String id, String action, String find, String target, String... steps) {
+      this.id = id;
+      this.action = action;
+      this.find = find;
+      this.target = target;
 
 
 
+      for (int i = 0; i < steps.length; i++) {
 
-        for (int i = 0; i < steps.length; i++) {
+        String step = steps[i].trim();
 
-            String step = steps[i].trim();
-
-            if (step.matches("@[aA-zZ_][aA-zZ_0-9]*")) {
-                this.next = step.replaceAll("@", "");
-                continue;
-            }
-
-            String[] replaceDesc = step.split("[ \\t]*:[ \\t]*", 2);
-
-            String replace = replaceDesc[0];
-
-            String desc = replaceDesc.length > 1 ? replaceDesc[1] : null;
-
-
-
-
-            this.steps.add(new Step(replace, desc));
-
+        if (step.matches("@[aA-zZ_][aA-zZ_0-9]*")) {
+          this.next = step.replaceAll("@", "");
+          continue;
         }
+
+        String[] replaceDesc = step.split("[ \\t]*:[ \\t]*", 2);
+
+        String replace = replaceDesc[0];
+
+        String desc = replaceDesc.length > 1 ? replaceDesc[1] : null;
+
+
+
+        this.steps.add(new Step(replace, desc));
+
+      }
 
     }
 
     public JsonObject toJson() {
 
-        JsonObject ret = new JsonObject();
+      JsonObject ret = new JsonObject();
 
-        ret.addProperty("find", find);
+      ret.addProperty("find", find);
 
-        if (id != null) {
-            ret.addProperty("id", id);
+      if (id != null) {
+        ret.addProperty("id", id);
+      }
+
+      if (next != null) {
+        ret.addProperty("next", next);
+      }
+
+      JsonArray steps = new JsonArray();
+
+      for (Step s : this.steps) {
+
+        JsonObject step = new JsonObject();
+
+        step.addProperty("replace", s.getReplace());
+
+        if (s.getDescription() != null) {
+
+          String desc = s.getDescription();
+
+          // TODO: make sure to update all code to new inline render syntax
+          Pattern newInlineRender = Pattern.compile("\\$\\{.*?}");
+
+          Matcher m = newInlineRender.matcher(desc);
+
+          StringBuilder builder = new StringBuilder();
+
+          int end = 0;
+
+          while (m.find()) {
+
+            String found = m.group();
+
+            builder.append(desc.substring(end, m.start()));
+
+            end = m.end();
+
+            String inside = found.substring(2, found.length() - 1);
+
+            // TEMPORARY SOLUTION... just converting new syntax from .rules file to old syntax for .json
+            String replacement =
+                "${" + inside.replaceAll("#", Matcher.quoteReplacement("$")) + "}$";
+
+            builder.append(replacement);
+
+          }
+
+          builder.append(desc.substring(end));
+
+          step.addProperty("description", builder.toString());
         }
 
-        if (next != null) {
-            ret.addProperty("next", next);
-        }
+        steps.add(step);
 
-        JsonArray steps = new JsonArray();
+      }
 
-        for (Step s : this.steps) {
+      ret.add("steps", steps);
 
-            JsonObject step = new JsonObject();
+      if (filter != null) {
 
-            step.addProperty("replace", s.getReplace());
+        JsonArray requirements = new JsonArray();
 
-            if (s.getDescription() != null) {
+        Set<String> vars = filter.getVariables();
 
-                String desc = s.getDescription();
+        for (String var : vars) {
 
-                // TODO: make sure to update all code to new inline render syntax
-                Pattern newInlineRender = Pattern.compile("\\$\\{.*?}");
+          CodeRequirement r = filter.getRequirement(var);
 
-                Matcher m = newInlineRender.matcher(desc);
-
-                StringBuilder builder = new StringBuilder();
-
-                int end = 0;
-
-                while (m.find()) {
-
-                    String found = m.group();
-
-                    builder.append(desc.substring(end, m.start()));
-
-                    end = m.end();
-
-                    String inside = found.substring(2, found.length()-1);
-
-                    // TEMPORARY SOLUTION... just converting new syntax from .rules file to old syntax for .json
-                    String replacement = "${" + inside.replaceAll("#", Matcher.quoteReplacement("$")) + "}$";
-
-                    builder.append(replacement);
-
-                }
-
-                builder.append(desc.substring(end));
-
-                step.addProperty("description", builder.toString());
-            }
-
-            steps.add(step);
-
-        }
-
-        ret.add("steps", steps);
-
-        if (filter != null) {
-
-            JsonArray requirements = new JsonArray();
-
-            Set<String> vars = filter.getVariables();
-
-            for (String var : vars) {
-
-                JsonObject req = new JsonObject();
-
-                req.addProperty("variable", var);
-
-                Requirement r = filter.getRequirement(var);
-
-                req.addProperty("contains solve", r.isRequireContainsTarget());
-
-                requirements.add(req);
-
-            }
-
-            ret.add("require", requirements);
+          requirements.add(r.toJson());
 
         }
 
-        return ret;
+        ret.add("require", requirements);
+
+      }
+
+      return ret;
 
     }
 
     public String getId() {
-        return id;
+      return id;
     }
 
     public String getFind() {
-        return find;
+      return find;
     }
 
     public String getTarget() {
-        return target;
+      return target;
     }
 
     public String getAction() {
-        return action;
+      return action;
     }
 
     public List<Step> getSteps() {
-        return steps;
+      return steps;
     }
 
     public Filter getFilter() {
-        return filter;
+      return filter;
     }
 
     public void setFilter(Filter filter) {
-        this.filter = filter;
+      this.filter = filter;
     }
 
-    @Override
-    public String toString() {
-        return "Definition{" +
-            "id='" +
-            id +
-            '\'' +
-            ", action='" +
-            action +
-            '\'' +
-            ", find='" +
-            find +
-            '\'' +
-            ", target='" +
-            target +
-            '\'' +
-            ", steps=" +
-            steps +
-            '}';
+    @Override public String toString() {
+      return "Definition{" + "id='" + id + '\'' + ", action='" + action + '\'' + ", find='" + find
+          + '\'' + ", target='" + target + '\'' + ", steps=" + steps + '}';
     }
 
-}
+  }
 
-public static void convertJsonToCode(File input, File output)
-    throws IOException, ParserException {
+  public static void convertJsonToCode(File input, File output)
+      throws IOException, ParserException {
 
-    System.out.println(String.format(
-        "Converting %s to rule set %s...",
-        input.getName(),
-        output.getName()
-    ));
+    System.out.println(
+        String.format("Converting %s to rule set %s...", input.getName(), output.getName()));
 
     // get
     JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(input));
@@ -285,10 +277,10 @@ public static void convertJsonToCode(File input, File output)
 
     for (int i = 0; i < array.size(); i++) {
 
-        String s = Rule.convertToCode(array.get(i).getAsJsonObject(), p);
+      String s = Rule.convertToCode(array.get(i).getAsJsonObject(), p);
 
-        f.write(s);
-        f.write("\n\n");
+      f.write(s);
+      f.write("\n\n");
 
     }
 
@@ -296,16 +288,16 @@ public static void convertJsonToCode(File input, File output)
 
     System.out.println("Conversion complete.");
 
-}
+  }
 
-public static CodeRule compileDefinition(ruleSetParser.R_definitionContext ctx) {
+  public static CodeRule compileDefinition(ruleSetParser.R_definitionContext ctx) {
 
     int i = 0;
 
     String id = null, action, find, target = null, stepsString;
 
     if (ctx.getChild(i) instanceof ruleSetParser.IdContext) {
-        id = ctx.getChild(i++).getText().replaceAll("@", "");
+      id = ctx.getChild(i++).getText().replaceAll("@", "");
     }
 
     action = ctx.getChild(i++).getText();
@@ -314,25 +306,19 @@ public static CodeRule compileDefinition(ruleSetParser.R_definitionContext ctx) 
 
 
     if (ctx.getChild(i) instanceof ruleSetParser.R_target_specifierContext) {
-        ParseTree specifier = ctx.getChild(i++);
-        target = specifier.getChild(1).getText();
-        target = target.substring(1, target.length() - 1).trim();
+      ParseTree specifier = ctx.getChild(i++);
+      target = specifier.getChild(1).getText();
+      target = target.substring(1, target.length() - 1).trim();
     }
 
     stepsString = ctx.getChild(i++).getText();
     stepsString = stepsString.substring(1, stepsString.length() - 1).trim();
 
-    return new CodeRule(
-        id,
-        action,
-        find,
-        target,
-        stepsString.split("[\\r\\n]+")
-    );
+    return new CodeRule(id, action, find, target, stepsString.split("[\\r\\n]+"));
 
-}
+  }
 
-public static Filter compileFilter(ruleSetParser.R_filterContext ctx) {
+  public static Filter compileFilter(ruleSetParser.R_filterContext ctx) {
 
     String filterText = ctx.getChild(1).getText();
     filterText = filterText.substring(1, filterText.length() - 1).trim();
@@ -345,108 +331,158 @@ public static Filter compileFilter(ruleSetParser.R_filterContext ctx) {
 
     for (int i = 0; i < filterLines.length; i++) {
 
-        String[] nameRequirements = filterLines[i].trim()
-            .split("[ \\t]*:[ \\t]*", 2);
+      String[] nameRequirements = filterLines[i].trim().split("[ \\t]*:[ \\t]*", 2);
 
-        String name = nameRequirements[0];
+      String name = nameRequirements[0];
 
-        String requirements = nameRequirements[1];
+      String[] requirements = nameRequirements[1].split(",");
 
-        if (requirements.matches("is[ \\t]+f\\(.*?\\)")) {
+      CodeRequirement requirement = new CodeRequirement(name);
 
-            Matcher m = functionPattern.matcher(requirements);
+      f.putRequirement(name, requirement);
 
-            if (m.find()) {
+      // loop thru all requirements for this variable
+      for (int j = 0; j < requirements.length; j++) {
 
-                String match = m.group();
+        String req = requirements[j].trim();
 
-                String targetVariable = match.substring(2, match.length() - 1)
-                    .trim();
+        if (req.matches("is[ \\t]+f\\(.*?\\)")) {
 
-                if (targetVariable.equals("#target")) {
-                    f.putRequirement(name, new Requirement(true));
-                } else {
+          Matcher m = functionPattern.matcher(req);
 
-                    //System.out.println("WARNING: ");
+          if (m.find()) {
 
-                }
+            String match = m.group();
+
+            String targetVariable = match.substring(2, match.length() - 1).trim();
+
+
+            if (targetVariable.equals("#target")) {
+
+              requirement.requireContainsTarget(true);
+
+            } else {
+
+              //System.out.println("WARNING: ");
+
+            }
+
+          }
+
+        } else if (req.matches("not[ \\t]+f\\(.*?\\)")) {
+
+          Matcher m = functionPattern.matcher(req);
+
+          if (m.find()) {
+
+            String match = m.group();
+
+            String targetVariable = match.substring(2, match.length() - 1).trim();
+
+            if (targetVariable.equals("#target")) {
+
+              requirement.requireContainsTarget(false);
 
             }
 
-        } else if (requirements.matches("not[ \\t]+f\\(.*?\\)")) {
+          }
 
-            Matcher m = functionPattern.matcher(requirements);
+        } else if (req.matches("is[ \\t]+=[ \\t]+.*?")) {
 
-            if (m.find()) {
+          String sVal = req.replaceAll("[ \\t]+", " ").replaceAll("is =", "").trim();
 
-                String match = m.group();
+          // TODO: implement required value key
 
-                String targetVariable = match.substring(2, match.length() - 1)
-                    .trim();
+          //System.out.println("require value: " + sVal);
 
-                if (targetVariable.equals("#target")) {
-                    f.putRequirement(name, new Requirement(false));
-                }
+          requirement.requireValue(Double.parseDouble(sVal));
 
-            }
+        } else if (req.matches("not[ \\t]+=[ \\t]+.*?")) {
+
+          String sVal = req.replaceAll("[ \\t]+", " ").replaceAll("not =", "").trim();
+
+          // TODO: implement required not value key
+
+          //System.out.println("require not value: " + sVal);
+
+          requirement.requireNotValue(Double.parseDouble(sVal));
+
+        } else if (req.matches("is[ \\t].*?")) {
+
+          String sVal = req.replaceAll("is[ \\t]+", "").trim();
+
+          // TODO: implement required value key
+
+          //System.out.println("require type: " + sVal);
+
+          requirement.requireType(sVal);
+
+        } else if (req.matches("not[ \\t].*?")) {
+
+          String sVal = req.replaceAll("not[ \\t]+", "").trim();
+
+          // TODO: implement required value key
+
+          //System.out.println("require not type: " + sVal);
+
+          requirement.requireNotType(sVal);
 
         } else {
-            throw new IllegalArgumentException("Bad requirement: \"" +
-                requirements +
-                "\"");
+          throw new IllegalArgumentException("Unrecognized requirement: \"" + req + "\"");
         }
+
+      }
+
+
 
     }
 
     return f;
 
-}
+  }
 
-public static CodeRule compileRule(ruleSetParser.R_ruleContext ctx) {
+  public static CodeRule compileRule(ruleSetParser.R_ruleContext ctx) {
 
-    ruleSetParser.R_definitionContext def = (ruleSetParser.R_definitionContext) ctx
-        .getChild(0);
+    ruleSetParser.R_definitionContext def = (ruleSetParser.R_definitionContext) ctx.getChild(0);
 
     CodeRule defObj = compileDefinition(def);
 
     if (ctx.getChildCount() > 1) {
-        ruleSetParser.R_filterContext filter = (ruleSetParser.R_filterContext) ctx
-            .getChild(1);
+      ruleSetParser.R_filterContext filter = (ruleSetParser.R_filterContext) ctx.getChild(1);
 
-        Filter filterObj = compileFilter(filter);
+      Filter filterObj = compileFilter(filter);
 
-        defObj.setFilter(filterObj);
+      defObj.setFilter(filterObj);
 
     }
 
     return defObj;
 
-}
+  }
 
-public static List<CodeRule> compile(ruleSetParser.ParseContext ctx) {
+  public static List<CodeRule> compile(ruleSetParser.ParseContext ctx) {
 
     List<CodeRule> codeRules = new ArrayList<>();
 
     for (int i = 0; i < ctx.getChildCount(); i++) {
 
-        ParseTree p = ctx.getChild(i);
+      ParseTree p = ctx.getChild(i);
 
-        if (p instanceof ruleSetParser.R_ruleContext) {
+      if (p instanceof ruleSetParser.R_ruleContext) {
 
-            CodeRule r = compileRule((ruleSetParser.R_ruleContext) p);
+        CodeRule r = compileRule((ruleSetParser.R_ruleContext) p);
 
-            codeRules.add(r);
+        codeRules.add(r);
 
-        }
+      }
 
     }
 
     return codeRules;
 
-}
+  }
 
-public static void compileFiles(String inputDir, String outputDir)
-    throws IOException {
+  public static void compileFiles(String inputDir, String outputDir) throws IOException {
 
     Path inDir = Paths.get(inputDir);
 
@@ -456,20 +492,19 @@ public static void compileFiles(String inputDir, String outputDir)
 
     for (String s : paths) {
 
-        File in = new File(s);
+      File in = new File(s);
 
-        String outName = outDir.toAbsolutePath() +
-            "\\" +
-            in.getName().replaceFirst("\\.rules", ".json");
+      String outName =
+          outDir.toAbsolutePath() + "\\" + in.getName().replaceFirst("\\.rules", ".json");
 
-        File out = new File(outName);
+      File out = new File(outName);
 
-        compileFile(in, out);
+      compileFile(in, out);
 
     }
-}
+  }
 
-public static void compileFile(File input, File output) throws IOException {
+  public static void compileFile(File input, File output) throws IOException {
 
     System.out.println("Compiling:\t" + input.getName());
 
@@ -493,14 +528,12 @@ public static void compileFile(File input, File output) throws IOException {
     JsonArray jsonOutput = new JsonArray();
 
     for (CodeRule r : codeRules) {
-        jsonOutput.add(r.toJson());
+      jsonOutput.add(r.toJson());
     }
 
     FileWriter f = new FileWriter(output);
 
-    Gson gson = new GsonBuilder().setPrettyPrinting()
-        .disableHtmlEscaping()
-        .create();
+    Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
     f.write(gson.toJson(jsonOutput));
 
@@ -508,40 +541,33 @@ public static void compileFile(File input, File output) throws IOException {
 
     System.out.println("Wrote:\t\t" + output.getName());
 
-}
+  }
 
 
 
-private static void describe(ParseTree tree) {
+  private static void describe(ParseTree tree) {
     describe(tree, 0);
-}
+  }
 
-private static void describe(ParseTree tree, int level) {
+  private static void describe(ParseTree tree, int level) {
 
     StringBuilder s = new StringBuilder();
 
     for (int i = 0; i < level; i++) {
-        s.append('\t');
+      s.append('\t');
     }
 
     System.out.println(
 
-        s.toString() +
-            "(" +
-            tree.getClass().getSimpleName() +
-            "): " +
-            "\"" +
-            tree.getText()
-                .replaceAll("[\\r\\n]+", " ")
-                .replaceAll("[\\t ]+", " ") +
-            "\"");
+        s.toString() + "(" + tree.getClass().getSimpleName() + "): " + "\"" + tree.getText()
+            .replaceAll("[\\r\\n]+", " ").replaceAll("[\\t ]+", " ") + "\"");
     for (int i = 0; i < tree.getChildCount(); i++) {
 
-        ParseTree child = tree.getChild(i);
+      ParseTree child = tree.getChild(i);
 
-        describe(child, level + 1);
+      describe(child, level + 1);
 
     }
-}
+  }
 
 }

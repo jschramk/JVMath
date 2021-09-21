@@ -1,0 +1,260 @@
+@ADD_ZERO
+simplify (x + 0) {
+    x
+}
+
+@ADD_SAME
+simplify (x + x) {
+    2x
+}
+
+@FACTOR
+simplify (a^2 + 2 a b + b^2) {
+    (a + b)^2
+}
+
+@SUBTRACT_SAME
+simplify (x - x) {
+    0
+}
+
+@ADD_WITH_COEFFICIENT
+simplify (x + a * x) {
+    (1 + a)x
+} where {
+    x: is f(#target)
+}
+
+@ADD_WITH_DOUBLE_COEFFICIENT
+simplify (a x + b x) {
+    (a + b)x
+} where {
+    x: is f(#target), not LITERAL
+}
+
+@DISTRIBUTE_LITERAL
+simplify (n(a + b)) {
+    n a + n b
+} where {
+    n: is LITERAL
+}
+
+@ADD_SAME_DENOMINATOR
+simplify (a/x + b/x) {
+    (a+b)/x
+}
+
+@ADD_DIFFERENT_DENOMINATOR
+simplify (a/b + c/d) {
+    (a d + b c)/(b d)
+}
+
+@NEGATIVE_ZERO
+simplify (-0) {
+    0
+}
+
+@MULTIPLY_BY_ZERO
+simplify (0x) {
+    0
+}
+
+@MULTIPLY_BY_ONE
+simplify (1x) {
+    x
+}
+
+@MULTIPLY_BY_NEGATIVE_ONE
+simplify ((-1)*x) {
+    -x
+}
+
+@MULTIPLY_BY_LITERAL_NEGATIVE_ONE
+simplify (neg*x) {
+    -x
+} where {
+    neg: is LITERAL, is = -1
+}
+
+@DOUBLE_NEGATIVE
+simplify (-(-x)) {
+    x
+}
+
+simplify (-(a*b)) {
+    (-a)*b
+}
+
+simplify (-(a/b)) {
+    (-a)/b
+}
+
+simplify (-(a + b)) {
+    -a - b
+}
+
+simplify (x * x) {
+    x^2
+}
+
+simplify (x * x^a) {
+    x^(1 + a)
+}
+
+simplify (x^a * x^b) {
+    x^(a + b)
+}
+
+simplify (a^c b^c) {
+    (a b)^c
+}
+
+simplify ((a/b)*(c/d)) {
+    (a c)/(b d)
+}
+
+simplify (0/x) {
+    0
+}
+
+simplify (x/x) {
+    1
+}
+
+simplify (x/1) {
+    x
+}
+
+simplify (a/b/c) {
+    a/(b * c)
+}
+
+simplify ((a * b)/b) {
+    a
+}
+
+simplify ((a * x)/(b * x)) {
+    a/b
+}
+
+simplify (x/(a * x)) {
+    1/a
+}
+
+simplify (a/(b/c)) {
+    (a * c)/b
+}
+
+simplify (a(b/c)) {
+    (a * b)/c
+}
+
+simplify (x^a/x) {
+    x^(a - 1)
+}
+
+simplify (x^a/x^b) {
+    x^(a - b)
+}
+
+simplify (0^x) {
+    0
+}
+
+simplify (1^x) {
+    1
+}
+
+simplify (x^0) {
+    1
+}
+
+simplify (x^1) {
+    x
+}
+
+simplify (x^-1) {
+    1/x
+}
+
+simplify (x^-a) {
+    1/x^a
+}
+
+simplify ((x^a)^b) {
+    x^(a*b)
+}
+
+simplify (asin(sin(x))) {
+    x
+}
+
+simplify (acos(cos(x))) {
+    x
+}
+
+simplify (atan(tan(x))) {
+    x
+}
+
+simplify (log(a, a^x)) {
+    x
+}
+
+simplify (b^(1/a)) {
+    root(a, b)
+}
+
+simplify (a^(0.5)) {
+    root(a)
+}
+
+simplify (root(2, x)) {
+    root(x)
+}
+
+simplify (root(a, x^a)) {
+    x
+}
+
+simplify (sin(x)^2 + cos(x)^2) {
+    1
+}
+
+simplify (log(a, b^c)) {
+    c log(a, b)
+}
+
+simplify (log(a^b)) {
+    b log(a)
+}
+
+simplify (a(b + c) + d(f + g)) {
+    a b + a c + d f + d g
+}
+
+simplify (a(-x)) {
+    (-a) x
+} where {
+    x: is VARIABLE
+    a: not VARIABLE
+}
+
+simplify (a/b + c) {
+    (a + b c)/b
+} where {
+    b: is LITERAL
+}
+
+simplify ((a x^n1)/(b x^n2)) {
+    a x^(n1 - n2)/b
+}
+
+simplify (x^n1/(b x^n2)) {
+    x^(n1 - n2)/b
+}
+
+simplify ((a x^n1)/x^n2) {
+    a x^(n1 - n2)
+}
+

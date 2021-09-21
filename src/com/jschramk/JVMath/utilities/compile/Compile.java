@@ -15,13 +15,14 @@ public class Compile {
 public static void main(String[] args) throws IOException, ParserException {
 
 
-    /*
-    RuleSetCompiler.convertJsonToCode(
+    /*RuleSetCompiler.convertJsonToCode(
         new File(
-            "C:\\Users\\Jacob Schramkowski\\OneDrive\\Projects\\Solvable\\JVMath\\src\\com\\jschramk\\JVMath\\utilities\\rewrite_jsons\\solve.json"),
+            "src\\com\\jschramk\\JVMath\\utilities\\rewrite_jsons\\simplify.json"),
         new File(
-            "C:\\Users\\Jacob Schramkowski\\OneDrive\\Projects\\Solvable\\JVMath\\src\\com\\jschramk\\JVMath\\utilities\\rule_sets\\solve.rules")
+            "src\\com\\jschramk\\JVMath\\utilities\\rule_sets\\simplify.rules")
     );*/
+
+
 
 
 
