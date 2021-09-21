@@ -28,7 +28,7 @@
       },
       {
         "replace": "x = y/a",
-        "description": "Cancel ${$a}S in the numerator and denominator on the left side"
+        "description": "Cancel ${$a}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [

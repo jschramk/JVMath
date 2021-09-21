@@ -100,6 +100,8 @@ private static class CodeRule {
         this.target = target;
 
 
+
+
         for (int i = 0; i < steps.length; i++) {
 
             String step = steps[i].trim();
@@ -114,6 +116,9 @@ private static class CodeRule {
             String replace = replaceDesc[0];
 
             String desc = replaceDesc.length > 1 ? replaceDesc[1] : null;
+
+
+
 
             this.steps.add(new Step(replace, desc));
 
@@ -144,7 +149,38 @@ private static class CodeRule {
             step.addProperty("replace", s.getReplace());
 
             if (s.getDescription() != null) {
-                step.addProperty("description", s.getDescription());
+
+                String desc = s.getDescription();
+
+                // TODO: make sure to update all code to new inline render syntax
+                Pattern newInlineRender = Pattern.compile("\\$\\{.*?}");
+
+                Matcher m = newInlineRender.matcher(desc);
+
+                StringBuilder builder = new StringBuilder();
+
+                int end = 0;
+
+                while (m.find()) {
+
+                    String found = m.group();
+
+                    builder.append(desc.substring(end, m.start()));
+
+                    end = m.end();
+
+                    String inside = found.substring(2, found.length()-1);
+
+                    // TEMPORARY SOLUTION... just converting new syntax from .rules file to old syntax for .json
+                    String replacement = "${" + inside.replaceAll("#", Matcher.quoteReplacement("$")) + "}$";
+
+                    builder.append(replacement);
+
+                }
+
+                builder.append(desc.substring(end));
+
+                step.addProperty("description", builder.toString());
             }
 
             steps.add(step);
@@ -372,12 +408,6 @@ public static CodeRule compileRule(ruleSetParser.R_ruleContext ctx) {
         .getChild(0);
 
     CodeRule defObj = compileDefinition(def);
-
-
-    List<Step> steps = defObj.getSteps();
-
-    //System.out.println(steps);
-
 
     if (ctx.getChildCount() > 1) {
         ruleSetParser.R_filterContext filter = (ruleSetParser.R_filterContext) ctx

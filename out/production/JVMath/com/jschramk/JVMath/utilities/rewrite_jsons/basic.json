@@ -5,7 +5,7 @@
     "steps": [
       {
         "replace": "x = y",
-        "description": "Flip the equation so ${$x}$ is on the left side"
+        "description": "Flip the equation so ${$x}$$ is on the left side"
       }
     ],
     "require": [
@@ -24,11 +24,11 @@
     "steps": [
       {
         "replace": "(x * a)/a = y/a",
-        "description": "Divide both sides by ${$a}$"
+        "description": "Divide both sides by ${$a}$$"
       },
       {
         "replace": "x = y/a",
-        "description": "Cancel ${$a}S in the numerator and denominator on the left side"
+        "description": "Cancel ${$a}$S in the numerator and denominator on the left side"
       }
     ],
     "require": [

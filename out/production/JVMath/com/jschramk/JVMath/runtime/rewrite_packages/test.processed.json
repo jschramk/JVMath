@@ -1,1 +1,1 @@
-[{"find":"y = x","id":18,"steps":[{"replace":"x = y","description":"Flip the equation so ${#x} is on the left side"}],"require":[{"variable":"x","contains solve":true},{"variable":"y","contains solve":false}]}]
+[{"find":"y = x","id":18,"steps":[{"replace":"x = y","description":"Flip the equation so ${$x}$ is on the left side"}],"require":[{"variable":"x","contains solve":true},{"variable":"y","contains solve":false}]}]

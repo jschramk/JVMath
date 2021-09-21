@@ -47,7 +47,7 @@
       },
       {
         "replace": "x = y - a",
-        "description": "Cancel the ${$a}$'s on the left side"
+        "description": "Cancel ${$a}$ on the left side"
       }
     ],
     "require": [
@@ -74,7 +74,7 @@
       },
       {
         "replace": "x - x1 = y",
-        "description": "Cancel the ${$x1}$'s on the right side"
+        "description": "Cancel ${$x1}$ on the right side"
       }
     ],
     "require": [
@@ -101,7 +101,7 @@
       },
       {
         "replace": "x = y (x1 + a)",
-        "description": "Cancel the ${$x1 + $a}$'s in the left side numerator and denominator"
+        "description": "Cancel ${$x1 + $a}$ in the left side numerator and denominator"
       },
       {
         "replace": "x = y x1 + y a",
@@ -113,7 +113,7 @@
       },
       {
         "replace": "x - x1 y = a y",
-        "description": "Cancel the ${$y + $x1}$'s on the right side"
+        "description": "Cancel ${$y + $x1}$ on the right side"
       }
     ],
     "require": [
@@ -144,7 +144,7 @@
       },
       {
         "replace": "x = y/a",
-        "description": "Cancel the ${$a}$'s in the numerator and denominator on the left side"
+        "description": "Cancel ${$a}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [
@@ -171,7 +171,7 @@
       },
       {
         "replace": "x = y * a",
-        "description": "Cancel the ${$a}$'s in the numerator and denominator on the left side"
+        "description": "Cancel ${$a}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [
@@ -248,7 +248,7 @@
       },
       {
         "replace": "a = x*b",
-        "description": "Cancel the ${$x}$'s in the numerator and denominator on the left side"
+        "description": "Cancel ${$x}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [
@@ -271,7 +271,7 @@
       },
       {
         "replace": "x1 x2 = a",
-        "description": "Cancel the ${$x2}$'s in the numerator and denominator on the right side"
+        "description": "Cancel ${$x2}$ in the numerator and denominator on the right side"
       }
     ],
     "require": [
