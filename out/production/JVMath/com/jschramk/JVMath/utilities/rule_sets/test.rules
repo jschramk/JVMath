@@ -1,0 +1,8 @@
+@FLIP
+solve (y = x) {
+    x = y : Flip the equation so ${#x} is on the left side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
