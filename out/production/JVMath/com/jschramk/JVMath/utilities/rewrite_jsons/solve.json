@@ -21,6 +21,7 @@
   },
   {
     "find": "-x = y",
+    "id": "NEGATE",
     "steps": [
       {
         "replace": "x = -y",
@@ -39,7 +40,36 @@
     ]
   },
   {
+    "find": "x1 = y + x2",
+    "id": "COLLECT_LIKE",
+    "steps": [
+      {
+        "replace": "x1 - x2 = y + x2 - x2",
+        "description": "Subtract ${$x2}$ from both sides"
+      },
+      {
+        "replace": "x1 - x2 = y",
+        "description": "Cancel ${$x2}$ on the right side"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x1",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
+      },
+      {
+        "variable": "x2",
+        "contains solve": true
+      }
+    ]
+  },
+  {
     "find": "x + a = y",
+    "id": "SUBTRACT",
     "steps": [
       {
         "replace": "x + a - a = y - a",
@@ -66,45 +96,18 @@
     ]
   },
   {
-    "find": "x = y + x1",
-    "steps": [
-      {
-        "replace": "x - x1 = y + x1 - x1",
-        "description": "Subtract ${$x1}$ from both sides"
-      },
-      {
-        "replace": "x - x1 = y",
-        "description": "Cancel ${$x1}$ on the right side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "x1",
-        "contains solve": true
-      }
-    ]
-  },
-  {
     "find": "x/(x1 + a) = y",
     "steps": [
       {
-        "replace": "(x (x1 + a))/(x1 + a) = y (x1 + a)",
+        "replace": "((x1 + a) * x)/(x1 + a) = y (x1 + a)",
         "description": "Multiply both sides by ${$x1 + $a}$"
       },
       {
-        "replace": "x = y (x1 + a)",
+        "replace": "x = (x1 + a) * y",
         "description": "Cancel ${$x1 + $a}$ in the left side numerator and denominator"
       },
       {
-        "replace": "x = y x1 + y a",
+        "replace": "x = (x1 * y) + (a * y)",
         "description": "Distribute the right side"
       },
       {

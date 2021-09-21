@@ -6,6 +6,7 @@ solve (y = x) {
     y: not f(#target)
 }
 
+@NEGATE
 solve (-x = y) {
     x = -y : Negate both sides and simplify
 } where {
@@ -13,6 +14,17 @@ solve (-x = y) {
     y: not f(#target)
 }
 
+@COLLECT_LIKE
+solve (x1 = y + x2) {
+    x1 - x2 = y + x2 - x2 : Subtract ${#x2} from both sides
+    x1 - x2 = y : Cancel ${#x2} on the right side
+} where {
+    x1: is f(#target)
+    x2: is f(#target)
+    y: not f(#target)
+}
+
+@SUBTRACT
 solve (x + a = y) {
     x + a - a = y - a : Subtract ${#a} from both sides
     x = y - a : Cancel ${#a} on the left side
@@ -22,21 +34,12 @@ solve (x + a = y) {
     a: not f(#target)
 }
 
-solve (x = y + x1) {
-    x - x1 = y + x1 - x1 : Subtract ${#x1} from both sides
-    x - x1 = y : Cancel ${#x1} on the right side
-} where {
-    x: is f(#target)
-    y: not f(#target)
-    x1: is f(#target)
-}
-
 solve (x/(x1 + a) = y) {
-    (x (x1 + a))/(x1 + a) = y (x1 + a) : Multiply both sides by ${#x1 + #a}
-    x = y (x1 + a) : Cancel ${#x1 + #a} in the left side numerator and denominator
-    x = y x1 + y a : Distribute the right side
-    x - y x1 = y x1 + y a - y x1 : Subtract ${#y #x1} from both sides
-    x - x1 y = a y : Cancel ${#y + #x1} on the right side
+    ((x1 + a) * x)/(x1 + a) = y (x1 + a)    : Multiply both sides by ${#x1 + #a}
+    x = (x1 + a) * y                        : Cancel ${#x1 + #a} in the left side numerator and denominator
+    x = (x1 * y) + (a * y)                  : Distribute the right side
+    x - y x1 = y x1 + y a - y x1            : Subtract ${#y #x1} from both sides
+    x - x1 y = a y                          : Cancel ${#y + #x1} on the right side
 } where {
     x: is f(#target)
     x1: is f(#target)
@@ -225,6 +228,16 @@ solve (x^2 + x = y) {
     x: is f(#target)
     y: not f(#target)
 }
+
+/*
+solve (x^2 + - x = y) {
+    1 x^2 + (-1) x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+*/
 
 solve (root(a, x) = y) {
     x = y^a
