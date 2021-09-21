@@ -1,7 +1,6 @@
 package com.jschramk.JVMath.utilities.compile;
 
 import com.google.gson.*;
-import com.jschramk.JVMath.utilities.compile.Compile;
 import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
@@ -167,7 +166,7 @@ private static void processJson(File f, JsonArray array, Parser parser)
             if (!object1.has("description") && r.is(Equation.class)) {
 
                 String msg = String.format(
-                    "WARNING (%s): No description for find[ %s ], step: replace[ %s ]",
+                    "WARNING (%s): No description for rule: FIND[ %s ], step: REPLACE[ %s ]",
                     f.getName(),
                     find,
                     replace
@@ -206,8 +205,8 @@ private static void processJson(File f, JsonArray array, Parser parser)
 }
 
 private static void startTopClass() {
-    classStringBuilder.append("package com.jschramk.JVMath.runtime.rewrite_resources")
-        .append(';');
+    classStringBuilder.append(
+        "package com.jschramk.JVMath.runtime.rewrite_resources").append(';');
     classStringBuilder.append("public class ").append("RuleId");
 }
 

@@ -2,6 +2,7 @@ package com.jschramk.JVMath.utilities.compile;
 
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,6 +13,17 @@ import java.util.stream.Stream;
 public class Compile {
 
 public static void main(String[] args) throws IOException, ParserException {
+
+
+    /*
+    RuleSetCompiler.convertJsonToCode(
+        new File(
+            "C:\\Users\\Jacob Schramkowski\\OneDrive\\Projects\\Solvable\\JVMath\\src\\com\\jschramk\\JVMath\\utilities\\rewrite_jsons\\solve.json"),
+        new File(
+            "C:\\Users\\Jacob Schramkowski\\OneDrive\\Projects\\Solvable\\JVMath\\src\\com\\jschramk\\JVMath\\utilities\\rule_sets\\solve.rules")
+    );*/
+
+
 
     System.out.println("Beginning to compile rule sets...\n");
 
@@ -30,6 +42,7 @@ public static void main(String[] args) throws IOException, ParserException {
     );
 
     System.out.println("\nRule set packaging completed successfully.");
+
 
 }
 

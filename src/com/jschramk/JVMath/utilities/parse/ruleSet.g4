@@ -1,6 +1,6 @@
 grammar ruleSet;
 
-// parser rules
+// parser codeRules
 
 parse: r_rule+ EOF;
 
@@ -16,7 +16,7 @@ r_action_content: NESTED_BRACKETS;
 
 id: ID;
 
-// lexer rules
+// lexer codeRules
 
 //REQUIREMENT_SPEC : 'is' | 'not' ;
 

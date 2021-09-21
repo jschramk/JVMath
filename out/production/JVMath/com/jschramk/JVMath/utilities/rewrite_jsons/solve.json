@@ -1,7 +1,7 @@
 [
   {
-    "id": "FLIP",
     "find": "y = x",
+    "id": "FLIP",
     "steps": [
       {
         "replace": "x = y",
@@ -52,15 +52,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -96,27 +96,31 @@
     "find": "x/(x1 + a) = y",
     "steps": [
       {
-        "description": "Multiply both sides by ${$x1 + $a}$",
-        "replace": "(x (x1 + a))/(x1 + a) = y (x1 + a)"
+        "replace": "(x (x1 + a))/(x1 + a) = y (x1 + a)",
+        "description": "Multiply both sides by ${$x1 + $a}$"
       },
       {
-        "description": "Cancel the ${$x1 + $a}$'s in the left side numerator and denominator",
-        "replace": "x = y (x1 + a)"
+        "replace": "x = y (x1 + a)",
+        "description": "Cancel the ${$x1 + $a}$'s in the left side numerator and denominator"
       },
       {
-        "description": "Distribute the right side",
-        "replace": "x = y x1 + y a"
+        "replace": "x = y x1 + y a",
+        "description": "Distribute the right side"
       },
       {
-        "description": "Subtract ${$y $x1}$ from both sides",
-        "replace": "x - y x1 = y x1 + y a - y x1"
+        "replace": "x - y x1 = y x1 + y a - y x1",
+        "description": "Subtract ${$y $x1}$ from both sides"
       },
       {
-        "description": "Cancel the ${$y + $x1}$'s on the right side",
-        "replace": "x - x1 y = a y"
+        "replace": "x - x1 y = a y",
+        "description": "Cancel the ${$y + $x1}$'s on the right side"
       }
     ],
     "require": [
+      {
+        "variable": "a",
+        "contains solve": false
+      },
       {
         "variable": "x",
         "contains solve": true
@@ -124,10 +128,6 @@
       {
         "variable": "x1",
         "contains solve": true
-      },
-      {
-        "variable": "a",
-        "contains solve": false
       },
       {
         "variable": "y",
@@ -149,15 +149,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -176,15 +176,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -199,10 +199,6 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
@@ -213,6 +209,10 @@
       {
         "variable": "c",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
       }
     ]
   },
@@ -226,16 +226,16 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
       {
         "variable": "b",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
       }
     ]
   },
@@ -253,12 +253,12 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
         "variable": "a",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
       }
     ]
   },
@@ -276,16 +276,16 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x1",
         "contains solve": true
       },
       {
         "variable": "x2",
         "contains solve": true
-      },
-      {
-        "variable": "a",
-        "contains solve": false
       }
     ]
   },
@@ -298,16 +298,16 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x1",
         "contains solve": true
       },
       {
         "variable": "x2",
         "contains solve": true
-      },
-      {
-        "variable": "a",
-        "contains solve": false
       }
     ]
   },
@@ -320,16 +320,16 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
       {
         "variable": "b",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
       },
       {
         "variable": "y",
@@ -351,15 +351,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -393,22 +393,22 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
         "contains solve": false
-      },
-      {
-        "variable": "a",
-        "contains solve": false
       }
     ]
   },
   {
-    "id": "QUADRATIC",
     "find": "a x^2 + b x = y",
+    "id": "QUADRATIC",
     "steps": [
       {
         "replace": "x = ( (-b - root(b^2 - 4 * a * (-y) ))/(2a), (-b + root(b^2 - 4 * a * (-y) ))/(2a))",
@@ -417,26 +417,26 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
       {
         "variable": "b",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "(a x^2)/a1 + b x = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "(a/a1) x^2 + b x = y",
@@ -445,11 +445,7 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
+        "variable": "a1",
         "contains solve": false
       },
       {
@@ -457,18 +453,22 @@
         "contains solve": false
       },
       {
-        "variable": "a1",
+        "variable": "b",
         "contains solve": false
       },
       {
-        "variable": "b",
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
         "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "(a x^2)/a1 + (b x)/b1 = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "(a/a1) x^2 + (b/b1) x = y",
@@ -477,11 +477,7 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
+        "variable": "a1",
         "contains solve": false
       },
       {
@@ -489,11 +485,15 @@
         "contains solve": false
       },
       {
-        "variable": "a1",
+        "variable": "b",
         "contains solve": false
       },
       {
-        "variable": "b",
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
         "contains solve": false
       },
       {
@@ -503,8 +503,8 @@
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "x^2/a + x/b = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "(1/a) x^2 + (1/b) x = y",
@@ -513,26 +513,26 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
       {
         "variable": "b",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "x^2/a + x = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "(1/a) x^2 + 1 x = y",
@@ -541,26 +541,26 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
       {
         "variable": "b",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "x^2 + x/b = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "1 x^2 + (1/b) x = y",
@@ -569,26 +569,26 @@
     ],
     "require": [
       {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
         "variable": "a",
         "contains solve": false
       },
       {
         "variable": "b",
         "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "a x^2 + x = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "a x^2 + 1 x = y",
@@ -597,22 +597,22 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
         "contains solve": false
-      },
-      {
-        "variable": "a",
-        "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "x^2 + b x = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "1 x^2 + b x = y",
@@ -621,22 +621,22 @@
     ],
     "require": [
       {
+        "variable": "b",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
         "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
       }
     ]
   },
   {
-    "next": "QUADRATIC",
     "find": "x^2 + x = y",
+    "next": "QUADRATIC",
     "steps": [
       {
         "replace": "1 x^2 + 1 x = y",
@@ -663,15 +663,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -812,15 +812,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -835,15 +835,15 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
         "variable": "x",
         "contains solve": true
       },
       {
         "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
         "contains solve": false
       }
     ]
@@ -854,6 +854,24 @@
       {
         "replace": "e^y = x",
         "description": "Rewrite the equation using the definition of natural log"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "x^2 = y",
+    "steps": [
+      {
+        "replace": "x = root(2, y)"
       }
     ],
     "require": [

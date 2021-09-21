@@ -15,7 +15,7 @@
       },
       {
         "variable": "y",
-        "contains solve": true
+        "contains solve": false
       }
     ]
   }

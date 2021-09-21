@@ -15,7 +15,7 @@
       },
       {
         "variable": "y",
-        "contains solve": true
+        "contains solve": false
       }
     ]
   },
@@ -34,7 +34,7 @@
     "require": [
       {
         "variable": "a",
-        "contains solve": true
+        "contains solve": false
       },
       {
         "variable": "x",
@@ -42,7 +42,7 @@
       },
       {
         "variable": "y",
-        "contains solve": true
+        "contains solve": false
       }
     ]
   }

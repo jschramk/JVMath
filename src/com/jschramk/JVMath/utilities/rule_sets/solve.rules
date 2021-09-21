@@ -1,0 +1,324 @@
+@FLIP
+solve (y = x) {
+    x = y : Flip the equation so ${$x}$ is on the left side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (-x = y) {
+    x = -y : Negate both sides and simplify
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (x + a = y) {
+    x + a - a = y - a : Subtract ${$a}$ from both sides
+    x = y - a : Cancel the ${$a}$'s on the left side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (x = y + x1) {
+    x - x1 = y + x1 - x1 : Subtract ${$x1}$ from both sides
+    x - x1 = y : Cancel the ${$x1}$'s on the right side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    x1: is f(#target)
+}
+
+solve (x/(x1 + a) = y) {
+    (x (x1 + a))/(x1 + a) = y (x1 + a) : Multiply both sides by ${$x1 + $a}$
+    x = y (x1 + a) : Cancel the ${$x1 + $a}$'s in the left side numerator and denominator
+    x = y x1 + y a : Distribute the right side
+    x - y x1 = y x1 + y a - y x1 : Subtract ${$y $x1}$ from both sides
+    x - x1 y = a y : Cancel the ${$y + $x1}$'s on the right side
+} where {
+    x: is f(#target)
+    x1: is f(#target)
+    a: not f(#target)
+    y: not f(#target)
+}
+
+solve (x * a = y) {
+    (x * a)/a = y/a : Divide both sides by ${$a}$
+    x = y/a : Cancel the ${$a}$'s in the numerator and denominator on the left side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (x/a = y) {
+    (x*a)/a = y * a : Multiply both sides by ${$a}$
+    x = y * a : Cancel the ${$a}$'s in the numerator and denominator on the left side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (a/x = b/c) {
+    x/a = c/b : Invert both sides of the equation
+} where {
+    x: is f(#target)
+    a: not f(#target)
+    b: not f(#target)
+    c: not f(#target)
+}
+
+solve (a/x = b) {
+    x/a = 1/b : Invert both sides of the equation
+} where {
+    x: is f(#target)
+    a: not f(#target)
+    b: not f(#target)
+}
+
+solve (a/x = b) {
+    (a*x)/x = x*b : Multiply both sides by ${$x}$
+    a = x*b : Cancel the ${$x}$'s in the numerator and denominator on the left side
+} where {
+    x: is f(#target)
+    a: not f(#target)
+}
+
+solve (x1 = a/x2) {
+    x1 x2 = (a x2)/x2 : Multiply both sides by ${$x2}$
+    x1 x2 = a : Cancel the ${$x2}$'s in the numerator and denominator on the right side
+} where {
+    x1: is f(#target)
+    x2: is f(#target)
+    a: not f(#target)
+}
+
+solve (x1 = a * x2) {
+    x1/x2 = a
+} where {
+    x1: is f(#target)
+    x2: is f(#target)
+    a: not f(#target)
+}
+
+solve (a x + b (-x) = y) {
+    (a - b) x  = y
+} where {
+    x: is f(#target)
+    a: not f(#target)
+    b: not f(#target)
+    y: not f(#target)
+}
+
+solve (x^a = y) {
+    root(a, (x^a)) = root(a, y) : Take the root ${$a}$ of both sides
+    x = root(a, y) : Simplify the left side
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (e^x = y) {
+    x = log(y) : Rewrite the equation as a natural logarithm
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (a^x = y) {
+    x = log(a, y) : Rewrite the equation as a logarithm
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+@QUADRATIC
+solve (a x^2 + b x = y) {
+    x = ( (-b - root(b^2 - 4 * a * (-y) ))/(2a), (-b + root(b^2 - 4 * a * (-y) ))/(2a)) : Apply the quadratic formula
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+    b: not f(#target)
+}
+
+solve ((a x^2)/a1 + b x = y) {
+    (a/a1) x^2 + b x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+    a1: not f(#target)
+    b: not f(#target)
+}
+
+solve ((a x^2)/a1 + (b x)/b1 = y) {
+    (a/a1) x^2 + (b/b1) x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+    a1: not f(#target)
+    b: not f(#target)
+    b1: not f(#target)
+}
+
+solve (x^2/a + x/b = y) {
+    (1/a) x^2 + (1/b) x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+    b: not f(#target)
+}
+
+solve (x^2/a + x = y) {
+    (1/a) x^2 + 1 x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+    b: not f(#target)
+}
+
+solve (x^2 + x/b = y) {
+    1 x^2 + (1/b) x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+    b: not f(#target)
+}
+
+solve (a x^2 + x = y) {
+    a x^2 + 1 x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (x^2 + b x = y) {
+    1 x^2 + b x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    b: not f(#target)
+}
+
+solve (x^2 + x = y) {
+    1 x^2 + 1 x = y : Rewrite as a standard quadratic
+    @QUADRATIC
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (root(a, x) = y) {
+    x = y^a
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (root(x) = y) {
+    x = y^2
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (sin(x) = y) {
+    x = asin(y)
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (cos(x) = y) {
+    x = acos(y)
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (tan(x) = y) {
+    x = atan(y)
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (asin(x) = y) {
+    x = sin(y)
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (acos(x) = y) {
+    x = cos(y)
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (atan(x) = y) {
+    x = tan(y)
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+solve (log(x, a) = y) {
+    x^y = a : Rewrite the equation using the definition of log
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (log(a, x) = y) {
+    a^y = x : Rewrite the equation using the definition of log
+} where {
+    x: is f(#target)
+    y: not f(#target)
+    a: not f(#target)
+}
+
+solve (log(x) = y) {
+    e^y = x : Rewrite the equation using the definition of natural log
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+
+/*
+
+Test commented out rule
+
+solve (x^2 = y) {
+
+    x = root(2, y)
+
+} where {
+    x: is f(#target)
+    y: not f(#target)
+}
+
+*/
+

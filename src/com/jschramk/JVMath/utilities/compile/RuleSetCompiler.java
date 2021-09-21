@@ -1,9 +1,9 @@
 package com.jschramk.JVMath.utilities.compile;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import com.jschramk.JVMath.runtime.exceptions.ParserException;
+import com.jschramk.JVMath.runtime.parse.Parser;
+import com.jschramk.JVMath.runtime.rewrite_engine.Rule;
 import com.jschramk.JVMath.utilities.antlr_gen.rule_parse.ruleSetLexer;
 import com.jschramk.JVMath.utilities.antlr_gen.rule_parse.ruleSetParser;
 import org.antlr.v4.runtime.CharStream;
@@ -12,6 +12,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -84,13 +85,13 @@ private static class Filter {
 
 
 
-private static class Rule {
+private static class CodeRule {
 
     private String id, action, find, target, next;
     private List<Step> steps = new ArrayList<>();
     private Filter filter;
 
-    public Rule(
+    public CodeRule(
         String id, String action, String find, String target, String... steps
     ) {
         this.id = id;
@@ -230,7 +231,38 @@ private static class Rule {
 
 }
 
-public static Rule compileDefinition(ruleSetParser.R_definitionContext ctx) {
+public static void convertJsonToCode(File input, File output)
+    throws IOException, ParserException {
+
+    System.out.println(String.format(
+        "Converting %s to rule set %s...",
+        input.getName(),
+        output.getName()
+    ));
+
+    // get
+    JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(input));
+
+    Parser p = Parser.getDefault();
+
+    FileWriter f = new FileWriter(output);
+
+    for (int i = 0; i < array.size(); i++) {
+
+        String s = Rule.convertToCode(array.get(i).getAsJsonObject(), p);
+
+        f.write(s);
+        f.write("\n\n");
+
+    }
+
+    f.close();
+
+    System.out.println("Conversion complete.");
+
+}
+
+public static CodeRule compileDefinition(ruleSetParser.R_definitionContext ctx) {
 
     int i = 0;
 
@@ -254,7 +286,13 @@ public static Rule compileDefinition(ruleSetParser.R_definitionContext ctx) {
     stepsString = ctx.getChild(i++).getText();
     stepsString = stepsString.substring(1, stepsString.length() - 1).trim();
 
-    return new Rule(id, action, find, target, stepsString.split("[\\r\\n]+"));
+    return new CodeRule(
+        id,
+        action,
+        find,
+        target,
+        stepsString.split("[\\r\\n]+")
+    );
 
 }
 
@@ -289,12 +327,12 @@ public static Filter compileFilter(ruleSetParser.R_filterContext ctx) {
                 String targetVariable = match.substring(2, match.length() - 1)
                     .trim();
 
-                /*System.out.println(name +
-                    " must be a function of " +
-                    targetVariable);*/
-
                 if (targetVariable.equals("#target")) {
                     f.putRequirement(name, new Requirement(true));
+                } else {
+
+                    //System.out.println("WARNING: ");
+
                 }
 
             }
@@ -310,12 +348,8 @@ public static Filter compileFilter(ruleSetParser.R_filterContext ctx) {
                 String targetVariable = match.substring(2, match.length() - 1)
                     .trim();
 
-                /*System.out.println(name +
-                    " must not be a function of " +
-                    targetVariable);*/
-
                 if (targetVariable.equals("#target")) {
-                    f.putRequirement(name, new Requirement(true));
+                    f.putRequirement(name, new Requirement(false));
                 }
 
             }
@@ -332,12 +366,12 @@ public static Filter compileFilter(ruleSetParser.R_filterContext ctx) {
 
 }
 
-public static Rule compileRule(ruleSetParser.R_ruleContext ctx) {
+public static CodeRule compileRule(ruleSetParser.R_ruleContext ctx) {
 
     ruleSetParser.R_definitionContext def = (ruleSetParser.R_definitionContext) ctx
         .getChild(0);
 
-    Rule defObj = compileDefinition(def);
+    CodeRule defObj = compileDefinition(def);
 
 
     List<Step> steps = defObj.getSteps();
@@ -359,9 +393,9 @@ public static Rule compileRule(ruleSetParser.R_ruleContext ctx) {
 
 }
 
-public static List<Rule> compile(ruleSetParser.ParseContext ctx) {
+public static List<CodeRule> compile(ruleSetParser.ParseContext ctx) {
 
-    List<Rule> rules = new ArrayList<>();
+    List<CodeRule> codeRules = new ArrayList<>();
 
     for (int i = 0; i < ctx.getChildCount(); i++) {
 
@@ -369,15 +403,15 @@ public static List<Rule> compile(ruleSetParser.ParseContext ctx) {
 
         if (p instanceof ruleSetParser.R_ruleContext) {
 
-            Rule r = compileRule((ruleSetParser.R_ruleContext) p);
+            CodeRule r = compileRule((ruleSetParser.R_ruleContext) p);
 
-            rules.add(r);
+            codeRules.add(r);
 
         }
 
     }
 
-    return rules;
+    return codeRules;
 
 }
 
@@ -407,7 +441,7 @@ public static void compileFiles(String inputDir, String outputDir)
 
 public static void compileFile(File input, File output) throws IOException {
 
-    System.out.println("Compiling: " + input.getName());
+    System.out.println("Compiling:\t" + input.getName());
 
     // get input stream
     CharStream in = CharStreams.fromPath(input.toPath());
@@ -423,12 +457,12 @@ public static void compileFile(File input, File output) throws IOException {
     ruleSetParser.ParseContext parse = parser.parse();
 
     // compile rules
-    List<Rule> rules = compile(parse);
+    List<CodeRule> codeRules = compile(parse);
 
     // create json output
     JsonArray jsonOutput = new JsonArray();
 
-    for (Rule r : rules) {
+    for (CodeRule r : codeRules) {
         jsonOutput.add(r.toJson());
     }
 
@@ -442,7 +476,7 @@ public static void compileFile(File input, File output) throws IOException {
 
     f.close();
 
-    System.out.println("Wrote: " + output.getName());
+    System.out.println("Wrote:\t\t" + output.getName());
 
 }
 
