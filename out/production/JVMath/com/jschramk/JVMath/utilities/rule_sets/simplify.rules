@@ -20,33 +20,33 @@ simplify (x - x) {
 
 @ADD_WITH_COEFFICIENT
 simplify (x + a * x) {
-    (1 + a)x
+    (1 + a) * x
 } where {
     x: is f(#target)
 }
 
 @ADD_WITH_DOUBLE_COEFFICIENT
 simplify (a x + b x) {
-    (a + b)x
+    (a + b) * x
 } where {
     x: is f(#target), not literal
 }
 
 @DISTRIBUTE_LITERAL
-simplify (n(a + b)) {
-    n a + n b
+simplify (n * (a + b)) {
+    n * a + n * b
 } where {
     n: is literal
 }
 
 @ADD_SAME_DENOMINATOR
 simplify (a/x + b/x) {
-    (a+b)/x
+    (a + b) / x
 }
 
 @ADD_DIFFERENT_DENOMINATOR
 simplify (a/b + c/d) {
-    (a d + b c)/(b d)
+    (a * d + b * c)/(b * d)
 }
 
 @NEGATIVE_ZERO
@@ -65,15 +65,17 @@ simplify (1x) {
 }
 
 @MULTIPLY_BY_NEGATIVE_ONE
-simplify ((-1)*x) {
+simplify ((-1) * x) {
     -x
 }
 
+// this is different from the previous rule because the -1 in the previous
+// rule is a negation of literal 1, and this one is a literal -1
 @MULTIPLY_BY_LITERAL_NEGATIVE_ONE
-simplify (neg*x) {
+simplify (neg1 * x) {
     -x
 } where {
-    neg: is literal, is = -1
+    neg1: is literal, is = -1
 }
 
 @DOUBLE_NEGATIVE
@@ -81,8 +83,8 @@ simplify (-(-x)) {
     x
 }
 
-simplify (-(a*b)) {
-    (-a)*b
+simplify (-(a * b)) {
+    (-a) * b
 }
 
 simplify (-(a/b)) {
@@ -105,12 +107,12 @@ simplify (x^a * x^b) {
     x^(a + b)
 }
 
-simplify (a^c b^c) {
-    (a b)^c
+simplify (a^c * b^c) {
+    (a * b)^c
 }
 
-simplify ((a/b)*(c/d)) {
-    (a c)/(b d)
+simplify ((a/b) * (c/d)) {
+    (a*c) / (b*d)
 }
 
 simplify (0/x) {
@@ -182,7 +184,7 @@ simplify (x^-a) {
 }
 
 simplify ((x^a)^b) {
-    x^(a*b)
+    x^(a * b)
 }
 
 simplify (asin(sin(x))) {
@@ -222,7 +224,7 @@ simplify (sin(x)^2 + cos(x)^2) {
 }
 
 simplify (log(a, b^c)) {
-    c log(a, b)
+    c * log(a, b)
 }
 
 simplify (log(a^b)) {
@@ -230,24 +232,25 @@ simplify (log(a^b)) {
 }
 
 simplify (a(b + c) + d(f + g)) {
-    a b + a c + d f + d g
+    (a * b) + (a * c) + (d * f) + (d * g)
 }
 
-simplify (a(-x)) {
-    (-a) x
+// basically makes the engine prefer non-variables to be negated over variables
+simplify (a * (-x)) {
+    (-a) * x
 } where {
     x: is variable
     a: not variable
 }
 
 simplify (a/b + c) {
-    (a + b c)/b
+    (a + b * c)/b
 } where {
     b: is literal
 }
 
-simplify ((a x^n1)/(b x^n2)) {
-    a x^(n1 - n2)/b
+simplify ((a * x^n1)/(b * x^n2)) {
+    a * x^(n1 - n2)/b
 }
 
 simplify (x^n1/(b x^n2)) {
@@ -255,6 +258,6 @@ simplify (x^n1/(b x^n2)) {
 }
 
 simplify ((a x^n1)/x^n2) {
-    a x^(n1 - n2)
+    a * x^(n1 - n2)
 }
 

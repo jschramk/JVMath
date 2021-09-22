@@ -41,7 +41,7 @@
     "id": "ADD_WITH_COEFFICIENT",
     "steps": [
       {
-        "replace": "(1 + a)x"
+        "replace": "(1 + a) * x"
       }
     ],
     "require": [
@@ -56,7 +56,7 @@
     "id": "ADD_WITH_DOUBLE_COEFFICIENT",
     "steps": [
       {
-        "replace": "(a + b)x"
+        "replace": "(a + b) * x"
       }
     ],
     "require": [
@@ -68,11 +68,11 @@
     ]
   },
   {
-    "find": "n(a + b)",
+    "find": "n * (a + b)",
     "id": "DISTRIBUTE_LITERAL",
     "steps": [
       {
-        "replace": "n a + n b"
+        "replace": "n * a + n * b"
       }
     ],
     "require": [
@@ -87,7 +87,7 @@
     "id": "ADD_SAME_DENOMINATOR",
     "steps": [
       {
-        "replace": "(a+b)/x"
+        "replace": "(a + b) / x"
       }
     ]
   },
@@ -96,7 +96,7 @@
     "id": "ADD_DIFFERENT_DENOMINATOR",
     "steps": [
       {
-        "replace": "(a d + b c)/(b d)"
+        "replace": "(a * d + b * c)/(b * d)"
       }
     ]
   },
@@ -128,7 +128,7 @@
     ]
   },
   {
-    "find": "(-1)*x",
+    "find": "(-1) * x",
     "id": "MULTIPLY_BY_NEGATIVE_ONE",
     "steps": [
       {
@@ -137,7 +137,7 @@
     ]
   },
   {
-    "find": "neg*x",
+    "find": "neg1 * x",
     "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
     "steps": [
       {
@@ -146,7 +146,7 @@
     ],
     "require": [
       {
-        "variable": "neg",
+        "variable": "neg1",
         "type": "LITERAL",
         "value": -1.0
       }
@@ -162,10 +162,10 @@
     ]
   },
   {
-    "find": "-(a*b)",
+    "find": "-(a * b)",
     "steps": [
       {
-        "replace": "(-a)*b"
+        "replace": "(-a) * b"
       }
     ]
   },
@@ -210,18 +210,18 @@
     ]
   },
   {
-    "find": "a^c b^c",
+    "find": "a^c * b^c",
     "steps": [
       {
-        "replace": "(a b)^c"
+        "replace": "(a * b)^c"
       }
     ]
   },
   {
-    "find": "(a/b)*(c/d)",
+    "find": "(a/b) * (c/d)",
     "steps": [
       {
-        "replace": "(a c)/(b d)"
+        "replace": "(a*c) / (b*d)"
       }
     ]
   },
@@ -365,7 +365,7 @@
     "find": "(x^a)^b",
     "steps": [
       {
-        "replace": "x^(a*b)"
+        "replace": "x^(a * b)"
       }
     ]
   },
@@ -445,7 +445,7 @@
     "find": "log(a, b^c)",
     "steps": [
       {
-        "replace": "c log(a, b)"
+        "replace": "c * log(a, b)"
       }
     ]
   },
@@ -461,15 +461,15 @@
     "find": "a(b + c) + d(f + g)",
     "steps": [
       {
-        "replace": "a b + a c + d f + d g"
+        "replace": "(a * b) + (a * c) + (d * f) + (d * g)"
       }
     ]
   },
   {
-    "find": "a(-x)",
+    "find": "a * (-x)",
     "steps": [
       {
-        "replace": "(-a) x"
+        "replace": "(-a) * x"
       }
     ],
     "require": [
@@ -487,7 +487,7 @@
     "find": "a/b + c",
     "steps": [
       {
-        "replace": "(a + b c)/b"
+        "replace": "(a + b * c)/b"
       }
     ],
     "require": [
@@ -498,10 +498,10 @@
     ]
   },
   {
-    "find": "(a x^n1)/(b x^n2)",
+    "find": "(a * x^n1)/(b * x^n2)",
     "steps": [
       {
-        "replace": "a x^(n1 - n2)/b"
+        "replace": "a * x^(n1 - n2)/b"
       }
     ]
   },
@@ -517,7 +517,7 @@
     "find": "(a x^n1)/x^n2",
     "steps": [
       {
-        "replace": "a x^(n1 - n2)"
+        "replace": "a * x^(n1 - n2)"
       }
     ]
   }
