@@ -4,7 +4,8 @@
     "id": "ADD_ZERO",
     "steps": [
       {
-        "replace": "x"
+        "replace": "x",
+        "description": "Cancel the ${0}$"
       }
     ]
   },
@@ -452,7 +453,7 @@
     "find": "log(a^b)",
     "steps": [
       {
-        "replace": "b log(a)"
+        "replace": "b * log(a)"
       }
     ]
   },

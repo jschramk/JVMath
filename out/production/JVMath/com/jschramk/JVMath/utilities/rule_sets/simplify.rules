@@ -1,6 +1,6 @@
 @ADD_ZERO
 simplify (x + 0) {
-    x
+    x : Cancel the ${0}
 }
 
 @ADD_SAME
@@ -29,14 +29,14 @@ simplify (x + a * x) {
 simplify (a x + b x) {
     (a + b)x
 } where {
-    x: is f(#target), not LITERAL
+    x: is f(#target), not literal
 }
 
 @DISTRIBUTE_LITERAL
 simplify (n(a + b)) {
     n a + n b
 } where {
-    n: is LITERAL
+    n: is literal
 }
 
 @ADD_SAME_DENOMINATOR
@@ -73,7 +73,7 @@ simplify ((-1)*x) {
 simplify (neg*x) {
     -x
 } where {
-    neg: is LITERAL, is = -1
+    neg: is literal, is = -1
 }
 
 @DOUBLE_NEGATIVE
@@ -226,7 +226,7 @@ simplify (log(a, b^c)) {
 }
 
 simplify (log(a^b)) {
-    b log(a)
+    b * log(a)
 }
 
 simplify (a(b + c) + d(f + g)) {
@@ -236,14 +236,14 @@ simplify (a(b + c) + d(f + g)) {
 simplify (a(-x)) {
     (-a) x
 } where {
-    x: is VARIABLE
-    a: not VARIABLE
+    x: is variable
+    a: not variable
 }
 
 simplify (a/b + c) {
     (a + b c)/b
 } where {
-    b: is LITERAL
+    b: is literal
 }
 
 simplify ((a x^n1)/(b x^n2)) {

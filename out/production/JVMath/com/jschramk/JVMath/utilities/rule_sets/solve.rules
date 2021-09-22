@@ -35,11 +35,11 @@ solve (x + a = y) {
 }
 
 solve (x/(x1 + a) = y) {
-    ((x1 + a) * x)/(x1 + a) = y (x1 + a)    : Multiply both sides by ${#x1 + #a}
-    x = (x1 + a) * y                        : Cancel ${#x1 + #a} in the left side numerator and denominator
-    x = (x1 * y) + (a * y)                  : Distribute the right side
-    x - y x1 = y x1 + y a - y x1            : Subtract ${#y #x1} from both sides
-    x - x1 y = a y                          : Cancel ${#y + #x1} on the right side
+    ((x1 + a) * x)/(x1 + a) = y (x1 + a) : Multiply both sides by ${#x1 + #a}
+    x = (x1 + a) * y : Cancel ${#x1 + #a} in the left side numerator and denominator
+    x = (x1 * y) + (a * y) : Distribute the right side
+    x - y x1 = y x1 + y a - y x1 : Subtract ${#y #x1} from both sides
+    x - x1 y = a y : Cancel ${#y + #x1} on the right side
 } where {
     x: is f(#target)
     x1: is f(#target)
@@ -320,16 +320,4 @@ solve (log(x) = y) {
     x: is f(#target)
     y: not f(#target)
 }
-
-
-/*
-Test commented out rule
-
-solve (x^2 = y) {
-    x = root(2, y)
-} where {
-    x: is f(#target)
-    y: not f(#target)
-}
-*/
 
