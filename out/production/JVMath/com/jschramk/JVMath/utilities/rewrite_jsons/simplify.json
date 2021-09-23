@@ -445,7 +445,7 @@
     "find": "log(a, b^c)",
     "steps": [
       {
-        "replace": "c log(a, b)"
+        "replace": "c * log(a, b)"
       }
     ]
   },
@@ -461,15 +461,15 @@
     "find": "a(b + c) + d(f + g)",
     "steps": [
       {
-        "replace": "a b + a c + d f + d g"
+        "replace": "(a * b) + (a * c) + (d * f) + (d * g)"
       }
     ]
   },
   {
-    "find": "a(-x)",
+    "find": "a * (-x)",
     "steps": [
       {
-        "replace": "(-a) x"
+        "replace": "(-a) * x"
       }
     ],
     "require": [
@@ -487,7 +487,7 @@
     "find": "a/b + c",
     "steps": [
       {
-        "replace": "(a + b c)/b"
+        "replace": "(a + b * c)/b"
       }
     ],
     "require": [
@@ -498,10 +498,10 @@
     ]
   },
   {
-    "find": "(a x^n1)/(b x^n2)",
+    "find": "(a * x^n1)/(b * x^n2)",
     "steps": [
       {
-        "replace": "a x^(n1 - n2)/b"
+        "replace": "a * x^(n1 - n2)/b"
       }
     ]
   },
@@ -517,7 +517,7 @@
     "find": "(a x^n1)/x^n2",
     "steps": [
       {
-        "replace": "a x^(n1 - n2)"
+        "replace": "a * x^(n1 - n2)"
       }
     ]
   }

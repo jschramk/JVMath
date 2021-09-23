@@ -2,7 +2,6 @@ package com.jschramk.JVMath.utilities.compile;
 
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,12 +23,9 @@ public static void main(String[] args) throws IOException, ParserException {
 
 
 
-
-
     System.out.println("Beginning to compile rule sets...\n");
 
-    RuleSetCompiler.compileFiles(
-        "src/com/jschramk/JVMath/utilities/rule_sets",
+    RuleSetCompiler.compileFiles("src/com/jschramk/JVMath/utilities/rule_sets",
         "src/com/jschramk/JVMath/utilities/rewrite_jsons"
     );
 
@@ -37,18 +33,15 @@ public static void main(String[] args) throws IOException, ParserException {
 
     System.out.println("Beginning to process rewrite JSON files...\n");
 
-    JsonRuleProcessor.processFiles(
-        "src/com/jschramk/JVMath/utilities/rewrite_jsons",
+    JsonRuleProcessor.processFiles("src/com/jschramk/JVMath/utilities/rewrite_jsons",
         "src/com/jschramk/JVMath/runtime/rewrite_packages"
     );
 
     System.out.println("\nRule set packaging completed successfully.");
 
-
 }
 
-public static List<String> getFilesOfType(Path path, String fileExtension)
-    throws IOException {
+public static List<String> getFilesOfType(Path path, String fileExtension) throws IOException {
 
     if (!Files.isDirectory(path)) {
         throw new IllegalArgumentException("Path must be a directory!");
