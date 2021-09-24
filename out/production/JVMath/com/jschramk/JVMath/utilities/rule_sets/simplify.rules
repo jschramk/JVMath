@@ -34,7 +34,7 @@ simplify (a x + b x) {
 
 @DISTRIBUTE_LITERAL
 simplify (n * (a + b)) {
-    n * a + n * b
+    (n * a) + (n * b)
 } where {
     n: is literal
 }
@@ -231,7 +231,7 @@ simplify (log(a^b)) {
     b * log(a)
 }
 
-simplify (a(b + c) + d(f + g)) {
+simplify (a * (b + c) + d * (f + g)) {
     (a * b) + (a * c) + (d * f) + (d * g)
 }
 
@@ -253,11 +253,11 @@ simplify ((a * x^n1)/(b * x^n2)) {
     a * x^(n1 - n2)/b
 }
 
-simplify (x^n1/(b x^n2)) {
+simplify (x^n1/(b * x^n2)) {
     x^(n1 - n2)/b
 }
 
-simplify ((a x^n1)/x^n2) {
+simplify ((a * x^n1)/x^n2) {
     a * x^(n1 - n2)
 }
 

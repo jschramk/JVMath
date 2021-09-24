@@ -1,5 +1,6 @@
-package com.jschramk.JVMath.runtime.components;
+package com.jschramk.JVMath.runtime.rewrite_engine;
 
+import com.jschramk.JVMath.runtime.components.*;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
 import com.jschramk.JVMath.runtime.rewrite_engine.RewriteEngine;
@@ -137,6 +138,10 @@ public static void main(String[] args) throws ParserException {
 public static Comparator<Operand> CANONICAL_COMPARATOR = new Comparator<Operand>() {
     @Override
     public int compare(Operand operand, Operand t1) {
+
+        int childCountComp = -Integer.compare(operand.treeSize(), t1.treeSize());
+
+        if(childCountComp != 0) return childCountComp;
 
         int typeComp = operand.getType().compareTo(t1.getType());
 

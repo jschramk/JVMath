@@ -1,5 +1,6 @@
 package com.jschramk.JVMath.runtime.components;
 
+import com.jschramk.JVMath.runtime.rewrite_engine.Canonical;
 import com.jschramk.JVMath.runtime.rewrite_engine.Knowns;
 import com.jschramk.JVMath.runtime.utils.Utils;
 

@@ -72,7 +72,7 @@
     "id": "DISTRIBUTE_LITERAL",
     "steps": [
       {
-        "replace": "n * a + n * b"
+        "replace": "(n * a) + (n * b)"
       }
     ],
     "require": [
@@ -458,7 +458,7 @@
     ]
   },
   {
-    "find": "a(b + c) + d(f + g)",
+    "find": "a * (b + c) + d * (f + g)",
     "steps": [
       {
         "replace": "(a * b) + (a * c) + (d * f) + (d * g)"
@@ -506,7 +506,7 @@
     ]
   },
   {
-    "find": "x^n1/(b x^n2)",
+    "find": "x^n1/(b * x^n2)",
     "steps": [
       {
         "replace": "x^(n1 - n2)/b"
@@ -514,7 +514,7 @@
     ]
   },
   {
-    "find": "(a x^n1)/x^n2",
+    "find": "(a * x^n1)/x^n2",
     "steps": [
       {
         "replace": "a * x^(n1 - n2)"
