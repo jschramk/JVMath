@@ -68,8 +68,8 @@ public class CanonicalMatcher {
 
     public static void main(String[] args) throws ParserException {
 
-        Operand matchOperand = Parser.getDefault().parse("a x^(a + 3) + b x^2 + c x + d").to(Operand.class);
-        Operand searchOperand = Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^(8 + 3)").to(Operand.class);
+        Operand matchOperand = Parser.getDefault().parse("a x^(1 + a + 3) + b x^2 + c x + d").to(Operand.class);
+        Operand searchOperand = Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^(3 + 8 + 1)").to(Operand.class);
 
         matchOperand.canonify();
         searchOperand.canonify();
