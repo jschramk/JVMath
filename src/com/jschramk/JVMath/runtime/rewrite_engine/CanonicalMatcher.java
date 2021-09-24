@@ -3,6 +3,7 @@ package com.jschramk.JVMath.runtime.rewrite_engine;
 import com.jschramk.JVMath.runtime.components.*;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
+import util.PerformanceTimer;
 
 import java.util.*;
 
@@ -33,7 +34,7 @@ public class CanonicalMatcher {
 
         public void addMapping(String var, Operand o) {
 
-            if(stack.isEmpty()) {
+            if (stack.isEmpty()) {
                 throw new RuntimeException("No stack frame");
             }
 
@@ -61,6 +62,20 @@ public class CanonicalMatcher {
 
         }
 
+        public Map<String, Operand> collapse() {
+
+            Map<String, Operand> ret = new HashMap<>();
+
+            for (Map<String, Operand> frame : stack) {
+
+                ret.putAll(frame);
+
+            }
+
+            return ret;
+
+        }
+
         @Override public String toString() {
             return stack.toString();
         }
@@ -68,25 +83,56 @@ public class CanonicalMatcher {
 
     public static void main(String[] args) throws ParserException {
 
-        Operand matchOperand = Parser.getDefault().parse("a x^(1 + a + 3) + b x^2 + c x + d").to(Operand.class);
-        Operand searchOperand = Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^(3 + 8 + 1)").to(Operand.class);
+        PerformanceTimer t = new PerformanceTimer();
+
+        Operand matchOperand =
+            Parser.getDefault().parse("a x^(1 + a + 3) + b x^2 + c x + d").to(Operand.class);
+        Operand searchOperand =
+            Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^(3 + 8 + 1)").to(Operand.class);
+
+        t.start();
 
         matchOperand.canonify();
         searchOperand.canonify();
 
+        t.stop();
+
+        System.out.println("Canonify time: " + t.ms() + " ms");
+
         System.out
             .println(String.format("Attempting to map %s to %s", matchOperand, searchOperand));
 
-        System.out.println(matches(matchOperand, searchOperand, 0, new VariableStack()));
+        t.start();
+
+        VariableStack v = new VariableStack();
+
+        boolean match = matches(matchOperand, searchOperand, 0, v);
+
+        t.stop();
+
+        System.out.println(v.collapse());
+
+        System.out.println("Match time (new method): " + t.ms() + " ms");
+
+        t.start();
+
+        StructureMatcher.Match rightMatch =
+            StructureMatcher.getMatch(matchOperand, searchOperand, null, "z");
+
+        t.stop();
+
+        System.out.println("Match time (old method): " + t.ms() + " ms");
+
+        System.out.println(rightMatch.getKnowns().getVariables());
 
 
     }
 
     static boolean matches(Operand match, Operand search, int level, VariableStack v) {
 
-        System.out.print("\t".repeat(level));
+        //System.out.print("\t".repeat(level));
 
-        System.out.println(String.format("[ %s ] -> [ %s ] ?", match, search));
+        //System.out.println(String.format("[ %s ] -> [ %s ] ?", match, search));
 
         boolean ret = false;
 
@@ -96,13 +142,14 @@ public class CanonicalMatcher {
 
             if (o == null) {
 
-                if(v.hasFrame()) v.addMapping(match.toString(), search);
+                if (v.hasFrame())
+                    v.addMapping(match.toString(), search);
 
                 ret = true;
 
             } else {
 
-                if(o.equals(search)) {
+                if (o.equals(search)) {
 
                     ret = true;
 
@@ -214,7 +261,6 @@ public class CanonicalMatcher {
 
 
 
-
                         }
 
 
@@ -226,14 +272,14 @@ public class CanonicalMatcher {
 
         }
 
-        System.out.println("\t".repeat(level) + ret);
+        //System.out.println("\t".repeat(level) + ret);
 
         if (ret) {
-            System.out.print("\t".repeat(level));
-            System.out.println(match + " -> " + search);
+            // System.out.print("\t".repeat(level));
+            //System.out.println(match + " -> " + search);
         }
 
-        System.out.println(v);
+        //System.out.println(v);
 
 
 
