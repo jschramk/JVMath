@@ -68,8 +68,8 @@ public class CanonicalMatcher {
 
     public static void main(String[] args) throws ParserException {
 
-        Operand matchOperand = Parser.getDefault().parse("a x^3 + b x^2 + c x + d").to(Operand.class);
-        Operand searchOperand = Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^3").to(Operand.class);
+        Operand matchOperand = Parser.getDefault().parse("a x^(a + 3) + b x^2 + c x + d").to(Operand.class);
+        Operand searchOperand = Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^(8 + 3)").to(Operand.class);
 
         matchOperand.canonify();
         searchOperand.canonify();
@@ -199,6 +199,7 @@ public class CanonicalMatcher {
                                     matches(match.getChild(i), search.getChild(i), level + 1, v);
 
                                 if (!matches) {
+                                    v.popFrame();
                                     break;
                                 }
 
@@ -211,7 +212,6 @@ public class CanonicalMatcher {
 
                             }
 
-                            v.popFrame();
 
 
 
