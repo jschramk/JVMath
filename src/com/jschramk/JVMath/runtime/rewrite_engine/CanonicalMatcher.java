@@ -9,126 +9,88 @@ import java.util.*;
 
 public class CanonicalMatcher {
 
-
-    private static class VariableStack {
-
-        private LinkedList<Map<String, Operand>> stack = new LinkedList<>();
-
-        public boolean hasFrame() {
-            return !stack.isEmpty();
-        }
-
-        public void enterNewFrame() {
-
-            Map<String, Operand> vars = new HashMap<>();
-
-            stack.addFirst(vars);
-
-        }
-
-        public void popFrame() {
-
-            stack.removeFirst();
-
-        }
-
-        public void addMapping(String var, Operand o) {
-
-            if (stack.isEmpty()) {
-                throw new RuntimeException("No stack frame");
-            }
-
-            if (get(var) != null) {
-                throw new IllegalArgumentException(
-                    String.format("Variable \"%s\" already used", var));
-            }
-
-            stack.getFirst().put(var, o);
-
-        }
-
-        public Operand get(String s) {
-
-            for (Map<String, Operand> frame : stack) {
-
-                Operand o = frame.get(s);
-
-                if (o != null)
-                    return o;
-
-            }
-
-            return null;
-
-        }
-
-        public Map<String, Operand> collapse() {
-
-            Map<String, Operand> ret = new HashMap<>();
-
-            for (Map<String, Operand> frame : stack) {
-
-                ret.putAll(frame);
-
-            }
-
-            return ret;
-
-        }
-
-        @Override public String toString() {
-            return stack.toString();
-        }
-    }
+    private static PerformanceTimer t = new PerformanceTimer();
 
     public static void main(String[] args) throws ParserException {
 
-        PerformanceTimer t = new PerformanceTimer();
+        Parser p = Parser.getDefault();
 
-        Operand matchOperand =
-            Parser.getDefault().parse("a x^(1 + a + 3) + b x^2 + c x + d").to(Operand.class);
-        Operand searchOperand =
-            Parser.getDefault().parse("5z^2 + 4z + 12 + 8z^(3 + 8 + 1)").to(Operand.class);
+        compareMapping(p.parse("1 + 2 + a + 4 + b").to(Operand.class),
+            p.parse("1 + 2 + 3 + 4 + 5").to(Operand.class));
+
+    }
+
+    private static void compareMapping(Operand match, Operand search) {
 
         t.start();
 
-        matchOperand.canonify();
-        searchOperand.canonify();
+        match.canonify();
+        search.canonify();
 
         t.stop();
+
+        //System.out.println(match.toTreeString());
+        //System.out.println(search.toTreeString());
 
         System.out.println("Canonify time: " + t.ms() + " ms");
 
-        System.out
-            .println(String.format("Attempting to map %s to %s", matchOperand, searchOperand));
+        System.out.println(String.format("Attempting to map %s to %s", match, search));
+
+        // Old method -----------------------------------------------------------------------------
 
         t.start();
 
-        VariableStack v = new VariableStack();
+        StructureMatcher.Match oldMatch = StructureMatcher.getMatch(match, search, null, null);
 
-        boolean match = matches(matchOperand, searchOperand, 0, v);
+        Map<String, Operand> vars1 = null;
 
-        t.stop();
-
-        System.out.println(v.collapse());
-
-        System.out.println("Match time (new method): " + t.ms() + " ms");
-
-        t.start();
-
-        StructureMatcher.Match rightMatch =
-            StructureMatcher.getMatch(matchOperand, searchOperand, null, "z");
+        if (oldMatch != null) {
+            vars1 = oldMatch.getKnowns().getVariables();
+        }
 
         t.stop();
 
         System.out.println("Match time (old method): " + t.ms() + " ms");
 
-        System.out.println(rightMatch.getKnowns().getVariables());
+        if (vars1 != null) {
+            System.out.println("Result: " + vars1);
+        } else {
+            System.out.println("Old method did not produce a result");
+        }
 
+        // New method -----------------------------------------------------------------------------
+
+        t.start();
+
+        VariableStack v = new VariableStack();
+
+        boolean matches = checkMatch(match, search, 0, v);
+
+        t.stop();
+
+        Map<String, Operand> vars2 = null;
+
+        if (matches) {
+            vars2 = v.collapse();
+        }
+
+        System.out.println("Match time (new method): " + t.ms() + " ms");
+
+        if (vars2 != null) {
+            System.out.println("Result: " + vars2);
+        } else {
+            System.out.println("New method did not produce a result");
+        }
+
+        if (!Objects.equals(vars1, vars2)) {
+            System.err.println("Error: new and old methods produced different results");
+        }
 
     }
 
-    static boolean matches(Operand match, Operand search, int level, VariableStack v) {
+
+
+    private static boolean checkMatch(Operand match, Operand search, int level, VariableStack v) {
 
         //System.out.print("\t".repeat(level));
 
@@ -209,7 +171,7 @@ public class CanonicalMatcher {
                                 v.enterNewFrame();
 
                                 boolean matches =
-                                    matches(match.getChild(i), search.getChild(j), level + 1, v);
+                                    checkMatch(match.getChild(i), search.getChild(j), level + 1, v);
 
                                 if (matches) {
                                     offset = j + 1;
@@ -243,7 +205,7 @@ public class CanonicalMatcher {
                             for (int i = 0; i < match.childCount(); i++) {
 
                                 boolean matches =
-                                    matches(match.getChild(i), search.getChild(i), level + 1, v);
+                                    checkMatch(match.getChild(i), search.getChild(i), level + 1, v);
 
                                 if (!matches) {
                                     v.popFrame();
@@ -275,16 +237,87 @@ public class CanonicalMatcher {
         //System.out.println("\t".repeat(level) + ret);
 
         if (ret) {
-            // System.out.print("\t".repeat(level));
+            //System.out.print("\t".repeat(level));
             //System.out.println(match + " -> " + search);
         }
 
         //System.out.println(v);
 
-
-
         return ret;
 
+    }
+
+
+
+    private static class VariableStack {
+
+        private LinkedList<Map<String, Operand>> stack = new LinkedList<>();
+
+        public boolean hasFrame() {
+            return !stack.isEmpty();
+        }
+
+        public void enterNewFrame() {
+
+            Map<String, Operand> vars = new HashMap<>();
+
+            stack.addFirst(vars);
+
+        }
+
+        public void popFrame() {
+
+            stack.removeFirst();
+
+        }
+
+        public void addMapping(String var, Operand o) {
+
+            if (stack.isEmpty()) {
+                throw new RuntimeException("No stack frame");
+            }
+
+            if (get(var) != null) {
+                throw new IllegalArgumentException(
+                    String.format("Variable \"%s\" already used", var));
+            }
+
+            stack.getFirst().put(var, o);
+
+        }
+
+        public Operand get(String s) {
+
+            for (Map<String, Operand> frame : stack) {
+
+                Operand o = frame.get(s);
+
+                if (o != null)
+                    return o;
+
+            }
+
+            return null;
+
+        }
+
+        public Map<String, Operand> collapse() {
+
+            Map<String, Operand> ret = new HashMap<>();
+
+            for (Map<String, Operand> frame : stack) {
+
+                ret.putAll(frame);
+
+            }
+
+            return ret;
+
+        }
+
+        @Override public String toString() {
+            return stack.toString();
+        }
     }
 
 }

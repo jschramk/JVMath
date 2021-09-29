@@ -229,8 +229,7 @@ solve (x^2 + x = y) {
     y: not f(#target)
 }
 
-// Why does this cause issues with y = a b a^2 b^2?
-/*
+// NOTE: this caused issues before but it may not be the fault of this rule in particular
 solve (x^2 - x = y) {
     1 x^2 + (-1) x = y : Rewrite as a standard quadratic
     @QUADRATIC
@@ -238,8 +237,6 @@ solve (x^2 - x = y) {
     x: is f(#target)
     y: not f(#target)
 }
-*/
-
 
 solve (root(a, x) = y) {
     x = y^a
@@ -320,4 +317,3 @@ solve (log(x) = y) {
     x: is f(#target)
     y: not f(#target)
 }
-

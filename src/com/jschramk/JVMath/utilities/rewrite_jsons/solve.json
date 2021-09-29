@@ -658,6 +658,26 @@
     ]
   },
   {
+    "find": "x^2 - x = y",
+    "next": "QUADRATIC",
+    "steps": [
+      {
+        "replace": "1 x^2 + (-1) x = y",
+        "description": "Rewrite as a standard quadratic"
+      }
+    ],
+    "require": [
+      {
+        "variable": "x",
+        "contains solve": true
+      },
+      {
+        "variable": "y",
+        "contains solve": false
+      }
+    ]
+  },
+  {
     "find": "root(a, x) = y",
     "steps": [
       {

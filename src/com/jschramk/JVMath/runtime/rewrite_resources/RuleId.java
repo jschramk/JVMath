@@ -1,5 +1,6 @@
 package com.jschramk.JVMath.runtime.rewrite_resources;
 
+/*
 public class RuleId {
 
 public static class operand {
@@ -32,3 +33,5 @@ public static class equation {
 }
 
 }
+
+ */

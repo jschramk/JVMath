@@ -542,7 +542,7 @@ public static void compileFiles(String inputDir, String outputDir) throws IOExce
 
 public static void compileFile(File input, File output) throws IOException {
 
-    System.out.println("Compiling:\t" + input.getName());
+    System.out.println(String.format("Compiling: %s -> %s", input.getName(), output.getName()));
 
     // get input stream
     CharStream in = CharStreams.fromPath(input.toPath());
@@ -574,8 +574,6 @@ public static void compileFile(File input, File output) throws IOException {
     f.write(gson.toJson(jsonOutput));
 
     f.close();
-
-    System.out.println("Wrote:\t\t" + output.getName());
 
 }
 

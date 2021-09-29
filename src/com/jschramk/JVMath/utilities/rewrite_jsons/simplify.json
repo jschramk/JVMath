@@ -19,7 +19,7 @@
     ]
   },
   {
-    "find": "a^2 + 2 a b + b^2",
+    "find": "a^2 + 2*a*b + b^2",
     "id": "FACTOR",
     "steps": [
       {
@@ -52,7 +52,7 @@
     ]
   },
   {
-    "find": "a x + b x",
+    "find": "a * x + b * x",
     "id": "ADD_WITH_DOUBLE_COEFFICIENT",
     "steps": [
       {
@@ -61,9 +61,31 @@
     ],
     "require": [
       {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
+        "variable": "b",
+        "contains solve": false
+      }
+    ]
+  },
+  {
+    "find": "(a + b) * x",
+    "id": "DISTRIBUTE_TARGET",
+    "steps": [
+      {
+        "replace": "a * x + b * x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "b",
+        "contains solve": true
+      },
+      {
         "variable": "x",
-        "contains solve": true,
-        "not type": "LITERAL"
+        "contains solve": true
       }
     ]
   },
@@ -162,6 +184,14 @@
     ]
   },
   {
+    "find": "-(a + b)",
+    "steps": [
+      {
+        "replace": "-a - b"
+      }
+    ]
+  },
+  {
     "find": "-(a * b)",
     "steps": [
       {
@@ -178,23 +208,8 @@
     ]
   },
   {
-    "find": "-(a + b)",
-    "steps": [
-      {
-        "replace": "-a - b"
-      }
-    ]
-  },
-  {
-    "find": "x * x",
-    "steps": [
-      {
-        "replace": "x^2"
-      }
-    ]
-  },
-  {
     "find": "x * x^a",
+    "id": "MULTIPLY_SAME_BASE_1",
     "steps": [
       {
         "replace": "x^(1 + a)"
@@ -203,9 +218,19 @@
   },
   {
     "find": "x^a * x^b",
+    "id": "MULTIPLY_SAME_BASE_2",
     "steps": [
       {
         "replace": "x^(a + b)"
+      }
+    ]
+  },
+  {
+    "find": "x * x",
+    "id": "MULTIPLY_SAME",
+    "steps": [
+      {
+        "replace": "x^2"
       }
     ]
   },
@@ -214,6 +239,12 @@
     "steps": [
       {
         "replace": "(a * b)^c"
+      }
+    ],
+    "require": [
+      {
+        "variable": "c",
+        "contains solve": true
       }
     ]
   },
@@ -290,7 +321,7 @@
     ]
   },
   {
-    "find": "a(b/c)",
+    "find": "a * (b/c)",
     "steps": [
       {
         "replace": "(a * b)/c"
@@ -414,6 +445,22 @@
     "steps": [
       {
         "replace": "root(a)"
+      }
+    ]
+  },
+  {
+    "find": "root(n, a^n/b)",
+    "steps": [
+      {
+        "replace": "a/root(n, b)"
+      }
+    ]
+  },
+  {
+    "find": "root(n, a/b^n)",
+    "steps": [
+      {
+        "replace": "root(n, a)/b"
       }
     ]
   },

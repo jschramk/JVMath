@@ -9,7 +9,7 @@ simplify (x + x) {
 }
 
 @FACTOR
-simplify (a^2 + 2 a b + b^2) {
+simplify (a^2 + 2*a*b + b^2) {
     (a + b)^2
 }
 
@@ -26,11 +26,30 @@ simplify (x + a * x) {
 }
 
 @ADD_WITH_DOUBLE_COEFFICIENT
-simplify (a x + b x) {
+simplify (a * x + b * x) {
     (a + b) * x
 } where {
-    x: is f(#target), not literal
+    a: not f(#target)
+    b: not f(#target)
 }
+
+@DISTRIBUTE_TARGET
+simplify ((a + b) * x) {
+    a * x + b * x
+} where {
+    b: is f(#target)
+    x: is f(#target)
+}
+
+// the a: is f(#target) here sorta works like a or b is f(#target) because the mapping algorithm
+// will permute the mapping so that a maps to whatever is the f(#target)
+/*@DISTRIBUTE_NON_TARGET
+simplify (n * (a + b)) {
+    (n * a) + (n * b)
+} where {
+    n: not f(#target)
+    a: is f(#target)
+}*/
 
 @DISTRIBUTE_LITERAL
 simplify (n * (a + b)) {
@@ -83,6 +102,10 @@ simplify (-(-x)) {
     x
 }
 
+simplify (-(a + b)) {
+    -a - b
+}
+
 simplify (-(a * b)) {
     (-a) * b
 }
@@ -91,24 +114,27 @@ simplify (-(a/b)) {
     (-a)/b
 }
 
-simplify (-(a + b)) {
-    -a - b
-}
-
-simplify (x * x) {
-    x^2
-}
-
+@MULTIPLY_SAME_BASE_1
 simplify (x * x^a) {
     x^(1 + a)
 }
 
+@MULTIPLY_SAME_BASE_2
 simplify (x^a * x^b) {
     x^(a + b)
 }
 
+// this must go after the previous two so things like a*b*a^2*b^2 can be simplified
+@MULTIPLY_SAME
+simplify (x * x) {
+    x^2
+}
+
+// only do this to get to c, otherwise leave it alone
 simplify (a^c * b^c) {
     (a * b)^c
+} where {
+    c: is f(#target)
 }
 
 simplify ((a/b) * (c/d)) {
@@ -147,7 +173,7 @@ simplify (a/(b/c)) {
     (a * c)/b
 }
 
-simplify (a(b/c)) {
+simplify (a * (b/c)) {
     (a * b)/c
 }
 
@@ -211,6 +237,14 @@ simplify (a^(0.5)) {
     root(a)
 }
 
+simplify (root(n, a^n/b)) {
+    a/root(n, b)
+}
+
+simplify (root(n, a/b^n)) {
+    root(n, a)/b
+}
+
 simplify (root(2, x)) {
     root(x)
 }
@@ -260,4 +294,3 @@ simplify (x^n1/(b * x^n2)) {
 simplify ((a * x^n1)/x^n2) {
     a * x^(n1 - n2)
 }
-
