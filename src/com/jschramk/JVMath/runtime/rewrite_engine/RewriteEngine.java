@@ -12,38 +12,52 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.jschramk.JVMath.runtime.rewrite_engine.StructureMatcher.findMatch;
+import static com.jschramk.JVMath.runtime.rewrite_engine.StructureSearch.findMatch;
 
 public class RewriteEngine {
 
     private static final int MAX_SINGLE_RULE_APPLICATIONS = 100, MAX_ALL_RULE_CHECKS = 100;
 
-    private static Output<Equation> applyEquationRule(Equation to, Rule<Equation> rule,
-        String solveFor, boolean steps) {
+    // get a mapping of an equation rule onto an equation, if possible, else return null
+    private static SolvedMappings getEquationMapping(Equation equation, Rule<Equation> rule,
+        String solveFor) {
 
-        to = to.fixedCopy();
+        StructureSearch.Match leftMatch = StructureSearch
+            .computeMatch(rule.getFind().getLeftSide(), equation.getLeftSide(),
+                rule.getRequirements(), solveFor);
 
-        StructureMatcher.Match leftMatch = StructureMatcher
-            .getMatch(rule.getFind().getLeftSide(), to.getLeftSide(), rule.getRequirements(),
-                solveFor);
-
-        StructureMatcher.Match rightMatch = StructureMatcher
-            .getMatch(rule.getFind().getRightSide(), to.getRightSide(), rule.getRequirements(),
-                solveFor);
+        StructureSearch.Match rightMatch = StructureSearch
+            .computeMatch(rule.getFind().getRightSide(), equation.getRightSide(),
+                rule.getRequirements(), solveFor);
 
         if (leftMatch == null || rightMatch == null) {
             return null;
         }
 
-        if (!Knowns.sameVariables(leftMatch.getKnowns(), rightMatch.getKnowns())) {
+        if (!SolvedMappings
+            .sameVariables(leftMatch.getSolvedMappings(), rightMatch.getSolvedMappings())) {
             return null;
         }
 
-        Knowns allKnowns = Knowns.combine(leftMatch.getKnowns(), rightMatch.getKnowns());
+        return SolvedMappings
+            .combine(leftMatch.getSolvedMappings(), rightMatch.getSolvedMappings());
+
+    }
+
+
+    private static Output<Equation> applyEquationRule(Equation equation, Rule<Equation> rule,
+        String solveFor, boolean steps) {
+
+        equation = equation.fixedCopy();
+
+        SolvedMappings allSolvedMappings = getEquationMapping(equation, rule, solveFor);
+
+        if (allSolvedMappings == null)
+            return null;
 
         Output<Equation> output = new Output<>();
 
-        Map<String, Operand> variables = allKnowns.getVariables();
+        Map<String, Operand> variables = allSolvedMappings.getVariables();
 
         Equation equationStep;
 
@@ -51,8 +65,10 @@ public class RewriteEngine {
 
             for (Step<Equation> step : rule.getSteps()) {
 
-                Operand leftReplacement = step.getReplace().getLeftSide().replaceCopy(allKnowns);
-                Operand rightReplacement = step.getReplace().getRightSide().replaceCopy(allKnowns);
+                Operand leftReplacement =
+                    step.getReplace().getLeftSide().replaceCopy(allSolvedMappings);
+                Operand rightReplacement =
+                    step.getReplace().getRightSide().replaceCopy(allSolvedMappings);
 
                 equationStep = new Equation(leftReplacement, rightReplacement);
                 equationStep.fixTree();
@@ -60,9 +76,7 @@ public class RewriteEngine {
                 String desc = step.getDescription();
 
                 if (desc != null) {
-                    for (String name : variables.keySet()) {
-                        desc = desc.replaceAll("\\$" + name, variables.get(name).toString());
-                    }
+                    desc = fillVariableDescription(desc, variables);
                 }
 
                 Step<Equation> outStep = new Step<>(equationStep, desc);
@@ -75,8 +89,10 @@ public class RewriteEngine {
 
             Step<Equation> step = rule.getLastStep();
 
-            Operand leftReplacement = step.getReplace().getLeftSide().replaceCopy(allKnowns);
-            Operand rightReplacement = step.getReplace().getRightSide().replaceCopy(allKnowns);
+            Operand leftReplacement =
+                step.getReplace().getLeftSide().replaceCopy(allSolvedMappings);
+            Operand rightReplacement =
+                step.getReplace().getRightSide().replaceCopy(allSolvedMappings);
 
             equationStep = new Equation(leftReplacement, rightReplacement);
             equationStep.fixTree();
@@ -312,8 +328,6 @@ public class RewriteEngine {
 
                 curr = consolidated;
 
-                //ret.incrementOperationCount();
-
                 if (steps) {
                     ret.addStep(new Step<>(curr, null));
                 }
@@ -330,8 +344,6 @@ public class RewriteEngine {
             return null;
         }
 
-        //System.out.println(ret.getResult());
-
         return ret;
 
     }
@@ -341,10 +353,9 @@ public class RewriteEngine {
 
         to = to.fixedCopy();
 
-        //System.out.print(String.format("%s -> %s ? ", to, rule.getFind()));
+        //System.out.println(String.format("%s -> %s ?", to, rule.getFind()));
 
-        StructureMatcher.Match match =
-            findMatch(rule.getFind(), to, rule.getRequirements(), target);
+        StructureSearch.Match match = findMatch(rule.getFind(), to, rule.getRequirements(), target);
 
         //System.out.println("Simplify with target: " + target);
 
@@ -354,7 +365,7 @@ public class RewriteEngine {
             return null;
         }
 
-        Map<String, Operand> variables = match.getKnowns().getVariables();
+        Map<String, Operand> variables = match.getSolvedMappings().getVariables();
 
         Output<Operand> output = new Output<>();
 
@@ -364,17 +375,15 @@ public class RewriteEngine {
 
             for (Step<Operand> step : rule.getSteps()) {
 
-                operandStep = getPopulatedReplacement(match.getOriginal(), step.getReplace(),
-                    match.getKnowns());
+                operandStep = buildReplacement(match.getOriginal(), step.getReplace(),
+                    match.getSolvedMappings());
 
                 operandStep = to.replaceCopy(match.getOriginal().getId(), operandStep);
 
                 String desc = step.getDescription();
 
                 if (desc != null) {
-                    for (String name : variables.keySet()) {
-                        desc = desc.replaceAll("\\$" + name, variables.get(name).toString());
-                    }
+                    desc = fillVariableDescription(desc, variables);
                 }
 
                 Step<Operand> outStep = new Step<>(operandStep, desc);
@@ -388,7 +397,7 @@ public class RewriteEngine {
             Step<Operand> step = rule.getLastStep();
 
             operandStep =
-                getPopulatedReplacement(match.getOriginal(), step.getReplace(), match.getKnowns());
+                buildReplacement(match.getOriginal(), step.getReplace(), match.getSolvedMappings());
 
             operandStep = to.replaceCopy(match.getOriginal().getId(), operandStep);
 
@@ -402,10 +411,17 @@ public class RewriteEngine {
 
     }
 
-    private static Operand getPopulatedReplacement(Operand original, Operand replacement,
-        Knowns knowns) {
+    private static String fillVariableDescription(String desc, Map<String, Operand> variables) {
+        for (String name : variables.keySet()) {
+            desc = desc.replaceAll("#" + name, variables.get(name).toString());
+        }
+        return desc;
+    }
 
-        Operand populated = replacement.replaceCopy(knowns);
+    private static Operand buildReplacement(Operand original, Operand replacement,
+        SolvedMappings solvedMappings) {
+
+        Operand populated = replacement.replaceCopy(solvedMappings);
 
         if (!(original instanceof BinaryOperation)) {
             return populated;
@@ -420,7 +436,7 @@ public class RewriteEngine {
             List<Operand> unusedChildren = new ArrayList<>();
 
             for (Operand child : original) {
-                if (!knowns.getUsedIds().contains(child.getId())) {
+                if (!solvedMappings.getUsedIds().contains(child.getId())) {
                     unusedChildren.add(child.copy());
                 }
             }
@@ -600,7 +616,7 @@ public class RewriteEngine {
             steps.addAll(moreSteps.steps);
         }
 
-        public void print() {
+        public void printSteps() {
 
             for (Step<T> step : steps) {
 

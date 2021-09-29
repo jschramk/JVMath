@@ -94,17 +94,17 @@ solve (x1 = a/x2) {
     x1 x2 = (a x2)/x2 : Multiply both sides by ${#x2}
     x1 x2 = a : Cancel ${#x2} in the numerator and denominator on the right side
 } where {
+    a: not f(#target)
     x1: is f(#target)
     x2: is f(#target)
-    a: not f(#target)
 }
 
 solve (x1 = a * x2) {
     x1/x2 = a
 } where {
+    a: not f(#target)
     x1: is f(#target)
     x2: is f(#target)
-    a: not f(#target)
 }
 
 solve (a x + b (-x) = y) {

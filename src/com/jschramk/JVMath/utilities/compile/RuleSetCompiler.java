@@ -193,7 +193,7 @@ private static class CodeRule {
                     String inside = found.substring(2, found.length() - 1);
 
                     // TEMPORARY SOLUTION... just converting new syntax from .rules file to old syntax for .json
-                    String replacement = "${" + inside.replaceAll("#", Matcher.quoteReplacement("$")) + "}$";
+                    String replacement = "${" + inside + "}$";
 
                     builder.append(replacement);
 

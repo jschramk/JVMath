@@ -8,18 +8,18 @@ import util.PrettyPrinter;
 
 import java.util.*;
 
-public class Unknowns {
+public class UnsolvedMappings {
 
     private static final PerformanceTimer timer = new PerformanceTimer();
 
     private static final int MAX_ITERATIONS = 20;
     private final Map<Operand, Choices> unknownMap = new HashMap<>();
-    private final Knowns knowns;
-    private final Assigner assigner;
+    private final SolvedMappings solvedMappings;
+    private final MappingAssigner mappingAssigner;
 
-    public Unknowns(Knowns knowns) {
-        this.knowns = knowns;
-        this.assigner = new Assigner(knowns, this);
+    public UnsolvedMappings(SolvedMappings solvedMappings) {
+        this.solvedMappings = solvedMappings;
+        this.mappingAssigner = new MappingAssigner(solvedMappings, this);
     }
 
     // returns true if all operands in the collection are the same (not the same instance)
@@ -106,7 +106,7 @@ public class Unknowns {
                 break;
             }
 
-            if (!assigner.assignNext()) {
+            if (!mappingAssigner.assignNext()) {
                 return false;
             }
 
@@ -133,7 +133,7 @@ public class Unknowns {
 
             Map.Entry<Operand, Choices> entry = iterator.next();
 
-            entry.getValue().removeKnown(knowns.getMappedIds());
+            entry.getValue().removeKnown(solvedMappings.getMappedIds());
 
             if (entry.getValue().isEmpty()) {
                 iterator.remove();
@@ -145,7 +145,7 @@ public class Unknowns {
 
     public void removeUsed() {
         for (Map.Entry<Operand, Choices> entry : unknownMap.entrySet()) {
-            entry.getValue().removeUsed(knowns.getUsedIds());
+            entry.getValue().removeUsed(solvedMappings.getUsedIds());
         }
     }
 
@@ -189,11 +189,11 @@ public class Unknowns {
 
     private boolean notEqualToGeneralKnown(Operand choice, Operand unknown) {
 
-        if (!knowns.hasGeneralMapping(unknown)) {
+        if (!solvedMappings.hasGeneralMapping(unknown)) {
             return false;
         }
 
-        return !knowns.getGeneralMapping(unknown).equals(choice);
+        return !solvedMappings.getGeneralMapping(unknown).equals(choice);
     }
 
     private boolean notChildOfKnownParent(Operand choice, Operand unknown) {
@@ -204,11 +204,11 @@ public class Unknowns {
             return false;
         }
 
-        if (!knowns.hasInstanceMapping(parent)) {
+        if (!solvedMappings.hasInstanceMapping(parent)) {
             return false;
         }
 
-        return !knowns.getInstanceMapping(parent).hasChildInstance(choice);
+        return !solvedMappings.getInstanceMapping(parent).hasChildInstance(choice);
     }
 
     private boolean notParentOfKnownChild(Operand choice, Operand unknown) {
@@ -217,11 +217,11 @@ public class Unknowns {
 
             for (Operand child : unknown) {
 
-                if (!knowns.hasInstanceMapping(child)) {
+                if (!solvedMappings.hasInstanceMapping(child)) {
                     continue;
                 }
 
-                if (!choice.hasChildInstance(knowns.getInstanceMapping(child))) {
+                if (!choice.hasChildInstance(solvedMappings.getInstanceMapping(child))) {
                     return true;
                 }
 
@@ -397,15 +397,15 @@ public class Unknowns {
 
 
     // class that represents a set of choices that must be mapped to a set of unknowns
-    private static class Assigner {
+    private static class MappingAssigner {
 
-        private Knowns knowns;
-        private Unknowns unknowns;
+        private SolvedMappings solvedMappings;
+        private UnsolvedMappings unsolvedMappings;
         private Map<OperandSet, OperandSet> map = new HashMap<>(10, 0.8f);
 
-        private Assigner(Knowns knowns, Unknowns unknowns) {
-            this.knowns = knowns;
-            this.unknowns = unknowns;
+        private MappingAssigner(SolvedMappings solvedMappings, UnsolvedMappings unsolvedMappings) {
+            this.solvedMappings = solvedMappings;
+            this.unsolvedMappings = unsolvedMappings;
             reset();
         }
 
@@ -413,7 +413,7 @@ public class Unknowns {
 
             map.clear();
 
-            for (Map.Entry<Operand, Choices> unknownEntry : unknowns.unknownMap.entrySet()) {
+            for (Map.Entry<Operand, Choices> unknownEntry : unsolvedMappings.unknownMap.entrySet()) {
 
                 Choices operandChoices = unknownEntry.getValue();
 
@@ -560,7 +560,7 @@ public class Unknowns {
 
                         //System.out.print(assignList.get(i) + " -> " + choiceList.get(i) + ", ");
 
-                        knowns.putMapping(assignList.get(i), choiceList.get(i));
+                        solvedMappings.putMapping(assignList.get(i), choiceList.get(i));
 
                     } else {
 
@@ -575,7 +575,7 @@ public class Unknowns {
 
                         if (!Operand.sameParent(leftover)) {
 
-                            knowns.putMapping(assignList.get(i), choiceList.get(i));
+                            solvedMappings.putMapping(assignList.get(i), choiceList.get(i));
 
                             continue;
 
@@ -587,7 +587,7 @@ public class Unknowns {
 
                             //System.out.print(assignList + " -> " + choiceList.get(i) + ", ");
 
-                            knowns.putMapping(assign, choiceList.get(i));
+                            solvedMappings.putMapping(assign, choiceList.get(i));
 
                             continue;
 
@@ -604,8 +604,8 @@ public class Unknowns {
 
                             //System.out.print(assignList.get(i) + " -> " + operation + ", ");
 
-                            knowns.putMapping(assignList.get(i), operation);
-                            knowns.addUsed(leftover);
+                            solvedMappings.putMapping(assignList.get(i), operation);
+                            solvedMappings.addUsed(leftover);
 
                         } else {
 
@@ -626,7 +626,7 @@ public class Unknowns {
 
                     //System.out.print(assignList.get(i) + " -> " + choiceList.get(i) + ", ");
 
-                    knowns.putMapping(assignList.get(i), choiceList.get(i));
+                    solvedMappings.putMapping(assignList.get(i), choiceList.get(i));
 
                 }
 

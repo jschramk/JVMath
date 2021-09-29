@@ -1,7 +1,7 @@
 package com.jschramk.JVMath.runtime.components;
 
-import com.jschramk.JVMath.runtime.rewrite_engine.Canonical;
-import com.jschramk.JVMath.runtime.rewrite_engine.Knowns;
+//import com.jschramk.JVMath.runtime.rewrite_engine.Canonical;
+import com.jschramk.JVMath.runtime.rewrite_engine.SolvedMappings;
 import com.jschramk.JVMath.runtime.utils.Utils;
 
 import java.util.*;
@@ -12,18 +12,18 @@ import java.util.*;
  */
 public abstract class Operand implements Iterable<Operand> {
 
-private static int NEXT_ID = 0;
+    private static int NEXT_ID = 0;
 
-private short level = -1;
-private int id = getNextId();
-private Operand parent;
-private Operand[] children;
+    private short level = -1;
+    private int id = getNextId();
+    private Operand parent;
+    private Operand[] children;
 
-private static int getNextId() {
-    return NEXT_ID++;
-}
+    private static int getNextId() {
+        return NEXT_ID++;
+    }
 
-public void canonify() {
+/*public void canonify() {
 
     if (hasChildren()) {
 
@@ -41,182 +41,175 @@ public void canonify() {
 
     }
 
-}
+}*/
 
-private static Map<Integer, Operand> getVariableReplaceMap(
-    Operand operand, VariableDomain domain
-) {
+    private static Map<Integer, Operand> getVariableReplaceMap(Operand operand,
+        VariableDomain domain) {
 
-    Map<Integer, Operand> map = new HashMap<>();
+        Map<Integer, Operand> map = new HashMap<>();
 
-    if (operand instanceof Variable) {
+        if (operand instanceof Variable) {
 
-        Variable variable = (Variable) operand;
+            Variable variable = (Variable) operand;
 
-        if (domain.contains(variable.getName())) {
-            map.put(operand.id, domain.get(variable.getName()));
+            if (domain.contains(variable.getName())) {
+                map.put(operand.id, domain.get(variable.getName()));
+            }
+
+        } else if (operand.children != null) {
+
+            for (Operand child : operand.children) {
+
+                map.putAll(getVariableReplaceMap(child, domain));
+
+            }
+
         }
 
-    } else if (operand.children != null) {
-
-        for (Operand child : operand.children) {
-
-            map.putAll(getVariableReplaceMap(child, domain));
-
-        }
+        return map;
 
     }
 
-    return map;
+    protected static String childPriorityString(Operand parent, Operand child) {
+        return childPriorityString(parent, child, false);
+    }
 
-}
-
-protected static String childPriorityString(Operand parent, Operand child) {
-    return childPriorityString(parent, child, false);
-}
-
-protected static String childPriorityString(Operand parent, Operand child, boolean latex) {
-    if (needsParentheses(parent, child)) {
-        if (latex) {
-            return " \\left( " + child.toLaTeX() + " \\right) ";
+    protected static String childPriorityString(Operand parent, Operand child, boolean latex) {
+        if (needsParentheses(parent, child)) {
+            if (latex) {
+                return " \\left( " + child.toLaTeX() + " \\right) ";
+            } else {
+                return "(" + child.toString() + ")";
+            }
         } else {
-            return "(" + child.toString() + ")";
+            if (latex) {
+                return child.toLaTeX();
+            } else {
+                return child.toString();
+            }
         }
-    } else {
-        if (latex) {
-            return child.toLaTeX();
+    }
+
+    public static boolean needsParentheses(Operand parent, Operand child) {
+        return needsParentheses(parent, child, true);
+    }
+
+    public String toLaTeX() {
+        return toString();
+    }
+
+    public static boolean needsParentheses(Operand parent, Operand child, boolean needsOnEquals) {
+
+        if (needsOnEquals) {
+            return typePriority(child.getType()) <= typePriority(parent.getType());
         } else {
-            return child.toString();
-        }
-    }
-}
-
-public static boolean needsParentheses(Operand parent, Operand child) {
-    return needsParentheses(parent, child, true);
-}
-
-public String toLaTeX() {
-    return toString();
-}
-
-public static boolean needsParentheses(Operand parent, Operand child, boolean needsOnEquals) {
-
-    if (needsOnEquals) {
-        return typePriority(child.getType()) <= typePriority(parent.getType());
-    } else {
-        return typePriority(child.getType()) < typePriority(parent.getType());
-    }
-
-}
-
-private static int typePriority(Enums.OperandType type) {
-
-    switch (type) {
-
-        case MATRIX:
-            return 5;
-        case CONSTANT:
-        case VARIABLE:
-        case LITERAL:
-            return 4;
-        case FUNCTION:
-            return 3;
-        case FACTORIAL:
-        case EXPONENT:
-            return 2;
-        case PRODUCT:
-        case DIVISION:
-        case NEGATION:
-            return 1;
-        case SUM:
-            return 0;
-
-    }
-
-    return -1;
-
-}
-
-public abstract Enums.OperandType getType();
-
-public static boolean sameType(Operand o1, Operand o2) {
-
-    if (o1 instanceof Literal) {
-        return o2 instanceof Literal;
-    } else if (o1 instanceof Variable) {
-        return o2 instanceof Variable;
-    } else if (o1 instanceof UnaryOperation) {
-        return o2 instanceof UnaryOperation &&
-            ((UnaryOperation) o1).getOperator() == ((UnaryOperation) o2).getOperator();
-    } else if (o1 instanceof BinaryOperation) {
-        return o2 instanceof BinaryOperation &&
-            ((BinaryOperation) o1).getOperator() == ((BinaryOperation) o2).getOperator();
-    } else if (o1 instanceof FunctionOperation) {
-        return o2 instanceof FunctionOperation &&
-            ((FunctionOperation) o1).getOperator() == ((FunctionOperation) o2).getOperator();
-    } else if (o1 instanceof Matrix) {
-        return o2 instanceof Matrix;
-    }
-
-    throw new IllegalArgumentException("Unable to verify type sameness: " + o1 + ", " + o2);
-
-}
-
-public static boolean sameParent(Collection<Operand> operands) {
-    Operand parent = operands.iterator().next().parent;
-    for (Operand operand : operands) {
-        if (operand.parent != parent || operand.parent == null) return false;
-    }
-    return true;
-}
-
-public static void validateTree(Operand operand) {
-    recursiveValidateTree(operand, null, new HashSet<>());
-}
-
-public static void validateTree(Equation equation) {
-    validateTree(equation.getLeftSide());
-    validateTree(equation.getRightSide());
-}
-
-private static void recursiveValidateTree(
-    Operand child, Operand parent, Set<Integer> visitedIds
-) {
-
-    if (child.parent != parent) {
-
-        if (parent == null) {
-            throw new IllegalArgumentException("Operand to validate must be top level parent");
-        } else {
-
-            throw new IllegalStateException("\n\nOperand:\n\t" +
-                child.toInfoString() +
-                "\nhas parent:\n\t" +
-                child.parent.toInfoString() +
-                "\nbut its parent should be:\n\t" +
-                parent.toInfoString() +
-                "\n\n" +
-                Utils.toTreeString(parent));
+            return typePriority(child.getType()) < typePriority(parent.getType());
         }
 
     }
 
-    if (visitedIds.contains(child.id)) {
-        throw new IllegalStateException("Operand \"" +
-            child +
-            "\" with ID " +
-            child.id +
-            " was used more than once in tree");
+    private static int typePriority(Enums.OperandType type) {
+
+        switch (type) {
+
+            case MATRIX:
+                return 5;
+            case CONSTANT:
+            case VARIABLE:
+            case LITERAL:
+                return 4;
+            case FUNCTION:
+                return 3;
+            case FACTORIAL:
+            case EXPONENT:
+                return 2;
+            case PRODUCT:
+            case DIVISION:
+            case NEGATION:
+                return 1;
+            case SUM:
+                return 0;
+
+        }
+
+        return -1;
+
     }
 
-    visitedIds.add(child.id);
+    public abstract Enums.OperandType getType();
 
-    if (child.level == -1) {
+    public static boolean sameType(Operand o1, Operand o2) {
 
-        System.out.println(child.level);
+        if (o1 instanceof Literal) {
+            return o2 instanceof Literal;
+        } else if (o1 instanceof Variable) {
+            return o2 instanceof Variable;
+        } else if (o1 instanceof UnaryOperation) {
+            return o2 instanceof UnaryOperation
+                && ((UnaryOperation) o1).getOperator() == ((UnaryOperation) o2).getOperator();
+        } else if (o1 instanceof BinaryOperation) {
+            return o2 instanceof BinaryOperation
+                && ((BinaryOperation) o1).getOperator() == ((BinaryOperation) o2).getOperator();
+        } else if (o1 instanceof FunctionOperation) {
+            return o2 instanceof FunctionOperation
+                && ((FunctionOperation) o1).getOperator() == ((FunctionOperation) o2).getOperator();
+        } else if (o1 instanceof Matrix) {
+            return o2 instanceof Matrix;
+        }
 
-        throw new IllegalStateException("Operand \"" + child + "\" level number is not set, ID: " + child.getId());
+        throw new IllegalArgumentException("Unable to verify type sameness: " + o1 + ", " + o2);
+
     }
+
+    public static boolean sameParent(Collection<Operand> operands) {
+        Operand parent = operands.iterator().next().parent;
+        for (Operand operand : operands) {
+            if (operand.parent != parent || operand.parent == null)
+                return false;
+        }
+        return true;
+    }
+
+    public static void validateTree(Operand operand) {
+        recursiveValidateTree(operand, null, new HashSet<>());
+    }
+
+    public static void validateTree(Equation equation) {
+        validateTree(equation.getLeftSide());
+        validateTree(equation.getRightSide());
+    }
+
+    private static void recursiveValidateTree(Operand child, Operand parent,
+        Set<Integer> visitedIds) {
+
+        if (child.parent != parent) {
+
+            if (parent == null) {
+                throw new IllegalArgumentException("Operand to validate must be top level parent");
+            } else {
+
+                throw new IllegalStateException(
+                    "\n\nOperand:\n\t" + child.toInfoString() + "\nhas parent:\n\t" + child.parent
+                        .toInfoString() + "\nbut its parent should be:\n\t" + parent.toInfoString()
+                        + "\n\n" + Utils.toTreeString(parent));
+            }
+
+        }
+
+        if (visitedIds.contains(child.id)) {
+            throw new IllegalStateException("Operand \"" + child + "\" with ID " + child.id
+                + " was used more than once in tree");
+        }
+
+        visitedIds.add(child.id);
+
+        if (child.level == -1) {
+
+            System.out.println(child.level);
+
+            throw new IllegalStateException(
+                "Operand \"" + child + "\" level number is not set, ID: " + child.getId());
+        }
 
     /*if (visitedOrderNumbers.contains(child.treeNumber)) {
       throw new IllegalStateException(
@@ -235,131 +228,148 @@ private static void recursiveValidateTree(
               + "\"");
     }*/
 
-    if (child.parent == null && child.level != 0) {
-        throw new IllegalStateException("Operand \"" +
-            child +
-            "\" has no parent but has level number of " +
-            child.level +
-            ", should be 0");
-    } else if (child.parent != null && child.level != child.parent.level + 1) {
-        throw new IllegalStateException("Operand \"" + child + "\" has an illegal level number\"");
-    }
-
-    if (child.children != null) {
-
-        for (Operand c : child.children) {
-            recursiveValidateTree(c, child, visitedIds);
+        if (child.parent == null && child.level != 0) {
+            throw new IllegalStateException(
+                "Operand \"" + child + "\" has no parent but has level number of " + child.level
+                    + ", should be 0");
+        } else if (child.parent != null && child.level != child.parent.level + 1) {
+            throw new IllegalStateException(
+                "Operand \"" + child + "\" has an illegal level number\"");
         }
 
-    }
+        if (child.children != null) {
 
-}
-
-private static Operand[] copyArray(Operand[] array) {
-    Operand[] ret = new Operand[array.length];
-    for (int i = 0; i < array.length; i++) {
-        ret[i] = array[i].copy();
-    }
-    return ret;
-}
-
-private static Operand[] replaceCopyArray(Operand[] list, Map<Integer, Operand> replacements) {
-
-    Operand[] result = new Operand[list.length];
-
-    for (int i = 0; i < list.length; i++) {
-        result[i] = list[i].recursiveReplaceCopy(replacements);
-    }
-
-    return result;
-}
-
-private static Operand[] replaceCopyArray(Operand[] list, Knowns replacements) {
-
-    Operand[] result = new Operand[list.length];
-
-    for (int i = 0; i < list.length; i++) {
-        result[i] = list[i].recursiveReplaceCopy(replacements);
-    }
-
-    return result;
-}
-
-private static Operand condenseBinaryOperation(BinaryOperation operation) {
-
-    BinaryOperator operator = operation.getOperator();
-
-    List<Operand> condensedChildren = new ArrayList<>();
-
-    if (operator.isCommutative()) {
-
-        List<Operand> noVars = new ArrayList<>();
-
-        for (int i = 0; i < operation.childCount(); i++) {
-
-            Operand child = operation.getChild(i);
-
-            if (child.getVariables().isEmpty()) {
-
-                noVars.add(child);
-
-            } else {
-
-                condensedChildren.add(child.condenseLiterals());
-
+            for (Operand c : child.children) {
+                recursiveValidateTree(c, child, visitedIds);
             }
 
         }
 
-        if (!noVars.isEmpty()) {
+    }
 
-            Operand noVar;
-
-            if (noVars.size() > 1) {
-                noVar = new BinaryOperation(operator, noVars).evaluate();
-            } else {
-                noVar = noVars.get(0).evaluate();
-            }
-
-            condensedChildren.add(0, noVar);
+    private static Operand[] copyArray(Operand[] array) {
+        Operand[] ret = new Operand[array.length];
+        for (int i = 0; i < array.length; i++) {
+            ret[i] = array[i].copy();
         }
-
-        Operand ret = new BinaryOperation(operator, condensedChildren);
-
-        ret.flatten();
-
         return ret;
+    }
 
-    } else {
+    private static Operand[] replaceCopyArray(Operand[] list, Map<Integer, Operand> replacements) {
 
-        return operation;
+        Operand[] result = new Operand[list.length];
+
+        for (int i = 0; i < list.length; i++) {
+            result[i] = list[i].recursiveReplaceCopy(replacements);
+        }
+
+        return result;
+    }
+
+    private static Operand[] replaceCopyArray(Operand[] list, SolvedMappings replacements) {
+
+        Operand[] result = new Operand[list.length];
+
+        for (int i = 0; i < list.length; i++) {
+            result[i] = list[i].recursiveReplaceCopy(replacements);
+        }
+
+        return result;
+    }
+
+    private static Operand condenseBinaryOperation(BinaryOperation operation) {
+
+        BinaryOperator operator = operation.getOperator();
+
+        List<Operand> condensedChildren = new ArrayList<>();
+
+        if (operator.isCommutative()) {
+
+            List<Operand> noVars = new ArrayList<>();
+
+            for (int i = 0; i < operation.childCount(); i++) {
+
+                Operand child = operation.getChild(i);
+
+                if (child.getVariables().isEmpty()) {
+
+                    noVars.add(child);
+
+                } else {
+
+                    condensedChildren.add(child.condenseLiterals());
+
+                }
+
+            }
+
+            if (!noVars.isEmpty()) {
+
+                Operand noVar;
+
+                if (noVars.size() > 1) {
+                    noVar = new BinaryOperation(operator, noVars).evaluate();
+                } else {
+                    noVar = noVars.get(0).evaluate();
+                }
+
+                condensedChildren.add(0, noVar);
+            }
+
+            Operand ret = new BinaryOperation(operator, condensedChildren);
+
+            ret.flatten();
+
+            return ret;
+
+        } else {
+
+            return operation;
+
+        }
 
     }
 
-}
+    public static boolean isCommutativeBinaryOperation(Operand operand) {
 
-public static boolean isCommutativeBinaryOperation(Operand operand) {
+        if (operand instanceof BinaryOperation) {
 
-    if (operand instanceof BinaryOperation) {
+            BinaryOperation operation = (BinaryOperation) operand;
 
-        BinaryOperation operation = (BinaryOperation) operand;
+            return operation.getOperator().isCommutative();
 
-        return operation.getOperator().isCommutative();
+        }
 
+        return false;
     }
 
-    return false;
-}
+    public int variableCount(String variable) {
 
-public int variableCount(String variable) {
+        if (this instanceof Variable) {
 
-    if (this instanceof Variable) {
+            Variable var = (Variable) this;
 
-        Variable var = (Variable) this;
+            if (var.getName().equals(variable)) {
 
-        if (var.getName().equals(variable)) {
+                return 1;
 
-            return 1;
+            } else {
+
+                return 0;
+
+            }
+
+        } else if (hasChildren()) {
+
+            int sum = 0;
+
+            for (Operand child : this) {
+
+                sum += child.variableCount(variable);
+
+            }
+
+            return sum;
 
         } else {
 
@@ -367,296 +377,279 @@ public int variableCount(String variable) {
 
         }
 
-    } else if (hasChildren()) {
+    }
 
-        int sum = 0;
-
-        for (Operand child : this) {
-
-            sum += child.variableCount(variable);
-
+    public void setVariableDomain(VariableDomain domain) {
+        if (getParent() != null) {
+            throw new IllegalArgumentException("Operand must be top level parent");
         }
-
-        return sum;
-
-    } else {
-
-        return 0;
-
+        recursiveSetVariableDomain(domain);
     }
 
-}
+    private void recursiveSetVariableDomain(VariableDomain domain) {
 
-public void setVariableDomain(VariableDomain domain) {
-    if (getParent() != null) {
-        throw new IllegalArgumentException("Operand must be top level parent");
-    }
-    recursiveSetVariableDomain(domain);
-}
+        if (hasChildren()) {
 
-private void recursiveSetVariableDomain(VariableDomain domain) {
+            for (Operand child : this) {
 
-    if (hasChildren()) {
+                if (child instanceof Variable) {
+                    child.setVariableDomain(domain); // defer to variable method
+                } else {
+                    child.recursiveSetVariableDomain(domain);
+                }
 
-        for (Operand child : this) {
-
-            if (child instanceof Variable) {
-                child.setVariableDomain(domain); // defer to variable method
-            } else {
-                child.recursiveSetVariableDomain(domain);
             }
 
         }
 
     }
 
-}
+    public Operand condenseLiterals() {
 
-public Operand condenseLiterals() {
+        Operand ret;
 
-    Operand ret;
+        if (getVariables().isEmpty()) {
 
-    if (getVariables().isEmpty()) {
+            ret = evaluate();
 
-        ret = evaluate();
+        } else if (this instanceof BinaryOperation) {
 
-    } else if (this instanceof BinaryOperation) {
+            BinaryOperation operation = (BinaryOperation) this;
 
-        BinaryOperation operation = (BinaryOperation) this;
+            if (operation.getOperator().isCommutative()) {
 
-        if (operation.getOperator().isCommutative()) {
+                ret = condenseBinaryOperation(operation);
 
-            ret = condenseBinaryOperation(operation);
+            } else {
+
+                List<Operand> consolidatedChildren = new ArrayList<>();
+
+                for (Operand child : operation) {
+
+                    Operand consolidatedChild = child.condenseLiterals();
+
+                    consolidatedChildren.add(consolidatedChild);
+                }
+
+                BinaryOperation newOperation =
+                    new BinaryOperation(operation.getOperator(), consolidatedChildren);
+
+                newOperation.flatten();
+
+                ret = newOperation;
+
+            }
 
         } else {
 
-            List<Operand> consolidatedChildren = new ArrayList<>();
+            ret = this;
 
-            for (Operand child : operation) {
+        }
 
-                Operand consolidatedChild = child.condenseLiterals();
+        return ret;
 
-                consolidatedChildren.add(consolidatedChild);
+    }
+
+    public Operand fixedCopy() {
+
+        Operand copy = copy();
+
+        copy.fixTree();
+
+        return copy;
+    }
+
+    public void fixTree() {
+
+        if (parent != null) {
+            throw new RuntimeException(
+                "fixTree() can only be called on top level parent, parent: " + parent
+                    .toInfoString());
+        }
+
+        recursiveFixTree((short) 0);
+
+        validateTree(this);
+
+    }
+
+    private void recursiveFixTree(short currLevelNumber) {
+
+        this.level = currLevelNumber++;
+
+        if (hasChildren()) {
+
+            for (Operand child : this) {
+
+                child.parent = this;
+
+                child.recursiveFixTree(currLevelNumber);
+
             }
 
-            BinaryOperation newOperation = new BinaryOperation(operation.getOperator(), consolidatedChildren);
-
-            newOperation.flatten();
-
-            ret = newOperation;
-
         }
 
-    } else {
-
-        ret = this;
-
     }
 
-    return ret;
-
-}
-
-public Operand fixedCopy() {
-
-    Operand copy = copy();
-
-    copy.fixTree();
-
-    return copy;
-}
-
-public void fixTree() {
-
-    if (parent != null) {
-        throw new RuntimeException("fixTree() can only be called on top level parent, parent: " +
-            parent.toInfoString());
+    public int treeDepth() {
+        return recursiveTreeDepth();
     }
 
-    recursiveFixTree((short) 0);
+    private int recursiveTreeDepth() {
 
-    validateTree(this);
+        if (!hasChildren()) {
 
-}
+            return 0;
 
-private void recursiveFixTree(short currLevelNumber) {
+        } else {
 
-    this.level = currLevelNumber++;
+            int max = 0;
 
-    if (hasChildren()) {
+            for (Operand child : this) {
 
-        for (Operand child : this) {
+                max = Math.max(max, child.treeDepth());
 
-            child.parent = this;
+            }
 
-            child.recursiveFixTree(currLevelNumber);
+            return max + 1;
 
         }
 
     }
 
-}
+    public int treeSize() {
 
-public int treeDepth() {
-    return recursiveTreeDepth();
-}
+        if (!hasChildren()) {
 
-private int recursiveTreeDepth() {
+            return 1;
 
-    if (!hasChildren()) {
+        } else {
 
-        return 0;
+            int sum = 1;
 
-    } else {
+            for (Operand child : this) {
+                sum += child.treeSize();
+            }
 
-        int max = 0;
-
-        for (Operand child : this) {
-
-            max = Math.max(max, child.treeDepth());
+            return sum;
 
         }
 
-        return max + 1;
-
     }
 
-}
-
-public int treeSize() {
-
-    if (!hasChildren()) {
-
-        return 1;
-
-    } else {
-
-        int sum = 1;
-
-        for (Operand child : this) {
-            sum += child.treeSize();
-        }
-
-        return sum;
-
+    @Override public Iterator<Operand> iterator() {
+        return new ChildIterator(this);
     }
 
-}
+    public Operand replace(int replaceId, Operand replaceWith) {
 
-@Override
-public Iterator<Operand> iterator() {
-    return new ChildIterator(this);
-}
-
-public Operand replace(int replaceId, Operand replaceWith) {
-
-    if (id == replaceId) {
-        return replaceWith;
-    }
-
-    if (children != null) {
-        for (int i = 0; i < childCount(); i++) {
-            changeChild(i, getChild(i).replace(replaceId, replaceWith));
-        }
-
-        flatten();
-
-    }
-
-    return this;
-
-}
-
-public Operand replace(String variable, Operand replaceWith) {
-
-    if (this instanceof Variable) {
-
-        Variable var = (Variable) this;
-
-        if (var.getName().equals(variable)) {
+        if (id == replaceId) {
             return replaceWith;
         }
 
-    }
+        if (children != null) {
+            for (int i = 0; i < childCount(); i++) {
+                changeChild(i, getChild(i).replace(replaceId, replaceWith));
+            }
 
-    if (children != null) {
-        for (int i = 0; i < childCount(); i++) {
-            changeChild(i, getChild(i).replace(variable, replaceWith));
+            flatten();
+
         }
 
-        flatten();
+        return this;
 
     }
 
-    return this;
+    public Operand replace(String variable, Operand replaceWith) {
 
-}
+        if (this instanceof Variable) {
 
-public Operand replace(Map<Integer, Operand> replacements) {
+            Variable var = (Variable) this;
 
-    if (replacements.containsKey(id)) {
-        return replacements.get(id);
-    }
+            if (var.getName().equals(variable)) {
+                return replaceWith;
+            }
 
-    if (children != null) {
-        for (int i = 0; i < childCount(); i++) {
-            changeChild(i, getChild(i).replace(replacements));
         }
 
-        flatten();
+        if (children != null) {
+            for (int i = 0; i < childCount(); i++) {
+                changeChild(i, getChild(i).replace(variable, replaceWith));
+            }
 
-    }
+            flatten();
 
-
-    return this;
-
-}
-
-public Operand replace(Knowns replacements) {
-
-    if (replacements.hasGeneralMapping(this)) {
-
-        return replacements.getGeneralMapping(this).copy();
-
-    }
-
-    if (children != null) {
-
-        for (int i = 0; i < childCount(); i++) {
-            changeChild(i, getChild(i).replace(replacements));
         }
 
-        flatten();
+        return this;
 
     }
 
-    return this;
+    public Operand replace(Map<Integer, Operand> replacements) {
 
-}
+        if (replacements.containsKey(id)) {
+            return replacements.get(id);
+        }
 
-public Operand replaceCopy(Map<Integer, Operand> replacements) {
+        if (children != null) {
+            for (int i = 0; i < childCount(); i++) {
+                changeChild(i, getChild(i).replace(replacements));
+            }
 
-    Operand replaced = recursiveReplaceCopy(replacements);
-    replaced.fixTree();
+            flatten();
 
-    return replaced;
-}
+        }
 
-public Operand replaceCopy(int replaceId, Operand replaceWith) {
 
-    Operand replaced = recursiveReplaceCopy(replaceId, replaceWith);
-    replaced.fixTree();
+        return this;
 
-    return replaced;
-}
+    }
 
-public Operand replaceCopy(Knowns replacements) {
+    public Operand replace(SolvedMappings replacements) {
 
-    Operand replaced = recursiveReplaceCopy(replacements);
-    replaced.fixTree();
+        if (replacements.hasGeneralMapping(this)) {
 
-    return replaced;
-}
+            return replacements.getGeneralMapping(this).copy();
+
+        }
+
+        if (children != null) {
+
+            for (int i = 0; i < childCount(); i++) {
+                changeChild(i, getChild(i).replace(replacements));
+            }
+
+            flatten();
+
+        }
+
+        return this;
+
+    }
+
+    public Operand replaceCopy(Map<Integer, Operand> replacements) {
+
+        Operand replaced = recursiveReplaceCopy(replacements);
+        replaced.fixTree();
+
+        return replaced;
+    }
+
+    public Operand replaceCopy(int replaceId, Operand replaceWith) {
+
+        Operand replaced = recursiveReplaceCopy(replaceId, replaceWith);
+        replaced.fixTree();
+
+        return replaced;
+    }
+
+    public Operand replaceCopy(SolvedMappings replacements) {
+
+        Operand replaced = recursiveReplaceCopy(replacements);
+        replaced.fixTree();
+
+        return replaced;
+    }
 
   /*public boolean containsMatrices() {
 
@@ -676,344 +669,351 @@ public Operand replaceCopy(Knowns replacements) {
 
   }*/
 
-private Operand recursiveReplaceCopy(Map<Integer, Operand> replacements) {
+    private Operand recursiveReplaceCopy(Map<Integer, Operand> replacements) {
 
-    if (replacements.containsKey(id)) {
-        return replacements.get(id).copy();
-    }
-
-    if (hasChildren()) {
-
-        Operand shallow = shallowCopy();
-
-        shallow.setChildren(replaceCopyArray(children, replacements));
-
-        return shallow;
-
-    } else {
-        return copy();
-    }
-
-}
-
-private Operand recursiveReplaceCopy(Integer replaceId, Operand replaceWith) {
-
-    Map<Integer, Operand> replacements = new HashMap<>();
-
-    replacements.put(replaceId, replaceWith);
-
-    return recursiveReplaceCopy(replacements);
-
-}
-
-private Operand recursiveReplaceCopy(Knowns replacements) {
-
-    if (replacements.hasGeneralMapping(this)) {
-        return replacements.getGeneralMapping(this).copy();
-    }
-
-    if (hasChildren()) {
-
-        Operand shallow = shallowCopy();
-
-        shallow.setChildren(replaceCopyArray(children, replacements));
-
-        return shallow;
-
-    } else {
-        return copy();
-    }
-
-}
-
-public double computeToDouble() throws UnsupportedOperationException {
-
-    Operand evaluated = evaluate();
-
-    if (evaluated instanceof Literal) {
-
-        Literal literal = (Literal) evaluated;
-
-        return literal.getValue();
-
-    } else {
-
-        throw new UnsupportedOperationException("Unable to compute double value for class " +
-            evaluated.getClass().getName());
-
-    }
-
-}
-
-public Operand evaluate() {
-    throw new UnsupportedOperationException("evaluate() not implemented for " + this.getClass().getName());
-}
-
-public Operand importVariables(VariableDomain domain) {
-
-    Map<Integer, Operand> map = getVariableReplaceMap(this, domain);
-
-    return replaceCopy(map);
-
-}
-
-public Operand replaceMap(Map<String, Operand> variables) {
-
-    Operand ret = recursiveReplaceMap(variables);
-
-    ret.fixTree();
-
-    return ret;
-
-}
-
-public Operand recursiveReplaceMap(Map<String, Operand> variables) {
-
-    if (this instanceof Variable) {
-
-        Variable variable = (Variable) this;
-
-        if (variables.containsKey(variable.getName())) {
-            return variables.get(variable.getName()).copy();
+        if (replacements.containsKey(id)) {
+            return replacements.get(id).copy();
         }
 
-    } else if (hasChildren()) {
+        if (hasChildren()) {
 
-        for (int i = 0; i < childCount(); i++) {
+            Operand shallow = shallowCopy();
 
-            changeChild(i, getChild(i).recursiveReplaceMap(variables));
+            shallow.setChildren(replaceCopyArray(children, replacements));
+
+            return shallow;
+
+        } else {
+            return copy();
+        }
+
+    }
+
+    private Operand recursiveReplaceCopy(Integer replaceId, Operand replaceWith) {
+
+        Map<Integer, Operand> replacements = new HashMap<>();
+
+        replacements.put(replaceId, replaceWith);
+
+        return recursiveReplaceCopy(replacements);
+
+    }
+
+    private Operand recursiveReplaceCopy(SolvedMappings replacements) {
+
+        if (replacements.hasGeneralMapping(this)) {
+            return replacements.getGeneralMapping(this).copy();
+        }
+
+        if (hasChildren()) {
+
+            Operand shallow = shallowCopy();
+
+            shallow.setChildren(replaceCopyArray(children, replacements));
+
+            return shallow;
+
+        } else {
+            return copy();
+        }
+
+    }
+
+    public double computeToDouble() throws UnsupportedOperationException {
+
+        Operand evaluated = evaluate();
+
+        if (evaluated instanceof Literal) {
+
+            Literal literal = (Literal) evaluated;
+
+            return literal.getValue();
+
+        } else {
+
+            throw new UnsupportedOperationException(
+                "Unable to compute double value for class " + evaluated.getClass().getName());
 
         }
 
     }
 
-    return this;
+    public Operand evaluate() {
+        throw new UnsupportedOperationException(
+            "evaluate() not implemented for " + this.getClass().getName());
+    }
 
-}
+    public Operand importVariables(VariableDomain domain) {
 
-public boolean hasNoVariables() {
-    return !hasVariables();
-}
+        Map<Integer, Operand> map = getVariableReplaceMap(this, domain);
 
-public boolean hasVariables() {
+        return replaceCopy(map);
 
-    if (this instanceof Variable) {
+    }
+
+    public Operand replaceMap(Map<String, Operand> variables) {
+
+        Operand ret = recursiveReplaceMap(variables);
+
+        ret.fixTree();
+
+        return ret;
+
+    }
+
+    public Operand recursiveReplaceMap(Map<String, Operand> variables) {
+
+        if (this instanceof Variable) {
+
+            Variable variable = (Variable) this;
+
+            if (variables.containsKey(variable.getName())) {
+                return variables.get(variable.getName()).copy();
+            }
+
+        } else if (hasChildren()) {
+
+            for (int i = 0; i < childCount(); i++) {
+
+                changeChild(i, getChild(i).recursiveReplaceMap(variables));
+
+            }
+
+        }
+
+        return this;
+
+    }
+
+    public boolean hasNoVariables() {
+        return !hasVariables();
+    }
+
+    public boolean hasVariables() {
+
+        if (this instanceof Variable) {
+            return true;
+        }
+
+        if (hasChildren()) {
+
+            for (Operand child : this) {
+
+                if (child.hasChildren()) {
+                    return true;
+                }
+
+            }
+
+        }
+
+        return false;
+
+    }
+
+    public boolean hasChildren() {
+        return childCount() > 0;
+    }
+
+    public int childCount() {
+        return children == null ? 0 : children.length;
+    }
+
+    public boolean canEvaluate() {
         return true;
     }
 
-    if (hasChildren()) {
+    public Class<?> returnType() {
+        return Operand.class;
+    }
 
-        for (Operand child : this) {
+    public Operand getParent() {
+        return parent;
+    }
 
-            if (child.hasChildren()) {
-                return true;
-            }
+    public int getId() {
+        return id;
+    }
 
+    public short getLevel() {
+        return level;
+    }
+
+    protected abstract Operand shallowCopy();
+
+    public Operand copy() {
+
+        Operand ret = shallowCopy();
+
+        if (ret.hasChildren()) {
+            throw new IllegalStateException(
+                "Shallow copy of operand: \"" + this + "\" already has children, should be null");
         }
 
+        if (hasChildren()) {
+            ret.setChildren(copyArray(children));
+        }
+
+        return ret;
+
     }
 
-    return false;
+    public Set<String> getVariables() {
+        Set<String> vars = new HashSet<>();
 
-}
+        if (this instanceof Variable) {
+            vars.add(((Variable) this).getName());
+        }
 
-public boolean hasChildren() {
-    return childCount() > 0;
-}
-
-public int childCount() {
-    return children == null ? 0 : children.length;
-}
-
-public boolean canEvaluate() {
-    return true;
-}
-
-public Class<?> returnType() {
-    return Operand.class;
-}
-
-public Operand getParent() {
-    return parent;
-}
-
-public int getId() {
-    return id;
-}
-
-public short getLevel() {
-    return level;
-}
-
-protected abstract Operand shallowCopy();
-
-public Operand copy() {
-
-    Operand ret = shallowCopy();
-
-    if (ret.hasChildren()) {
-        throw new IllegalStateException("Shallow copy of operand: \"" +
-            this +
-            "\" already has children, should be null");
-    }
-
-    if (hasChildren()) {
-        ret.setChildren(copyArray(children));
-    }
-
-    return ret;
-
-}
-
-public Set<String> getVariables() {
-    Set<String> vars = new HashSet<>();
-
-    if (this instanceof Variable) {
-        vars.add(((Variable) this).getName());
-    }
-
-    if (children == null) {
+        if (children == null) {
+            return vars;
+        }
+        for (Operand child : children) {
+            vars.addAll(child.getVariables());
+        }
         return vars;
     }
-    for (Operand child : children) {
-        vars.addAll(child.getVariables());
-    }
-    return vars;
-}
 
-public boolean treeContainsSimilar(Operand operand) {
+    public boolean treeContainsSimilar(Operand operand) {
 
-    if (operand == null) {
-        throw new IllegalArgumentException("Operand to check for cannot be null");
-    }
+        if (operand == null) {
+            throw new IllegalArgumentException("Operand to check for cannot be null");
+        }
 
-    if (children == null) {
+        if (children == null) {
 
-        return equals(operand);
+            return equals(operand);
 
-    } else {
+        } else {
 
-        for (Operand child : children) {
+            for (Operand child : children) {
 
-            if (child.treeContainsSimilar(operand)) {
-                return true;
+                if (child.treeContainsSimilar(operand)) {
+                    return true;
+                }
+
             }
 
+            return false;
+
+        }
+
+    }
+
+    public Operand getChild(int i) {
+        return children[i];
+    }
+
+    public boolean hasChildInstance(Operand operand) {
+
+        if (!hasChildren()) {
+            return false;
+        }
+
+        for (Operand child : children) {
+            if (child == operand)
+                return true;
         }
 
         return false;
 
     }
 
-}
-
-public Operand getChild(int i) {
-    return children[i];
-}
-
-public boolean hasChildInstance(Operand operand) {
-
-    if (!hasChildren()) {
-        return false;
+    public String toInfoString() {
+        return this + " {Lvl: " + level + ", ID: " + Integer.toHexString(id) + "}";
     }
 
-    for (Operand child : children) {
-        if (child == operand) return true;
+    public String toIdString() {
+        return this + " #" + Integer.toHexString(id);
     }
 
-    return false;
-
-}
-
-public String toInfoString() {
-    return this + " {Lvl: " + level + ", ID: " + Integer.toHexString(id) + "}";
-}
-
-public String toIdString() {
-    return this + " #" + Integer.toHexString(id);
-}
-
-public String toTreeString() {
-    return Utils.toTreeString(this);
-}
-
-public boolean childrenEquals(Operand operand) {
-
-    if (children == null) {
-        return operand.children == null;
+    public String toTreeString() {
+        return Utils.toTreeString(this);
     }
 
-    return Arrays.equals(children, operand.children);
-}
+    public boolean childrenEquals(Operand operand) {
 
-public boolean isScalar() {
-    return !(this instanceof Matrix);
-}
+        if (children == null) {
+            return operand.children == null;
+        }
 
-protected int childrenHashCode() {
-    return Arrays.hashCode(children);
-}
-
-@Override
-public int hashCode() {
-    throw new UnsupportedOperationException("hashCode() not implemented for " + this.getClass().getName());
-}
-
-@Override
-public boolean equals(Object o) {
-    throw new UnsupportedOperationException("equals() not implemented for " + this.getClass().getName());
-}
-
-@Override
-public String toString() {
-    throw new UnsupportedOperationException("toString() not implemented for " + this.getClass().getName());
-}
-
-protected void setChildren(List<Operand> children) {
-
-    if (hasChildren()) {
-        throw new IllegalStateException("Operand already has children: " + this);
+        return Arrays.equals(children, operand.children);
     }
 
-    this.children = childArray(children);
-
-    for (Operand child : this) {
-        child.parent = this;
+    public boolean isScalar() {
+        return !(this instanceof Matrix);
     }
 
-    flatten();
-
-}
-
-private static Operand[] childArray(List<Operand> childList) {
-    return childList.toArray(new Operand[0]);
-}
-
-protected void flatten() {
-
-    if (children == null || !(this instanceof BinaryOperation)) {
-        return;
+    protected int childrenHashCode() {
+        return Arrays.hashCode(children);
     }
 
-    BinaryOperator operator = ((BinaryOperation) this).getOperator();
-
-    if (!operator.isCommutative()) {
-        return;
+    @Override public int hashCode() {
+        throw new UnsupportedOperationException(
+            "hashCode() not implemented for " + this.getClass().getName());
     }
 
-    List<Operand> newChildren = new ArrayList<>();
+    @Override public boolean equals(Object o) {
+        throw new UnsupportedOperationException(
+            "equals() not implemented for " + this.getClass().getName());
+    }
 
-    for (Operand operand : children) {
+    @Override public String toString() {
+        throw new UnsupportedOperationException(
+            "toString() not implemented for " + this.getClass().getName());
+    }
 
-        if (operand instanceof BinaryOperation) {
+    protected void setChildren(List<Operand> children) {
 
-            BinaryOperation operation = (BinaryOperation) operand;
+        if (hasChildren()) {
+            throw new IllegalStateException("Operand already has children: " + this);
+        }
 
-            if (operation.getOperator() == operator) {
+        this.children = childArray(children);
 
-                for (Operand child : operation) {
-                    newChildren.add(child);
-                    child.parent = this;
+        for (Operand child : this) {
+            child.parent = this;
+        }
+
+        flatten();
+
+    }
+
+    private static Operand[] childArray(List<Operand> childList) {
+        return childList.toArray(new Operand[0]);
+    }
+
+    protected void flatten() {
+
+        if (children == null || !(this instanceof BinaryOperation)) {
+            return;
+        }
+
+        BinaryOperator operator = ((BinaryOperation) this).getOperator();
+
+        if (!operator.isCommutative()) {
+            return;
+        }
+
+        List<Operand> newChildren = new ArrayList<>();
+
+        for (Operand operand : children) {
+
+            if (operand instanceof BinaryOperation) {
+
+                BinaryOperation operation = (BinaryOperation) operand;
+
+                if (operation.getOperator() == operator) {
+
+                    for (Operand child : operation) {
+                        newChildren.add(child);
+                        child.parent = this;
+                    }
+
+                } else {
+
+                    newChildren.add(operand);
+
                 }
 
             } else {
@@ -1022,60 +1022,54 @@ protected void flatten() {
 
             }
 
-        } else {
-
-            newChildren.add(operand);
-
         }
 
+        children = childArray(newChildren);
+
     }
 
-    children = childArray(newChildren);
+    protected void setChildren(Operand... children) {
 
-}
+        if (hasChildren()) {
+            throw new IllegalStateException("Operand already has children: " + this);
+        }
 
-protected void setChildren(Operand... children) {
+        this.children = children;
 
-    if (hasChildren()) {
-        throw new IllegalStateException("Operand already has children: " + this);
+        for (Operand child : this) {
+            child.parent = this;
+        }
+
+        flatten();
+
     }
 
-    this.children = children;
+    protected void setChild(Operand child) {
 
-    for (Operand child : this) {
+        if (hasChildren()) {
+            throw new IllegalStateException("Operand already has children: " + this);
+        }
+
+        this.children = childArray(child);
+
         child.parent = this;
+
     }
 
-    flatten();
+    private static Operand[] childArray(Operand singleChild) {
 
-}
+        Operand[] arr = new Operand[1];
 
-protected void setChild(Operand child) {
+        arr[0] = singleChild;
 
-    if (hasChildren()) {
-        throw new IllegalStateException("Operand already has children: " + this);
+        return arr;
+
     }
 
-    this.children = childArray(child);
-
-    child.parent = this;
-
-}
-
-private static Operand[] childArray(Operand singleChild) {
-
-    Operand[] arr = new Operand[1];
-
-    arr[0] = singleChild;
-
-    return arr;
-
-}
-
-private void changeChild(int i, Operand newChild) {
-    children[i] = newChild;
-    newChild.parent = this;
-}
+    private void changeChild(int i, Operand newChild) {
+        children[i] = newChild;
+        newChild.parent = this;
+    }
 
 
 
@@ -1107,25 +1101,23 @@ private void changeChild(int i, Operand newChild) {
 
 
 
-public static class ChildIterator implements Iterator<Operand> {
+    public static class ChildIterator implements Iterator<Operand> {
 
-    private Operand operand;
-    private int i = 0;
+        private Operand operand;
+        private int i = 0;
 
-    private ChildIterator(Operand operand) {
-        this.operand = operand;
+        private ChildIterator(Operand operand) {
+            this.operand = operand;
+        }
+
+        @Override public boolean hasNext() {
+            return i < operand.childCount();
+        }
+
+        @Override public Operand next() {
+            return operand.getChild(i++);
+        }
+
     }
-
-    @Override
-    public boolean hasNext() {
-        return i < operand.childCount();
-    }
-
-    @Override
-    public Operand next() {
-        return operand.getChild(i++);
-    }
-
-}
 
 }

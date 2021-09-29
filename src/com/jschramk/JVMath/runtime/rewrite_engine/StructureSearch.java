@@ -5,10 +5,10 @@ import com.jschramk.JVMath.runtime.components.Literal;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.components.Variable;
 
-public class StructureMatcher {
+public class StructureSearch {
 
     private static boolean matches(Operand rule, Operand check, Requirements requirements,
-        OperandMapper mapper, String solveVariable) {
+        MappingSolver mapper, String solveVariable) {
 
         boolean matches = false; // default to false
 
@@ -90,22 +90,22 @@ public class StructureMatcher {
 
     }
 
-    public static Match getMatch(Operand ruleOperand, Operand actualOperand,
+    public static Match computeMatch(Operand ruleOperand, Operand actualOperand,
         Requirements requirements, String solveVariable) {
 
-        OperandMapper mapper = new OperandMapper();
+        MappingSolver mapper = new MappingSolver();
 
         if (!matches(ruleOperand, actualOperand, requirements, mapper, solveVariable)) {
             return null;
         }
 
-        Knowns knowns = mapper.getResult();
+        SolvedMappings solvedMappings = mapper.compute();
 
-        if (knowns == null) {
+        if (solvedMappings == null) {
             return null;
         }
 
-        return new Match(actualOperand, knowns);
+        return new Match(actualOperand, solvedMappings);
 
     }
 
@@ -118,7 +118,7 @@ public class StructureMatcher {
     private static Match recursiveFindMatch(Operand find, Operand in, Requirements requirements,
         String target) {
 
-        Match thisMatch = getMatch(find, in, requirements, target);
+        Match thisMatch = computeMatch(find, in, requirements, target);
 
         if (thisMatch != null) {
 
@@ -149,15 +149,15 @@ public class StructureMatcher {
     public static class Match {
 
         private Operand original;
-        private Knowns knowns;
+        private SolvedMappings solvedMappings;
 
-        public Match(Operand original, Knowns knowns) {
+        public Match(Operand original, SolvedMappings solvedMappings) {
             this.original = original;
-            this.knowns = knowns;
+            this.solvedMappings = solvedMappings;
         }
 
-        public Knowns getKnowns() {
-            return knowns;
+        public SolvedMappings getSolvedMappings() {
+            return solvedMappings;
         }
 
         public Operand getOriginal() {

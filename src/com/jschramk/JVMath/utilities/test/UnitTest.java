@@ -80,7 +80,7 @@ public class UnitTest {
 
         timer.stop();
 
-        //solved.print();
+        //solved.printSteps();
 
         //System.out.println(solved.getResult().getRightSide().toTreeString());
 

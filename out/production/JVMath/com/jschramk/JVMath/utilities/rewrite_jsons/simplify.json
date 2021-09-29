@@ -53,7 +53,7 @@
   },
   {
     "find": "a * x + b * x",
-    "id": "ADD_WITH_DOUBLE_COEFFICIENT",
+    "id": "COLLECT_LIKE_WITH_COEFFICIENTS",
     "steps": [
       {
         "replace": "(a + b) * x"
@@ -66,6 +66,75 @@
       },
       {
         "variable": "b",
+        "contains solve": false
+      },
+      {
+        "variable": "x",
+        "contains solve": true
+      }
+    ]
+  },
+  {
+    "find": "a * x + b * x",
+    "id": "COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS",
+    "steps": [
+      {
+        "replace": "(a + b) * x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "a",
+        "contains solve": false,
+        "type": "LITERAL"
+      },
+      {
+        "variable": "b",
+        "contains solve": false,
+        "type": "LITERAL"
+      }
+    ]
+  },
+  {
+    "find": "a * x + -(b) * x",
+    "id": "COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS_AND_NEGATIONS",
+    "steps": [
+      {
+        "replace": "(a - b) * x"
+      }
+    ],
+    "require": [
+      {
+        "variable": "a",
+        "contains solve": false,
+        "type": "LITERAL"
+      },
+      {
+        "variable": "b",
+        "contains solve": false,
+        "type": "LITERAL"
+      }
+    ]
+  },
+  {
+    "find": "n * (a + b)",
+    "id": "DISTRIBUTE_ALL_NON_TARGET",
+    "steps": [
+      {
+        "replace": "(n * a) + (n * b)"
+      }
+    ],
+    "require": [
+      {
+        "variable": "a",
+        "contains solve": false
+      },
+      {
+        "variable": "b",
+        "contains solve": false
+      },
+      {
+        "variable": "n",
         "contains solve": false
       }
     ]
@@ -208,6 +277,15 @@
     ]
   },
   {
+    "find": "x * x",
+    "id": "MULTIPLY_SAME",
+    "steps": [
+      {
+        "replace": "x^2"
+      }
+    ]
+  },
+  {
     "find": "x * x^a",
     "id": "MULTIPLY_SAME_BASE_1",
     "steps": [
@@ -222,15 +300,6 @@
     "steps": [
       {
         "replace": "x^(a + b)"
-      }
-    ]
-  },
-  {
-    "find": "x * x",
-    "id": "MULTIPLY_SAME",
-    "steps": [
-      {
-        "replace": "x^2"
       }
     ]
   },

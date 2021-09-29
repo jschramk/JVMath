@@ -40,12 +40,12 @@ public class CanonicalMatcher {
 
         t.start();
 
-        StructureMatcher.Match oldMatch = StructureMatcher.getMatch(match, search, null, null);
+        StructureSearch.Match oldMatch = StructureSearch.getMatch(match, search, null, null);
 
         Map<String, Operand> vars1 = null;
 
         if (oldMatch != null) {
-            vars1 = oldMatch.getKnowns().getVariables();
+            vars1 = oldMatch.getSolvedMappings().getVariables();
         }
 
         t.stop();

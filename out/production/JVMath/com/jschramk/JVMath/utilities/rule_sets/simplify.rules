@@ -25,12 +25,43 @@ simplify (x + a * x) {
     x: is f(#target)
 }
 
-@ADD_WITH_DOUBLE_COEFFICIENT
+// this makes it so the target variable will be collected even when the coefficient is not a literal
+@COLLECT_LIKE_WITH_COEFFICIENTS
 simplify (a * x + b * x) {
     (a + b) * x
 } where {
     a: not f(#target)
     b: not f(#target)
+    x: is f(#target)
+}
+
+// this allows non target variables with literal coefficients to be collected
+@COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS
+simplify (a * x + b * x) {
+    (a + b) * x
+} where {
+    a: not f(#target), is literal
+    b: not f(#target), is literal
+}
+
+// this allows non target variables with literal coefficients to be collected
+@COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS_AND_NEGATIONS
+simplify (a * x + -(b) * x) {
+    (a - b) * x
+} where {
+    a: not f(#target), is literal
+    b: not f(#target), is literal
+}
+
+// TODO: evaluate this rule and decide whether to keep
+// this makes it so non target variables will be distributed, prioritizing shallower tree depth
+@DISTRIBUTE_ALL_NON_TARGET
+simplify (n * (a + b)) {
+    (n * a) + (n * b)
+} where {
+    a: not f(#target)
+    b: not f(#target)
+    n: not f(#target)
 }
 
 @DISTRIBUTE_TARGET
@@ -41,7 +72,7 @@ simplify ((a + b) * x) {
     x: is f(#target)
 }
 
-// the a: is f(#target) here sorta works like a or b is f(#target) because the mapping algorithm
+// the a: is f(#target) here sorta works like a OR b is f(#target) because the mapping algorithm
 // will permute the mapping so that a maps to whatever is the f(#target)
 /*@DISTRIBUTE_NON_TARGET
 simplify (n * (a + b)) {
@@ -114,6 +145,11 @@ simplify (-(a/b)) {
     (-a)/b
 }
 
+@MULTIPLY_SAME
+simplify (x * x) {
+    x^2
+}
+
 @MULTIPLY_SAME_BASE_1
 simplify (x * x^a) {
     x^(1 + a)
@@ -122,12 +158,6 @@ simplify (x * x^a) {
 @MULTIPLY_SAME_BASE_2
 simplify (x^a * x^b) {
     x^(a + b)
-}
-
-// this must go after the previous two so things like a*b*a^2*b^2 can be simplified
-@MULTIPLY_SAME
-simplify (x * x) {
-    x^2
 }
 
 // only do this to get to c, otherwise leave it alone

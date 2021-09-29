@@ -58,7 +58,7 @@ public class TestRules {
         System.out.println("Simplify " + operand + "\n");
 
         if (out != null) {
-          out.print();
+          out.printSteps();
         } else {
           System.out.println("Unable to simplify further");
         }
@@ -93,7 +93,7 @@ public class TestRules {
           RewriteEngine.Output<Equation> out = RewriteEngine.solve(equation, "x", true);
 
           System.out.println("Solve " + equation + " for x\n");
-          out.print();
+          out.printSteps();
 
         } catch (UnsolvableException e) {
           System.out.println(e.getMessage());

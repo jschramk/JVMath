@@ -5,7 +5,7 @@
     "steps": [
       {
         "replace": "x = y",
-        "description": "Flip the equation so ${$x}$ is on the left side"
+        "description": "Flip the equation so ${#x}$ is on the left side"
       }
     ],
     "require": [
@@ -45,11 +45,11 @@
     "steps": [
       {
         "replace": "x1 - x2 = y + x2 - x2",
-        "description": "Subtract ${$x2}$ from both sides"
+        "description": "Subtract ${#x2}$ from both sides"
       },
       {
         "replace": "x1 - x2 = y",
-        "description": "Cancel ${$x2}$ on the right side"
+        "description": "Cancel ${#x2}$ on the right side"
       }
     ],
     "require": [
@@ -73,11 +73,11 @@
     "steps": [
       {
         "replace": "x + a - a = y - a",
-        "description": "Subtract ${$a}$ from both sides"
+        "description": "Subtract ${#a}$ from both sides"
       },
       {
         "replace": "x = y - a",
-        "description": "Cancel ${$a}$ on the left side"
+        "description": "Cancel ${#a}$ on the left side"
       }
     ],
     "require": [
@@ -100,11 +100,11 @@
     "steps": [
       {
         "replace": "((x1 + a) * x)/(x1 + a) = y (x1 + a)",
-        "description": "Multiply both sides by ${$x1 + $a}$"
+        "description": "Multiply both sides by ${#x1 + #a}$"
       },
       {
         "replace": "x = (x1 + a) * y",
-        "description": "Cancel ${$x1 + $a}$ in the left side numerator and denominator"
+        "description": "Cancel ${#x1 + #a}$ in the left side numerator and denominator"
       },
       {
         "replace": "x = (x1 * y) + (a * y)",
@@ -112,11 +112,11 @@
       },
       {
         "replace": "x - y x1 = y x1 + y a - y x1",
-        "description": "Subtract ${$y $x1}$ from both sides"
+        "description": "Subtract ${#y #x1}$ from both sides"
       },
       {
         "replace": "x - x1 y = a y",
-        "description": "Cancel ${$y + $x1}$ on the right side"
+        "description": "Cancel ${#y + #x1}$ on the right side"
       }
     ],
     "require": [
@@ -143,11 +143,11 @@
     "steps": [
       {
         "replace": "(x * a)/a = y/a",
-        "description": "Divide both sides by ${$a}$"
+        "description": "Divide both sides by ${#a}$"
       },
       {
         "replace": "x = y/a",
-        "description": "Cancel ${$a}$ in the numerator and denominator on the left side"
+        "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [
@@ -170,11 +170,11 @@
     "steps": [
       {
         "replace": "(x*a)/a = y * a",
-        "description": "Multiply both sides by ${$a}$"
+        "description": "Multiply both sides by ${#a}$"
       },
       {
         "replace": "x = y * a",
-        "description": "Cancel ${$a}$ in the numerator and denominator on the left side"
+        "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [
@@ -247,11 +247,11 @@
     "steps": [
       {
         "replace": "(a*x)/x = x*b",
-        "description": "Multiply both sides by ${$x}$"
+        "description": "Multiply both sides by ${#x}$"
       },
       {
         "replace": "a = x*b",
-        "description": "Cancel ${$x}$ in the numerator and denominator on the left side"
+        "description": "Cancel ${#x}$ in the numerator and denominator on the left side"
       }
     ],
     "require": [
@@ -270,11 +270,11 @@
     "steps": [
       {
         "replace": "x1 x2 = (a x2)/x2",
-        "description": "Multiply both sides by ${$x2}$"
+        "description": "Multiply both sides by ${#x2}$"
       },
       {
         "replace": "x1 x2 = a",
-        "description": "Cancel ${$x2}$ in the numerator and denominator on the right side"
+        "description": "Cancel ${#x2}$ in the numerator and denominator on the right side"
       }
     ],
     "require": [
@@ -345,7 +345,7 @@
     "steps": [
       {
         "replace": "root(a, (x^a)) = root(a, y)",
-        "description": "Take the root ${$a}$ of both sides"
+        "description": "Take the root ${#a}$ of both sides"
       },
       {
         "replace": "x = root(a, y)",

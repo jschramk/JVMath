@@ -6,13 +6,13 @@ import com.jschramk.JVMath.runtime.components.VariableDomain;
 
 import java.util.*;
 
-public class Knowns {
+public class SolvedMappings {
 
   private final Set<Integer> usedIds = new HashSet<>();
   private final Map<Integer, Operand> instanceMappings = new HashMap<>();
   private final Map<Operand, Operand> generalMappings = new HashMap<>();
 
-  public static boolean sameVariables(Knowns k1, Knowns k2) {
+  public static boolean sameVariables(SolvedMappings k1, SolvedMappings k2) {
     for (Operand known : k1.generalMappings.keySet()) {
       if (known instanceof Variable && k2.hasGeneralMapping(known)) {
         if (!k1.getGeneralMapping(known).equals(k2.getGeneralMapping(known))) return false;
@@ -29,8 +29,8 @@ public class Knowns {
     return generalMappings.get(operand);
   }
 
-  public static Knowns combine(Knowns k1, Knowns k2) {
-    Knowns result = new Knowns();
+  public static SolvedMappings combine(SolvedMappings k1, SolvedMappings k2) {
+    SolvedMappings result = new SolvedMappings();
     result.generalMappings.putAll(k1.generalMappings);
     result.generalMappings.putAll(k2.generalMappings);
     result.instanceMappings.putAll(k1.instanceMappings);
