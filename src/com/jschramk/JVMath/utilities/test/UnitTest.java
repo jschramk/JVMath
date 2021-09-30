@@ -4,7 +4,7 @@ import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.runtime.rewrite_engine.RewriteEngine;
+import com.jschramk.JVMath.runtime.math_engine.MathEngine;
 import util.PerformanceTimer;
 
 public class UnitTest {
@@ -76,7 +76,7 @@ public class UnitTest {
 
         timer.start();
 
-        RewriteEngine.Output<Equation> solved = RewriteEngine.solve(equation, variable, true);
+        MathEngine.Output<Equation> solved = MathEngine.solve(equation, variable, true);
 
         timer.stop();
 

@@ -1,4 +1,4 @@
-package com.jschramk.JVMath.runtime.rewrite_engine;
+package com.jschramk.JVMath.runtime.math_engine;
 
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.components.Variable;

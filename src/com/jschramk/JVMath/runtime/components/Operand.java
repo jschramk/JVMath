@@ -1,7 +1,7 @@
 package com.jschramk.JVMath.runtime.components;
 
 //import com.jschramk.JVMath.runtime.rewrite_engine.Canonical;
-import com.jschramk.JVMath.runtime.rewrite_engine.SolvedMappings;
+import com.jschramk.JVMath.runtime.math_engine.SolvedMappings;
 import com.jschramk.JVMath.runtime.utils.Utils;
 
 import java.util.*;

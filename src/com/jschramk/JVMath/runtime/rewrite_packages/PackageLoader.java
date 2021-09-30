@@ -4,8 +4,8 @@ import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.runtime.rewrite_engine.Requirement;
-import com.jschramk.JVMath.runtime.rewrite_engine.Rule;
+import com.jschramk.JVMath.runtime.math_engine.Requirement;
+import com.jschramk.JVMath.runtime.math_engine.Rule;
 
 import java.io.InputStream;
 import java.util.HashMap;

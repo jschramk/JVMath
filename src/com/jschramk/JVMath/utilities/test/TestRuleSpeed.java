@@ -4,7 +4,7 @@ import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.runtime.rewrite_engine.RewriteEngine;
+import com.jschramk.JVMath.runtime.math_engine.MathEngine;
 
 public class TestRuleSpeed {
 
@@ -30,7 +30,7 @@ public class TestRuleSpeed {
 
     t1 = System.currentTimeMillis();
 
-    Operand result = RewriteEngine.simplify(in, null, true).getResult();
+    Operand result = MathEngine.simplify(in, null, true).getResult();
 
     t2 = System.currentTimeMillis();
 
@@ -53,7 +53,7 @@ public class TestRuleSpeed {
 
     t1 = System.currentTimeMillis();
 
-    Equation result = RewriteEngine.solve(in, "x", true).getResult();
+    Equation result = MathEngine.solve(in, "x", true).getResult();
 
     t2 = System.currentTimeMillis();
 

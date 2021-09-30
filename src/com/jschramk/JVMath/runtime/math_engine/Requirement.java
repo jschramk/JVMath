@@ -1,4 +1,4 @@
-package com.jschramk.JVMath.runtime.rewrite_engine;
+package com.jschramk.JVMath.runtime.math_engine;
 
 import com.google.gson.JsonObject;
 import com.jschramk.JVMath.runtime.components.Enums;

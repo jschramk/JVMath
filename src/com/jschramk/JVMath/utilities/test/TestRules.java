@@ -5,7 +5,7 @@ import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.exceptions.UnsolvableException;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.runtime.rewrite_engine.RewriteEngine;
+import com.jschramk.JVMath.runtime.math_engine.MathEngine;
 
 import java.util.Scanner;
 
@@ -53,7 +53,7 @@ public class TestRules {
 
         Operand operand = p.parse(line, Operand.class);
 
-        RewriteEngine.Output<Operand> out = RewriteEngine.simplify(operand, null, true);
+        MathEngine.Output<Operand> out = MathEngine.simplify(operand, null, true);
 
         System.out.println("Simplify " + operand + "\n");
 
@@ -90,7 +90,7 @@ public class TestRules {
 
         try {
 
-          RewriteEngine.Output<Equation> out = RewriteEngine.solve(equation, "x", true);
+          MathEngine.Output<Equation> out = MathEngine.solve(equation, "x", true);
 
           System.out.println("Solve " + equation + " for x\n");
           out.printSteps();

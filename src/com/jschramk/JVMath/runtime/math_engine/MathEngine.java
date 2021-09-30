@@ -1,4 +1,4 @@
-package com.jschramk.JVMath.runtime.rewrite_engine;
+package com.jschramk.JVMath.runtime.math_engine;
 
 import com.jschramk.JVMath.runtime.components.BinaryOperation;
 import com.jschramk.JVMath.runtime.components.BinaryOperator;
@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.jschramk.JVMath.runtime.rewrite_engine.StructureSearch.findMatch;
+import static com.jschramk.JVMath.runtime.math_engine.StructureSearch.findMatch;
 
-public class RewriteEngine {
+public class MathEngine {
 
     private static final int MAX_SINGLE_RULE_APPLICATIONS = 100, MAX_ALL_RULE_CHECKS = 100;
 
@@ -617,12 +617,26 @@ public class RewriteEngine {
         }
 
         public void printSteps() {
+            printSteps(false);
+        }
 
-            for (Step<T> step : steps) {
+        public void printSteps(boolean showInlineRender) {
+
+            for (int i = 0; i < stepCount(); i++) {
+
+                Step<T> step = getStep(i);
+
+                System.out.print((i+1) + ") ");
 
                 if (step.getDescription() != null) {
-                    System.out.println(step.getDescription() + "\n");
+
+                    String desc = showInlineRender ? step.getDescription() : step.getDescription().replaceAll("(\\$\\{|}\\$)", "");
+
+                    System.out.print(desc + "\n");
                 }
+
+                System.out.println();
+
                 System.out.println("\t" + step.getReplace() + "\n");
 
             }

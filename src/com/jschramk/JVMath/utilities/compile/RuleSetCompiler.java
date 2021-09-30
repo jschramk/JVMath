@@ -4,7 +4,7 @@ import com.google.gson.*;
 import com.jschramk.JVMath.runtime.components.Enums;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.runtime.rewrite_engine.Rule;
+import com.jschramk.JVMath.runtime.math_engine.Rule;
 import com.jschramk.JVMath.utilities.antlr_gen.rule_parse.ruleSetLexer;
 import com.jschramk.JVMath.utilities.antlr_gen.rule_parse.ruleSetParser;
 import org.antlr.v4.runtime.CharStream;
