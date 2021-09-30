@@ -7,10 +7,7 @@ import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.UnsolvableException;
 import com.jschramk.JVMath.runtime.rewrite_packages.PackageLoader;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.jschramk.JVMath.runtime.math_engine.StructureSearch.findMatch;
 
@@ -411,8 +408,15 @@ public class MathEngine {
 
     }
 
+    private static final Comparator<String> varLengthComparator = (s, t1) -> t1.length() - s.length();
+
     private static String fillVariableDescription(String desc, Map<String, Operand> variables) {
-        for (String name : variables.keySet()) {
+
+        List<String> varsSorted = new ArrayList<>(variables.keySet());
+
+        varsSorted.sort(varLengthComparator);
+
+        for (String name : varsSorted) {
             desc = desc.replaceAll("#" + name, variables.get(name).toString());
         }
         return desc;
