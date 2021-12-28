@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="JVMath" />
+    </artifacts-to-build>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4c012b1e-e702-4a49-ab4f-c64b30a4a484" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/test/Console.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/JVMath/JVMath.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/JVMath/JVMath.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/BinaryOperation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/BinaryOperation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/BinaryOperator$Associativity.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/BinaryOperator$Associativity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/BinaryOperator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/BinaryOperator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Constant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Enums$OperandType.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Enums$OperandType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Enums.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Enums.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Equation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Equation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/FunctionDomain.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/FunctionDomain.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/FunctionOperation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/FunctionOperation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/FunctionOperator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/FunctionOperator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/JVMathSettings$AngularUnit.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/JVMathSettings$AngularUnit.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/JVMathSettings.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/JVMathSettings.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Literal.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Literal.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Matrix.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Matrix.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operand.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operand.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/OperandUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/OperandUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$10.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$10.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$11.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$11.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$12.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$12.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$13.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$13.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$14.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$14.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$15.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$15.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$16.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$16.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$17.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$17.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$18.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$18.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$19.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$19.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$20.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$20.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$21.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$21.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$22.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$22.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Operators.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/UnaryOperation.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/UnaryOperation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/UnaryOperator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/UnaryOperator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Variable.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/Variable.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/VariableDomain.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/components/VariableDomain.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/exceptions/OperatorException.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/exceptions/OperatorException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/exceptions/ParserException.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/exceptions/ParserException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/exceptions/UnsolvableException.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/exceptions/UnsolvableException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/DefaultParser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/DefaultParser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/ParseResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/ParseResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/Parser.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/Parser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/ParserUtils$Label.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/ParserUtils$Label.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/ParserUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/parse/ParserUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/rewrite_packages/PackageLoader.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/rewrite_packages/PackageLoader.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/rewrite_packages/simplify.processed.json" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/rewrite_packages/simplify.processed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/rewrite_resources/ExternalRequirements.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/rewrite_resources/ExternalRequirements.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/syntax/Highlight.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/syntax/Highlight.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/syntax/SyntaxFinder.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/syntax/SyntaxFinder.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/utils/IdentityHashSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/utils/IdentityHashSet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/utils/OperandInstanceSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/utils/OperandInstanceSet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/utils/Utils.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/runtime/utils/Utils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/utilities/rewrite_jsons/simplify.json" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/utilities/rewrite_jsons/simplify.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/utilities/rule_sets/simplify.rules" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/JVMath/com/jschramk/JVMath/utilities/rule_sets/simplify.rules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/core/JVMath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/core/JVMath.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/BinaryOperation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/BinaryOperation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/Equation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/Equation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/JVMathSettings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/JVMathSettings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/Operand.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/Operand.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/MathEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/MathEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/Requirement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/Requirement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/SolvedMappings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/SolvedMappings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/UnsolvedMappings.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/math_engine/UnsolvedMappings.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/rewrite_packages/simplify.processed.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/rewrite_packages/simplify.processed.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/unused/Canonical.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/runtime/components/Canonical.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/rewrite_jsons/simplify.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/rewrite_jsons/simplify.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/rule_sets/simplify.rules" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/rule_sets/simplify.rules" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/test/UnitTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/jschramk/JVMath/utilities/test/UnitTest.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1gWRjxuhhtXGi0D77Xy2OShyPc4" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="Downloaded.Files.Path.Enabled" value="false" />
+    <property name="Repository.Attach.Annotations" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="full.screen.before.presentation.mode" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/com/jschramk/JVMath/rewrite_resources" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveMembersDialog.RECENTS_KEY">
+      <recent name="com.jschramk.JVMath.components.Enums.OperandType" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\rewrite_resources" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\parse" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Projects\1\JVMath\src\com\jschramk\JVMath\rewrite_resources" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Projects\1\CAS\src\core\rewrite" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Java\Projects\1\CAS\src\core\old" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.jschramk.JVMath.experimental" />
+      <recent name="com.jschramk.JVMath.parse" />
+      <recent name="com.jschramk.JVMath.rewrite_engine" />
+      <recent name="core.rewrite" />
+      <recent name="core.engine" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\runtime\components" />
+      <recent name="C:\Users\jschr\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\unused" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\runtime\rewrite_resources\packages" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\utilities\antlr_gen\expression_parse" />
+      <recent name="C:\Users\Jacob Schramkowski\OneDrive\Projects\Solvable\JVMath\src\com\jschramk\JVMath\utilities\parse" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Unit Testing">
+    <configuration name="Canonical" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.jschramk.JVMath.runtime.components.Canonical" />
+      <module name="JVMath" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.jschramk.JVMath.runtime.components.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Console" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.jschramk.JVMath.utilities.test.Console" />
+      <module name="JVMath" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.jschramk.JVMath.utilities.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JVMath" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.jschramk.JVMath.utilities.core.JVMath" />
+      <module name="JVMath" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.jschramk.JVMath.utilities.core.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Package Files" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.jschramk.JVMath.utilities.compile.Compile" />
+      <module name="JVMath" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.jschramk.JVMath.utilities.compile.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mathsolver.v3.Test" />
+      <module name="Java-CAS" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mathsolver.v3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mathsolver.v4.Test" />
+      <module name="Math-Solver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mathsolver.v4.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Test" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="mathsolver.v3.Test" />
+      <module name="Math-Solver" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="mathsolver.v3.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Unit Testing" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="com.jschramk.JVMath.utilities.test.UnitTest" />
+      <module name="JVMath" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.jschramk.JVMath.utilities.test.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="VM_PARAMETERS" value="-ea" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CompoundRunConfigurationType">
+      <toRun name="Unit Testing" type="Application" />
+      <toRun name="Package Files" type="Application" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.Package Files" />
+      <item itemvalue="Application.Unit Testing" />
+      <item itemvalue="Application.Test" />
+      <item itemvalue="Application.JVMath" />
+      <item itemvalue="Application.Console" />
+      <item itemvalue="Application.Canonical" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.JVMath" />
+        <item itemvalue="Application.Console" />
+        <item itemvalue="Application.Canonical" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="showServicesTree" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4c012b1e-e702-4a49-ab4f-c64b30a4a484" name="Default Changelist" comment="" />
+      <created>1598228500626</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1598228500626</updated>
+    </task>
+    <task id="LOCAL-00001" summary="first commit from intellij">
+      <created>1611909245641</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1611909245641</updated>
+    </task>
+    <task id="LOCAL-00002" summary="minor fixes and some rule updates">
+      <created>1611913282223</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1611913282223</updated>
+    </task>
+    <task id="LOCAL-00003" summary="major refactors including rewrite engine and file creation">
+      <created>1612501779720</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1612501779720</updated>
+    </task>
+    <task id="LOCAL-00004" summary="code reformat">
+      <created>1616138423447</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1616138423447</updated>
+    </task>
+    <task id="LOCAL-00005" summary="added compiler for simple rule set syntax">
+      <created>1632103106878</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1632103106878</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.rules" />
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.tokens" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="first commit from intellij" />
+    <MESSAGE value="minor fixes and some rule updates" />
+    <MESSAGE value="major refactors including rewrite engine and file creation" />
+    <MESSAGE value="code reformat" />
+    <MESSAGE value="added compiler for simple rule set syntax" />
+    <option name="LAST_COMMIT_MESSAGE" value="added compiler for simple rule set syntax" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="901" y="181" key="#Java" timestamp="1633125375982">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="447" y="119" key="#Java/0.0.1707.920@0.0.1707.920" timestamp="1632458714973" />
+    <state x="901" y="181" key="#Java/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633125375982" />
+    <state x="601" y="178" key="#Project_Structure" timestamp="1633479119185">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="601" y="178" key="#Project_Structure/0.0.1707.920@0.0.1707.920" timestamp="1633479119185" />
+    <state x="969" y="215" key="#Project_Structure/0.0.2752.1112/3440.-843.1152.2008@0.0.2752.1112" timestamp="1626663712973" />
+    <state x="1211" y="271" key="#Project_Structure/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632266699474" />
+    <state x="583" y="232" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1632872753828">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="583" y="232" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1707.920@0.0.1707.920" timestamp="1632872753828" />
+    <state x="1174" y="355" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632107864299" />
+    <state x="1477" y="503" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1631558694632">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1477" y="503" key="#com.intellij.fileTypes.FileTypeChooser/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1631558694632" />
+    <state x="1525" y="409" key="#com.intellij.ide.util.MemberChooser" timestamp="1633463254466">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="757" y="269" key="#com.intellij.ide.util.MemberChooser/0.0.1707.920@0.0.1707.920" timestamp="1632459860606" />
+    <state x="1525" y="409" key="#com.intellij.ide.util.MemberChooser/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633463254466" />
+    <state x="1568" y="589" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1633462222861">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="778" y="387" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.1707.920@0.0.1707.920" timestamp="1633456642564" />
+    <state x="1568" y="589" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633462222861" />
+    <state x="1516" y="585" width="493" height="237" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1632192510312">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1516" y="585" width="493" height="237" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632192510312" />
+    <state x="558" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1632933820091">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="558" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1707.920@0.0.1707.920" timestamp="1632933820091" />
+    <state x="1125" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632194443831" />
+    <state x="1323" y="294" key="CommitChangelistDialog2" timestamp="1632103105683">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1323" y="294" key="CommitChangelistDialog2/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632103105683" />
+    <state x="92" y="92" width="3256" height="1216" key="DiffContextDialog" timestamp="1632033921715">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="92" y="92" width="3256" height="1216" key="DiffContextDialog/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632033921715" />
+    <state x="1500" y="455" key="FileChooserDialogImpl" timestamp="1632017003234">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1500" y="455" key="FileChooserDialogImpl/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632017003234" />
+    <state width="1664" height="253" key="GridCell.Tab.0.bottom" timestamp="1633483181467">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="253" key="GridCell.Tab.0.bottom/0.0.1707.920@0.0.1707.920" timestamp="1633483181467" />
+    <state width="1412" height="984" key="GridCell.Tab.0.bottom/0.0.2752.1112/3440.-843.1152.2008@0.0.2752.1112" timestamp="1626836007041" />
+    <state width="1430" height="1272" key="GridCell.Tab.0.bottom/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633464559778" />
+    <state width="1664" height="253" key="GridCell.Tab.0.center" timestamp="1633483181467">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="253" key="GridCell.Tab.0.center/0.0.1707.920@0.0.1707.920" timestamp="1633483181467" />
+    <state width="1412" height="984" key="GridCell.Tab.0.center/0.0.2752.1112/3440.-843.1152.2008@0.0.2752.1112" timestamp="1626836007041" />
+    <state width="1430" height="1272" key="GridCell.Tab.0.center/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633464559778" />
+    <state width="1664" height="253" key="GridCell.Tab.0.left" timestamp="1633483181467">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="253" key="GridCell.Tab.0.left/0.0.1707.920@0.0.1707.920" timestamp="1633483181467" />
+    <state width="1412" height="984" key="GridCell.Tab.0.left/0.0.2752.1112/3440.-843.1152.2008@0.0.2752.1112" timestamp="1626836007041" />
+    <state width="1430" height="1272" key="GridCell.Tab.0.left/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633464559778" />
+    <state width="1664" height="253" key="GridCell.Tab.0.right" timestamp="1633483181467">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state width="1664" height="253" key="GridCell.Tab.0.right/0.0.1707.920@0.0.1707.920" timestamp="1633483181467" />
+    <state width="1412" height="984" key="GridCell.Tab.0.right/0.0.2752.1112/3440.-843.1152.2008@0.0.2752.1112" timestamp="1626836007041" />
+    <state width="1430" height="1272" key="GridCell.Tab.0.right/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633464559778" />
+    <state x="1200" y="274" key="SettingsEditor" timestamp="1632885944623">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1200" y="274" key="SettingsEditor/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632885944623" />
+    <state x="1312" y="433" key="Vcs.Push.Dialog.v2" timestamp="1632103128667">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1312" y="433" key="Vcs.Push.Dialog.v2/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632103128667" />
+    <state x="1524" y="568" key="classpath-attribute-editor" timestamp="1632107202888">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1524" y="568" key="classpath-attribute-editor/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632107202888" />
+    <state x="1322" y="311" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1632349030635">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1322" y="311" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632349030635" />
+    <state x="240" y="505" width="2980" height="1387" key="dock-window-1" timestamp="1632015973019">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="240" y="505" width="2980" height="1387" key="dock-window-1/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632015973019" />
+    <state x="703" y="196" width="609" height="536" key="find.popup" timestamp="1633481969686">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="703" y="196" width="609" height="536" key="find.popup/0.0.1707.920@0.0.1707.920" timestamp="1633481969686" />
+    <state x="1416" y="298" width="737" height="804" key="find.popup/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1633463109296" />
+    <state x="512" y="211" key="run.anything.popup" timestamp="1632454974863">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="512" y="211" key="run.anything.popup/0.0.1707.920@0.0.1707.920" timestamp="1632454974863" />
+    <state x="686" y="207" width="672" height="446" key="search.everywhere.popup" timestamp="1632869690527">
+      <screen x="0" y="0" width="1707" height="920" />
+    </state>
+    <state x="686" y="207" width="672" height="446" key="search.everywhere.popup/0.0.1707.920@0.0.1707.920" timestamp="1632869690527" />
+    <state x="1383" y="315" width="672" height="678" key="search.everywhere.popup/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632367893265" />
+    <state x="1442" y="592" key="vcs.readOnlyHandler.ReadOnlyStatusDialog" timestamp="1632195151533">
+      <screen x="0" y="0" width="3440" height="1400" />
+    </state>
+    <state x="1442" y="592" key="vcs.readOnlyHandler.ReadOnlyStatusDialog/0.0.3440.1400/3440.-908.1152.2008@0.0.3440.1400" timestamp="1632195151533" />
+  </component>
+</project>
