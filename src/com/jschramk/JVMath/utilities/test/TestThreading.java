@@ -34,11 +34,11 @@ public class TestThreading {
 
                     if (j == target) {
 
-                        System.out.println(String.format("Thread %d found target", threadIndex));
-
                         for (int k = threadIndex + 1; k < threads.size(); k++) {
                             threads.get(k).interrupt();
                         }
+
+                        System.out.println(String.format("Thread %d found target", threadIndex));
 
                         break;
 

@@ -1,12 +1,4 @@
-@ADD_ZERO
-simplify (x + 0) {
-    x : Cancel the ${0}
-}
 
-@ADD_SAME
-simplify (x + x) {
-    2x
-}
 
 @FACTOR
 simplify (a^2 + 2*a*b + b^2) {
@@ -98,6 +90,10 @@ simplify (a/x + b/x) {
 simplify (a/b + c/d) {
     (a * d + b * c)/(b * d)
 }
+/*where {
+    a: is f(#target)
+    c: is f(#target)
+}*/
 
 @NEGATIVE_ZERO
 simplify (-0) {
@@ -145,11 +141,6 @@ simplify (-(a/b)) {
     (-a)/b
 }
 
-@MULTIPLY_SAME
-simplify (x * x) {
-    x^2
-}
-
 @MULTIPLY_SAME_BASE_1
 simplify (x * x^a) {
     x^(1 + a)
@@ -160,11 +151,23 @@ simplify (x^a * x^b) {
     x^(a + b)
 }
 
+@MULTIPLY_SAME
+simplify (x * x) {
+    x^2
+}
+
 // only do this to get to c, otherwise leave it alone
 simplify (a^c * b^c) {
     (a * b)^c
 } where {
     c: is f(#target)
+}
+
+// only do this to get to c, otherwise leave it alone
+simplify ((a * b)^c) {
+    a^c * b^c
+} where {
+    c: not f(#target)
 }
 
 simplify ((a/b) * (c/d)) {
@@ -323,4 +326,14 @@ simplify (x^n1/(b * x^n2)) {
 
 simplify ((a * x^n1)/x^n2) {
     a * x^(n1 - n2)
+}
+
+@ADD_ZERO
+simplify (x + 0) {
+    x : Cancel the ${0}
+}
+
+@ADD_SAME
+simplify (x + x) {
+    2x
 }

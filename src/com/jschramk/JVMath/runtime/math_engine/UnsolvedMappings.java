@@ -440,7 +440,7 @@ public class UnsolvedMappings {
 
             reset();
 
-            //System.out.println(this);
+            System.out.println("next: " + this);
             //System.out.println();
 
             OperandSet key = chooseNextMappingKey();
@@ -596,6 +596,9 @@ public class UnsolvedMappings {
                         if (Operand.isCommutativeBinaryOperation(parent)) {
 
                             BinaryOperation parentOperation = (BinaryOperation) parent;
+
+                            System.out.println("choices: " + choiceList);
+                            System.out.println("leftover: " + leftover);
 
                             Operand operation =
                                 new BinaryOperation(parentOperation.getOperator(), leftover);

@@ -26,7 +26,7 @@ public class Literal extends Operand {
 
   @Override
   public String toString() {
-    return MathUtils.format(value, JVMathSettings.DECIMAL_PLACES);
+    return MathUtils.format(value, JVMathSettings.getDecimalPlaces());
   }
 
   /*@Override

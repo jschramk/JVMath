@@ -23,25 +23,26 @@ public abstract class Operand implements Iterable<Operand> {
         return NEXT_ID++;
     }
 
-/*public void canonify() {
+public void beautify() {
 
     if (hasChildren()) {
 
         for (int i = 0; i < childCount(); i++) {
 
-            getChild(i).canonify();
+            getChild(i).beautify();
 
         }
 
-        if (this instanceof BinaryOperation && ((BinaryOperation) this).getOperator().isCommutative()) {
+        if (this instanceof BinaryOperation && ((BinaryOperation) this).getOperator()
+            .isCommutative()) {
 
-            Arrays.sort(children, Canonical.CANONICAL_COMPARATOR);
+            Arrays.sort(children, Canonical.BEAUTIFY_COMPARATOR);
 
         }
 
     }
 
-}*/
+}
 
     private static Map<Integer, Operand> getVariableReplaceMap(Operand operand,
         VariableDomain domain) {
@@ -343,7 +344,7 @@ public abstract class Operand implements Iterable<Operand> {
         return false;
     }
 
-    public int variableCount(String variable) {
+    public int variableInstanceCount(String variable) {
 
         if (this instanceof Variable) {
 
@@ -365,7 +366,7 @@ public abstract class Operand implements Iterable<Operand> {
 
             for (Operand child : this) {
 
-                sum += child.variableCount(variable);
+                sum += child.variableInstanceCount(variable);
 
             }
 
@@ -393,7 +394,7 @@ public abstract class Operand implements Iterable<Operand> {
             for (Operand child : this) {
 
                 if (child instanceof Variable) {
-                    child.setVariableDomain(domain); // defer to variable method
+                    child.setVariableDomain(domain); // defer to overridden variable method
                 } else {
                     child.recursiveSetVariableDomain(domain);
                 }
@@ -920,11 +921,11 @@ public abstract class Operand implements Iterable<Operand> {
     }
 
     public String toInfoString() {
-        return this + " {Lvl: " + level + ", ID: " + Integer.toHexString(id) + "}";
+        return this + " {Lvl: " + level + ", ID: " + Integer.toString(id) + "}";
     }
 
     public String toIdString() {
-        return this + " #" + Integer.toHexString(id);
+        return this + " #" + Integer.toString(id);
     }
 
     public String toTreeString() {

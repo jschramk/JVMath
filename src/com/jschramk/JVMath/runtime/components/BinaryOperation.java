@@ -6,52 +6,51 @@ import java.util.Map;
 
 public class BinaryOperation extends Operand {
 
-private BinaryOperator operator;
+    private BinaryOperator operator;
 
-public BinaryOperation(BinaryOperator operator, List<Operand> operands) {
-    this(operator, operands.toArray(new Operand[0]));
-}
-
-public BinaryOperation(BinaryOperator operator, Operand... operands) {
-
-    this(operator);
-
-    if (operands.length < 2) {
-        throw new IllegalArgumentException("BinaryOperation must be given at least 2 operands");
+    public BinaryOperation(BinaryOperator operator, List<Operand> operands) {
+        this(operator, operands.toArray(new Operand[0]));
     }
 
-    setChildren(operands);
+    public BinaryOperation(BinaryOperator operator, Operand... operands) {
 
-}
+        this(operator);
 
-private BinaryOperation(BinaryOperator operator) {
-    this.operator = operator;
-}
+        if (operands.length < 2) {
+            throw new IllegalArgumentException("BinaryOperation must be given at least 2 operands");
+        }
 
-public static Operand product(Operand... operands) {
-    return new BinaryOperation(Operators.MULTIPLICATION, operands);
-}
+        setChildren(operands);
 
-public static Operand sum(Operand... operands) {
-    return new BinaryOperation(Operators.ADDITION, operands);
-}
+    }
 
-public static Operand division(Operand numerator, Operand denominator) {
-    return new BinaryOperation(Operators.DIVISION, numerator, denominator);
-}
+    private BinaryOperation(BinaryOperator operator) {
+        this.operator = operator;
+    }
 
-public static Operand exponent(Operand base, Operand power) {
-    return new BinaryOperation(Operators.EXPONENT, base, power);
-}
+    public static Operand product(Operand... operands) {
+        return new BinaryOperation(Operators.MULTIPLICATION, operands);
+    }
 
-@Override
-public String toLaTeX() {
+    public static Operand sum(Operand... operands) {
+        return new BinaryOperation(Operators.ADDITION, operands);
+    }
 
-    if (getOperator() == Operators.DIVISION) {
+    public static Operand division(Operand numerator, Operand denominator) {
+        return new BinaryOperation(Operators.DIVISION, numerator, denominator);
+    }
+
+    public static Operand exponent(Operand base, Operand power) {
+        return new BinaryOperation(Operators.EXPONENT, base, power);
+    }
+
+    @Override public String toLaTeX() {
+
+    /*if (getOperator() == Operators.DIVISION) {
 
         return "\\frac{" + getChild(0).toLaTeX() + "}{" + getChild(1).toLaTeX() + "}";
 
-    } else {
+    } else {*/
 
         StringBuilder s = new StringBuilder();
 
@@ -66,124 +65,121 @@ public String toLaTeX() {
         }
 
         return s.toString();
-    }
-
-}
-
-public BinaryOperator getOperator() {
-    return operator;
-}
-
-@Override
-public Enums.OperandType getType() {
-    return operator.getType();
-}
-
-
-@Override
-public Operand evaluate() {
-
-    if (operator.getAssociativity() != BinaryOperator.Associativity.LEFT_TO_RIGHT) {
-
-        int size = childCount();
-
-        Operand curr = operator.evaluate(getChild(size - 2).evaluate(), getChild(size - 1).evaluate());
-
-        for (int i = size - 3; i >= 0; i--) {
-            curr = operator.evaluate(getChild(i).evaluate(), curr.evaluate());
-        }
-
-        return curr;
-
-    } else {
-
-        Operand curr = operator.evaluate(getChild(0).evaluate(), getChild(1).evaluate());
-
-        for (int i = 2; i < childCount(); i++) {
-            curr = operator.evaluate(curr.evaluate(), getChild(i).evaluate());
-        }
-
-        return curr;
+        //}
 
     }
 
-}
-
-@Override
-protected Operand shallowCopy() {
-    return new BinaryOperation(operator);
-}
-
-//TODO: test
-@Override
-public int hashCode() {
-
-    if (operator.isCommutative()) {
-        return childCountMap(this).hashCode();
+    public BinaryOperator getOperator() {
+        return operator;
     }
 
-    return childrenHashCode();
+    @Override public Enums.OperandType getType() {
+        return operator.getType();
+    }
 
-}
 
-//TODO: test
-@Override
-public boolean equals(Object o) {
+    @Override public Operand evaluate() {
 
-    if (o instanceof BinaryOperation) {
+        if (operator.getAssociativity()
+            != BinaryOperator.Associativity.LEFT_TO_RIGHT) { // eval left to right
 
-        BinaryOperation operation = (BinaryOperation) o;
+            int size = childCount();
 
-        if (operator != operation.operator) {
-            return false;
+            Operand curr =
+                operator.evaluate(getChild(size - 2).evaluate(), getChild(size - 1).evaluate());
+
+            for (int i = size - 3; i >= 0; i--) {
+                curr = operator.evaluate(getChild(i).evaluate(), curr.evaluate());
+            }
+
+            return curr;
+
+        } else { // eval right to left
+
+            Operand curr = operator.evaluate(getChild(0).evaluate(), getChild(1).evaluate());
+
+            for (int i = 2; i < childCount(); i++) {
+                curr = operator.evaluate(curr.evaluate(), getChild(i).evaluate());
+            }
+
+            return curr;
+
         }
+
+    }
+
+    @Override protected Operand shallowCopy() {
+        return new BinaryOperation(operator);
+    }
+
+    //TODO: test
+    @Override public int hashCode() {
 
         if (operator.isCommutative()) {
-            return childCountMap(operation).equals(childCountMap(this));
-        } else {
-            return childrenEquals(operation);
+            return childCountMap(this).hashCode();
         }
+
+        return childrenHashCode();
 
     }
 
-    return false;
+    //TODO: test
+    @Override public boolean equals(Object o) {
 
-}
+        if (o instanceof BinaryOperation) {
 
-private static Map<Operand, Integer> childCountMap(Operand operand) {
-    Map<Operand, Integer> countMap = new HashMap<>();
-    for (Operand child : operand) {
-        if (!countMap.containsKey(child)) {
-            countMap.put(child, 0);
-        }
-        countMap.put(child, countMap.get(child) + 1);
-    }
-    return countMap;
-}
+            BinaryOperation operation = (BinaryOperation) o;
 
-@Override
-public String toString() {
+            if (operator != operation.operator) {
+                return false;
+            }
 
-    StringBuilder s = new StringBuilder();
-
-    for (int i = 0; i < childCount(); i++) {
-
-        Operand child = getChild(i);
-
-        if (i > 0) {
-
-            if (operator == Operators.ADDITION && child.getType() == Enums.OperandType.NEGATION) {
-                s.append(" ");
+            if (operator.isCommutative()) {
+                return childCountMap(operation).equals(childCountMap(this));
             } else {
-                s.append(operator.getSymbol());
+                return childrenEquals(operation);
             }
 
         }
-        s.append(childPriorityString(this, child));
+
+        return false;
+
     }
 
-    return s.toString();
-}
+    private static Map<Operand, Integer> childCountMap(Operand operand) {
+        Map<Operand, Integer> countMap = new HashMap<>();
+        for (Operand child : operand) {
+            if (!countMap.containsKey(child)) {
+                countMap.put(child, 0);
+            }
+            countMap.put(child, countMap.get(child) + 1);
+        }
+        return countMap;
+    }
+
+    @Override public String toString() {
+
+        StringBuilder s = new StringBuilder();
+
+        for (int i = 0; i < childCount(); i++) {
+
+            Operand child = getChild(i);
+
+            if (i > 0) {
+
+                if (operator == Operators.ADDITION
+                    && child.getType() == Enums.OperandType.NEGATION) {
+                    s.append(" ");
+                } else {
+                    s.append(operator.getSymbol());
+                }
+
+            }
+            s.append(childPriorityString(this, child));
+        }
+
+        return s.toString();
+    }
 
   /*@Override
   public JsonObject toShallowJson() {

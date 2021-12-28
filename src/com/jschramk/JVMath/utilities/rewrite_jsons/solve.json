@@ -1,5 +1,7 @@
 [
   {
+    "file": "solve.rules",
+    "line": 1,
     "find": "y = x",
     "id": "FLIP",
     "steps": [
@@ -20,6 +22,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 9,
     "find": "-x = y",
     "id": "NEGATE",
     "steps": [
@@ -40,6 +44,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 17,
     "find": "x1 = y + x2",
     "id": "COLLECT_LIKE",
     "steps": [
@@ -68,6 +74,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 27,
     "find": "x + a = y",
     "id": "SUBTRACT",
     "steps": [
@@ -96,6 +104,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 37,
     "find": "x/(x1 + a) = y",
     "steps": [
       {
@@ -139,6 +149,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 56,
     "find": "x * a = y",
     "steps": [
       {
@@ -166,6 +178,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 65,
     "find": "x/a = y",
     "steps": [
       {
@@ -193,6 +207,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 74,
     "find": "a/x = b/c",
     "steps": [
       {
@@ -220,6 +236,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 83,
     "find": "a/x = b",
     "steps": [
       {
@@ -243,6 +261,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 91,
     "find": "a/x = b",
     "steps": [
       {
@@ -266,6 +286,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 99,
     "find": "x1 = a/x2",
     "steps": [
       {
@@ -293,6 +315,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 108,
     "find": "x1 = a * x2",
     "steps": [
       {
@@ -315,6 +339,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 116,
     "find": "a x + b (-x) = y",
     "steps": [
       {
@@ -341,6 +367,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 125,
     "find": "x^a = y",
     "steps": [
       {
@@ -368,6 +396,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 134,
     "find": "e^x = y",
     "steps": [
       {
@@ -387,6 +417,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 141,
     "find": "a^x = y",
     "steps": [
       {
@@ -410,6 +442,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 149,
     "find": "a x^2 + b x = y",
     "id": "QUADRATIC",
     "steps": [
@@ -438,6 +472,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 159,
     "find": "(a x^2)/a1 + b x = y",
     "next": "QUADRATIC",
     "steps": [
@@ -470,6 +506,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 170,
     "find": "(a x^2)/a1 + (b x)/b1 = y",
     "next": "QUADRATIC",
     "steps": [
@@ -506,6 +544,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 182,
     "find": "x^2/a + x/b = y",
     "next": "QUADRATIC",
     "steps": [
@@ -534,6 +574,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 192,
     "find": "x^2/a + x = y",
     "next": "QUADRATIC",
     "steps": [
@@ -562,6 +604,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 202,
     "find": "x^2 + x/b = y",
     "next": "QUADRATIC",
     "steps": [
@@ -590,6 +634,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 212,
     "find": "a x^2 + x = y",
     "next": "QUADRATIC",
     "steps": [
@@ -614,6 +660,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 221,
     "find": "x^2 + b x = y",
     "next": "QUADRATIC",
     "steps": [
@@ -638,6 +686,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 230,
     "find": "x^2 + x = y",
     "next": "QUADRATIC",
     "steps": [
@@ -658,6 +708,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 239,
     "find": "x^2 - x = y",
     "next": "QUADRATIC",
     "steps": [
@@ -678,6 +730,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 247,
     "find": "root(a, x) = y",
     "steps": [
       {
@@ -700,6 +754,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 255,
     "find": "root(x) = y",
     "steps": [
       {
@@ -718,6 +774,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 262,
     "find": "sin(x) = y",
     "steps": [
       {
@@ -736,6 +794,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 269,
     "find": "cos(x) = y",
     "steps": [
       {
@@ -754,6 +814,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 276,
     "find": "tan(x) = y",
     "steps": [
       {
@@ -772,6 +834,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 283,
     "find": "asin(x) = y",
     "steps": [
       {
@@ -790,6 +854,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 290,
     "find": "acos(x) = y",
     "steps": [
       {
@@ -808,6 +874,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 297,
     "find": "atan(x) = y",
     "steps": [
       {
@@ -826,6 +894,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 304,
     "find": "log(x, a) = y",
     "steps": [
       {
@@ -849,6 +919,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 312,
     "find": "log(a, x) = y",
     "steps": [
       {
@@ -872,6 +944,8 @@
     ]
   },
   {
+    "file": "solve.rules",
+    "line": 320,
     "find": "log(x) = y",
     "steps": [
       {

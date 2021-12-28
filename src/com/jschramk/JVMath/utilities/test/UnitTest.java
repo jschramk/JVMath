@@ -3,8 +3,8 @@ package com.jschramk.JVMath.utilities.test;
 import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
-import com.jschramk.JVMath.runtime.parse.Parser;
 import com.jschramk.JVMath.runtime.math_engine.MathEngine;
+import com.jschramk.JVMath.runtime.parse.Parser;
 import util.PerformanceTimer;
 
 public class UnitTest {
@@ -43,6 +43,7 @@ public class UnitTest {
         testSolve(eq("y = a b a^2 b^2"));
         testSolve(eq("r = root(3, 3V/(4pi))"));
         testSolve(eq("x^2 - x = 5"));
+        testSolve(eq("y = a b c d (a b)^2 d^2 c^2 a^3 d^3 (b c)^3"));
 
         // these ones are not really expected to pass because they are hard to solve symbolically
         //testSolve(eq("x^3 - 5 = root(3, x + 5)"));

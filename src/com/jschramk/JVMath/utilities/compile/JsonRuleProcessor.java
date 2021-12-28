@@ -127,6 +127,10 @@ private static void processJson(File f, JsonArray array, Parser parser)
 
         JsonObject object = (JsonObject) element;
 
+        String sourceFileName = object.get("file").getAsString();
+
+        int sourceFileLine = object.get("line").getAsInt();
+
         String find = object.get("find").getAsString();
 
         ParseResult r;
@@ -166,11 +170,8 @@ private static void processJson(File f, JsonArray array, Parser parser)
             if (!object1.has("description") && r.is(Equation.class)) {
 
                 String msg = String.format(
-                    "WARNING (%s): No description for rule: FIND[ %s ], step: REPLACE[ %s ]",
-                    f.getName(),
-                    find,
-                    replace
-                );
+                    "WARNING (%s:%d): Step has no description.\n\tRule: FIND[ %s ]\n\tStep: REPLACE[ %s ]",
+                    sourceFileName, sourceFileLine, find, replace);
 
                 System.out.println(msg);
 

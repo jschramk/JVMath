@@ -223,7 +223,7 @@ public class Operators {
 
       double input = arg.computeToDouble();
 
-      if (JVMathSettings.ANGULAR_UNIT == JVMathSettings.AngularUnit.DEGREES) {
+      if (JVMathSettings.getAngularUnit() == JVMathSettings.AngularUnit.DEGREES) {
         input = Math.toRadians(input);
       }
 
@@ -258,7 +258,7 @@ public class Operators {
 
       double val = Math.asin(arg.computeToDouble());
 
-      if (JVMathSettings.ANGULAR_UNIT == JVMathSettings.AngularUnit.DEGREES) {
+      if (JVMathSettings.getAngularUnit() == JVMathSettings.AngularUnit.DEGREES) {
         val = Math.toDegrees(val);
       }
 
@@ -293,7 +293,7 @@ public class Operators {
     public Operand evaluate(Operand arg) {
       double input = arg.computeToDouble();
 
-      if (JVMathSettings.ANGULAR_UNIT == JVMathSettings.AngularUnit.DEGREES) {
+      if (JVMathSettings.getAngularUnit() == JVMathSettings.AngularUnit.DEGREES) {
         input = Math.toRadians(input);
       }
 
@@ -327,7 +327,7 @@ public class Operators {
     public Operand evaluate(Operand arg) {
       double val = Math.acos(arg.computeToDouble());
 
-      if (JVMathSettings.ANGULAR_UNIT == JVMathSettings.AngularUnit.DEGREES) {
+      if (JVMathSettings.getAngularUnit() == JVMathSettings.AngularUnit.DEGREES) {
         val = Math.toDegrees(val);
       }
 
@@ -362,7 +362,7 @@ public class Operators {
 
       double input = arg.computeToDouble();
 
-      if (JVMathSettings.ANGULAR_UNIT == JVMathSettings.AngularUnit.DEGREES) {
+      if (JVMathSettings.getAngularUnit() == JVMathSettings.AngularUnit.DEGREES) {
         input = Math.toRadians(input);
       }
 
@@ -403,7 +403,7 @@ public class Operators {
         val = Math.atan2(arg.getChild(0).computeToDouble(), arg.getChild(1).computeToDouble());
       }
 
-      if (JVMathSettings.ANGULAR_UNIT == JVMathSettings.AngularUnit.DEGREES) {
+      if (JVMathSettings.getAngularUnit() == JVMathSettings.AngularUnit.DEGREES) {
         val = Math.toDegrees(val);
       }
 

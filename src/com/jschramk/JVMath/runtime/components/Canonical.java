@@ -1,9 +1,7 @@
-package com.jschramk.JVMath.runtime.rewrite_engine;
+package com.jschramk.JVMath.runtime.components;
 
-import com.jschramk.JVMath.runtime.components.*;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.Parser;
-import com.jschramk.JVMath.runtime.rewrite_engine.RewriteEngine;
 
 import java.util.*;
 
@@ -101,64 +99,52 @@ public class Canonical {
 
     public static void main(String[] args) throws ParserException {
 
-        int numTest = 100;
 
-        Operand[] tests = new Operand[numTest];
+        Parser p = Parser.getDefault();
 
-        for (int i = 0; i < numTest; i++) {
-            tests[i] = getEquivalentRandom(5);
-        }
+        Operand o = p.parse("2 + z + 1.99999 - a^2", Operand.class);
 
-        String expected = null;
+        o.beautify();
 
-        for (int i = 0; i < tests.length; i++) {
-
-            Operand o = tests[i];
-
-            o.canonify();
-
-            String actual = o.toString();
-
-            if (expected == null) {
-
-                expected = o.toString();
-
-                System.out.println("Expected: " + expected);
-
-            } else if (!actual.equals(expected)) {
-
-                throw new RuntimeException(
-                    String.format("Result mismatch: expected %s, got %s", expected, actual));
-
-            }
-
-        }
+        System.out.println(o);
 
     }
 
     // TODO: make a solution that will work with mapping algorithm
-    public static Comparator<Operand> CANONICAL_COMPARATOR = new Comparator<Operand>() {
-        @Override public int compare(Operand o1, Operand o2) {
+    public static Comparator<Operand> BEAUTIFY_COMPARATOR = (o1, o2) -> {
 
-            int childCountComp = -Integer.compare(o1.treeSize(), o2.treeSize());
+        switch (o1.getType()) {
 
-            if (childCountComp != 0)
-                return childCountComp;
+            case VARIABLE: {
 
-            // force variables to come before literals
-            if ((o1.getType() == Enums.OperandType.LITERAL) && (o2.getType()
-                == Enums.OperandType.VARIABLE))
-                return -1;
-            if ((o1.getType() == Enums.OperandType.VARIABLE) && (o2.getType()
-                == Enums.OperandType.LITERAL))
+                switch (o2.getType()) {
+
+                    case VARIABLE:
+                        return o1.toString().compareTo(o2.toString());
+
+                    case LITERAL:
+                        return -1;
+
+                    default:
+                        return 1;
+
+                }
+
+            }
+
+            case LITERAL: {
+
+                if (o2.getType() == Enums.OperandType.LITERAL) {
+                    return (int) -Math.signum(o2.computeToDouble() - o1.computeToDouble());
+                }
+
                 return 1;
 
-            int typeComp = o1.getType().compareTo(o2.getType());
+            }
 
-            if (typeComp != 0)
-                return typeComp;
+            default:
+                return o2.treeSize() - o1.treeSize();
 
-            return o1.toString().compareTo(o2.toString());
 
         }
 

@@ -84,7 +84,7 @@ public class MathEngine {
 
         } else {
 
-            Step<Equation> step = rule.getLastStep();
+            Step<Equation> step = rule.getFinalStep();
 
             Operand leftReplacement =
                 step.getReplace().getLeftSide().replaceCopy(allSolvedMappings);
@@ -150,11 +150,13 @@ public class MathEngine {
 
                     if (curr.variableCount(solveFor) > 1) {
 
-                        Output<Equation> simplifiedOutput = simplify(curr, solveFor, false);
+                        Output<Equation> simplifiedOutput = simplify(curr, solveFor, true);
 
                         if (simplifiedOutput != null) {
 
                             curr = simplifiedOutput.getResult();
+
+                            simplifiedOutput.printSteps();
 
                             if (steps)
                                 ret.appendSteps(simplifiedOutput);
@@ -391,7 +393,7 @@ public class MathEngine {
 
         } else {
 
-            Step<Operand> step = rule.getLastStep();
+            Step<Operand> step = rule.getFinalStep();
 
             operandStep =
                 buildReplacement(match.getOriginal(), step.getReplace(), match.getSolvedMappings());
@@ -408,6 +410,7 @@ public class MathEngine {
 
     }
 
+    // need to sort variables longest first to replace render variables correctly
     private static final Comparator<String> varLengthComparator = (s, t1) -> t1.length() - s.length();
 
     private static String fillVariableDescription(String desc, Map<String, Operand> variables) {
@@ -425,7 +428,20 @@ public class MathEngine {
     private static Operand buildReplacement(Operand original, Operand replacement,
         SolvedMappings solvedMappings) {
 
+        System.out.println(original.toTreeString());
+        System.out.println(replacement.toTreeString());
+
+        System.out.println(solvedMappings);
+
+        System.out.println(solvedMappings.getUsedIds());
+
+
+
         Operand populated = replacement.replaceCopy(solvedMappings);
+
+        System.out.println(populated);
+
+        System.out.println("-------------------------------------------");
 
         if (!(original instanceof BinaryOperation)) {
             return populated;
@@ -444,6 +460,8 @@ public class MathEngine {
                     unusedChildren.add(child.copy());
                 }
             }
+
+            System.out.println("unused: " + unusedChildren);
 
             if (!unusedChildren.isEmpty()) {
                 unusedChildren.add(populated);
@@ -472,8 +490,9 @@ public class MathEngine {
         Output<Operand> leftOut = simplify(left, target, steps);
         Output<Operand> rightOut = simplify(right, target, steps);
 
-        if (leftOut != null && leftOut.getResult().variableCount(target) <= left
-            .variableCount(target)) {
+        if (leftOut != null
+            && leftOut.getResult().variableInstanceCount(target) <= left.variableInstanceCount(
+            target)) {
 
             if (steps) {
 
@@ -497,8 +516,9 @@ public class MathEngine {
 
         }
 
-        if (rightOut != null && rightOut.getResult().variableCount(target) <= right
-            .variableCount(target)) {
+        if (rightOut != null
+            && rightOut.getResult().variableInstanceCount(target) <= right.variableInstanceCount(
+            target)) {
 
             if (steps) {
 

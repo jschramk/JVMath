@@ -3,9 +3,9 @@ package com.jschramk.JVMath.runtime.rewrite_packages;
 import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
-import com.jschramk.JVMath.runtime.parse.Parser;
 import com.jschramk.JVMath.runtime.math_engine.Requirement;
 import com.jschramk.JVMath.runtime.math_engine.Rule;
+import com.jschramk.JVMath.runtime.parse.Parser;
 
 import java.io.InputStream;
 import java.util.HashMap;
@@ -14,68 +14,83 @@ import java.util.Map;
 
 public class PackageLoader {
 
-private static Map<String, Object> ruleSets = new HashMap<>();
-private static Map<Integer, Rule<?>> rulesById = new HashMap<>();
-private static Map<Integer, Requirement> requirementsById = new HashMap<>();
+    private static Map<String, Object> ruleSets = new HashMap<>();
+    private static Map<Integer, Rule<?>> rulesById = new HashMap<>();
+    private static Map<Integer, Requirement> requirementsById = new HashMap<>();
 
-static {
+    static {
 
-    try {
+        try {
 
-        InputStream simplify = PackageLoader.class.getResourceAsStream(
-            "simplify.processed.json");
-        InputStream solve = PackageLoader.class.getResourceAsStream(
-            "solve.processed.json");
+            Parser parser = Parser.getDefault();
 
-        Parser parser = Parser.getDefault();
+            /*InputStream loadOrder = PackageLoader.class.getResourceAsStream("load_order.txt");
 
-        loadRuleSet("simplify", parser, simplify, Operand.class);
-        loadRuleSet("solve", parser, solve, Equation.class);
+            Scanner sc = new Scanner(loadOrder);
 
-    } catch (Exception e) {
-        e.printStackTrace();
-        System.exit(1);
-    }
 
-}
+            while (sc.hasNextLine()) {
 
-public static <T> Rule<T> getRule(int id, Class<T> type) {
+                String s = sc.nextLine().trim().replaceAll("//.*", "");
 
-    if (rulesById.containsKey(id)) {
-        return (Rule<T>) rulesById.get(id);
-    }
+                if(s.isEmpty()) continue;
 
-    throw new IllegalArgumentException("No operand rule with ID: " + id);
+                InputStream rules = PackageLoader.class.getResourceAsStream(s);
 
-}
+                JsonObject obj = JsonParser.parseReader(new InputStreamReader(rules)).getAsJsonObject();
 
-public static <T> List<Rule<T>> getRuleSet(String name, Class<T> type) {
-    if (!ruleSets.containsKey(name)) {
-        throw new IllegalArgumentException("No operand rule set \"" +
-            name +
-            "\"");
-    }
-    return (List<Rule<T>>) ruleSets.get(name);
-}
+            }*/
+
+            InputStream simplify =
+                PackageLoader.class.getResourceAsStream("simplify.processed.json");
+            InputStream solve = PackageLoader.class.getResourceAsStream("solve.processed.json");
 
 
 
-private static <T> void loadRuleSet(
-    String name, Parser parser, InputStream inputStream, Class<T> type
-) throws ParserException {
+            loadRuleSet("simplify", parser, simplify, Operand.class);
+            loadRuleSet("solve", parser, solve, Equation.class);
 
-    List<Rule<String>> stringRules = Rule.getRules(inputStream);
-
-    List<Rule<T>> equationRules = Rule.convertRules(parser, stringRules, type);
-
-    for (Rule<T> rule : equationRules) {
-
-        if (rule.getId() != -1) {
-            rulesById.put(rule.getId(), rule);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
         }
+
     }
 
-    ruleSets.put(name, equationRules);
-}
+    public static <T> Rule<T> getRule(int id, Class<T> type) {
+
+        if (rulesById.containsKey(id)) {
+            return (Rule<T>) rulesById.get(id);
+        }
+
+        throw new IllegalArgumentException("No operand rule with ID: " + id);
+
+    }
+
+    public static <T> List<Rule<T>> getRuleSet(String name, Class<T> type) {
+        if (!ruleSets.containsKey(name)) {
+            throw new IllegalArgumentException("No operand rule set \"" + name + "\"");
+        }
+        return (List<Rule<T>>) ruleSets.get(name);
+    }
+
+
+
+    private static <T> void loadRuleSet(String name, Parser parser, InputStream inputStream,
+        Class<T> type) throws ParserException {
+
+        List<Rule<String>> stringRules = Rule.getRules(inputStream);
+
+        List<Rule<T>> equationRules = Rule.convertRules(parser, stringRules, type);
+
+        for (Rule<T> rule : equationRules) {
+
+            if (rule.getId() != -1) {
+                rulesById.put(rule.getId(), rule);
+            }
+        }
+
+        ruleSets.put(name, equationRules);
+    }
 
 }

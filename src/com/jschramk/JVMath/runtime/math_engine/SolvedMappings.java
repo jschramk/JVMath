@@ -76,7 +76,7 @@ public class SolvedMappings {
 
   @Override
   public String toString() {
-    return instanceMappings.toString();
+    return "instance: " + instanceMappings.toString() + "\ngeneral: " + generalMappings.toString();
   }
 
   public VariableDomain toVariableDomain() {

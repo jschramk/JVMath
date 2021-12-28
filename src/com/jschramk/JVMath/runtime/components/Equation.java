@@ -37,7 +37,7 @@ public class Equation {
   }
 
   public int variableCount(String name) {
-    return leftSide.variableCount(name) + rightSide.variableCount(name);
+    return leftSide.variableInstanceCount(name) + rightSide.variableInstanceCount(name);
   }
 
   public boolean isSolvedFor(String variable) {

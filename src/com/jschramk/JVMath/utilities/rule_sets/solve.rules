@@ -1,3 +1,6 @@
+// General rules for solving equations
+// Author: jschramk
+
 @FLIP
 solve (y = x) {
     x = y : Flip the equation so ${#x} is on the left side

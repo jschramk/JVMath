@@ -120,6 +120,11 @@ public class Requirement {
             return false;
         }
 
+        //TODO: make sure this works, basically makes it so rules that require a target variable do not get used when there is no target
+        if (containsTargetVariable != null && containsTargetVariable && targetVariable == null) {
+            return false;
+        }
+
         if (requiredValue != null && operand instanceof Literal
             && operand.computeToDouble() != requiredValue) {
             return false;
