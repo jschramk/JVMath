@@ -1,2 +1,0 @@
-simplify.processed.json
-solve.processed.json

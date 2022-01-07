@@ -7,7 +7,7 @@ import com.jschramk.JVMath.runtime.components.Variable;
 
 public class StructureSearch {
 
-    private static boolean matches(Operand rule, Operand check, Requirements requirements,
+    private static boolean matches(Operand rule, Operand check, VariableFilterMap requirements,
         MappingSolver mapper, String solveVariable) {
 
         boolean matches = false; // default to false
@@ -21,7 +21,7 @@ public class StructureSearch {
             Variable var = (Variable) rule;
 
             matches = requirements == null || requirements
-                .meetsPrerequisites(var.getName(), solveVariable, check);
+                .passes(var.getName(), solveVariable, check);
 
         } else if (rule instanceof Literal) { // rule operand is literal, check if actual is the same literal
 
@@ -91,7 +91,7 @@ public class StructureSearch {
     }
 
     public static Match computeMatch(Operand ruleOperand, Operand actualOperand,
-        Requirements requirements, String solveVariable) {
+        VariableFilterMap requirements, String solveVariable) {
 
         MappingSolver mapper = new MappingSolver();
 
@@ -109,13 +109,13 @@ public class StructureSearch {
 
     }
 
-    public static Match findMatch(Operand find, Operand in, Requirements requirements,
+    public static Match findMatch(Operand find, Operand in, VariableFilterMap requirements,
         String target) {
 
         return recursiveFindMatch(find, in, requirements, target);
     }
 
-    private static Match recursiveFindMatch(Operand find, Operand in, Requirements requirements,
+    private static Match recursiveFindMatch(Operand find, Operand in, VariableFilterMap requirements,
         String target) {
 
         Match thisMatch = computeMatch(find, in, requirements, target);

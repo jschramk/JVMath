@@ -1,0 +1,29 @@
+@REDUCE_FRACTION
+simplify (
+    a/b
+) where (
+    a: is literal
+    b: is literal
+) {
+    // code block inline with steps
+    // does not show output, just executes code that may be referenced later
+    #{
+        var gcf = gcf(a, b);
+        var newNumer = a/gcf;
+        var newDenom = b/gcf;
+    }
+    newNumer/newDenom : Reduce the fraction using the GCF of ${#a} and ${#b}: ${#gcf}
+
+}
+
+
+
+
+
+integrate (
+    e^x
+) where (
+    x: is f(#target)
+) {
+
+}

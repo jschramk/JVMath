@@ -47,10 +47,14 @@ public class TestThreading {
                     try {
                         Thread.sleep(10);
                     } catch (InterruptedException e) {
+                        System.out.println(String.format("Thread %d interrupted", threadIndex));
                         break;
                     }
 
-                    if(Thread.interrupted()) break;
+                    if(Thread.currentThread().isInterrupted()) {
+                        System.out.println(String.format("Thread %d interrupted", threadIndex));
+                        break;
+                    }
 
                     if(j == end - 1)
                         System.out.println(String.format("Thread %d finished search", threadIndex));

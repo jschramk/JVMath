@@ -331,7 +331,7 @@ simplify ((a * x^n1)/x^n2) {
 
 @ADD_ZERO
 simplify (x + 0) {
-    x : Cancel the ${0}
+    x : "Cancel the ${0}"
 }
 
 @ADD_SAME

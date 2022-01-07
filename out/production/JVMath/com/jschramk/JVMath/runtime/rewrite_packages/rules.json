@@ -1,0 +1,1759 @@
+{
+  "files": {
+    "0": "simplify.rules",
+    "1": "solve.rules"
+  },
+  "rules": {
+    "solve": [
+      {
+        "line": 4,
+        "find": "y = x",
+        "id": 22,
+        "steps": [
+          {
+            "replace": "x = y",
+            "description": "Flip the equation so ${#x}$ is on the left side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 12,
+        "find": "- x = y",
+        "id": 23,
+        "steps": [
+          {
+            "replace": "x = - y",
+            "description": "Negate both sides and simplify"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 20,
+        "find": "x1 = y + x2",
+        "id": 24,
+        "steps": [
+          {
+            "replace": "x1 - x2 = y + x2 - x2",
+            "description": "Subtract ${#x2}$ from both sides"
+          },
+          {
+            "replace": "x1 - x2 = y",
+            "description": "Cancel ${#x2}$ on the right side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x1",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          },
+          {
+            "variable": "x2",
+            "contains solve": true
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 30,
+        "find": "x + a = y",
+        "id": 25,
+        "steps": [
+          {
+            "replace": "x + a - a = y - a",
+            "description": "Subtract ${#a}$ from both sides"
+          },
+          {
+            "replace": "x = y - a",
+            "description": "Cancel ${#a}$ on the left side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 40,
+        "find": "x/(x1 + a) = y",
+        "steps": [
+          {
+            "replace": "((x1 + a)⋅x)/(x1 + a) = y⋅(x1 + a)",
+            "description": "Multiply both sides by ${#x1 + #a}$"
+          },
+          {
+            "replace": "x = (x1 + a)⋅y",
+            "description": "Cancel ${#x1 + #a}$ in the left side numerator and denominator"
+          },
+          {
+            "replace": "x = x1⋅y + a⋅y",
+            "description": "Distribute the right side"
+          },
+          {
+            "replace": "x - (y⋅x1) = y⋅x1 + y⋅a - (y⋅x1)",
+            "description": "Subtract ${#y #x1}$ from both sides"
+          },
+          {
+            "replace": "x - (x1⋅y) = a⋅y",
+            "description": "Cancel ${#y + #x1}$ on the right side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "x1",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 59,
+        "find": "x⋅a = y",
+        "steps": [
+          {
+            "replace": "(x⋅a)/a = y/a",
+            "description": "Divide both sides by ${#a}$"
+          },
+          {
+            "replace": "x = y/a",
+            "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 68,
+        "find": "x/a = y",
+        "steps": [
+          {
+            "replace": "(x⋅a)/a = y⋅a",
+            "description": "Multiply both sides by ${#a}$"
+          },
+          {
+            "replace": "x = y⋅a",
+            "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 77,
+        "find": "a/x = b/c",
+        "steps": [
+          {
+            "replace": "x/a = c/b",
+            "description": "Invert both sides of the equation"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "c",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 86,
+        "find": "a/x = b",
+        "steps": [
+          {
+            "replace": "x/a = 1/b",
+            "description": "Invert both sides of the equation"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 94,
+        "find": "a/x = b",
+        "steps": [
+          {
+            "replace": "(a⋅x)/x = x⋅b",
+            "description": "Multiply both sides by ${#x}$"
+          },
+          {
+            "replace": "a = x⋅b",
+            "description": "Cancel ${#x}$ in the numerator and denominator on the left side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 102,
+        "find": "x1 = a/x2",
+        "steps": [
+          {
+            "replace": "x1⋅x2 = (a⋅x2)/x2",
+            "description": "Multiply both sides by ${#x2}$"
+          },
+          {
+            "replace": "x1⋅x2 = a",
+            "description": "Cancel ${#x2}$ in the numerator and denominator on the right side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x1",
+            "contains solve": true
+          },
+          {
+            "variable": "x2",
+            "contains solve": true
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 111,
+        "find": "x1 = a⋅x2",
+        "steps": [
+          {
+            "replace": "x1/x2 = a"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x1",
+            "contains solve": true
+          },
+          {
+            "variable": "x2",
+            "contains solve": true
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 119,
+        "find": "a⋅x + b⋅(- x) = y",
+        "steps": [
+          {
+            "replace": "(a - b)⋅x = y"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 128,
+        "find": "x^a = y",
+        "steps": [
+          {
+            "replace": "root(a, x^a) = root(a, y)",
+            "description": "Take the root ${#a}$ of both sides"
+          },
+          {
+            "replace": "x = root(a, y)",
+            "description": "Simplify the left side"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 137,
+        "find": "e^x = y",
+        "steps": [
+          {
+            "replace": "x = log(y)",
+            "description": "Rewrite the equation as a natural logarithm"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 144,
+        "find": "a^x = y",
+        "steps": [
+          {
+            "replace": "x = log(a, y)",
+            "description": "Rewrite the equation as a logarithm"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 152,
+        "find": "a⋅x^2 + b⋅x = y",
+        "id": 26,
+        "steps": [
+          {
+            "replace": "x = ((- b - root(b^2 - (4⋅a⋅(- y))))/(2⋅a), (- b + root(b^2 - (4⋅a⋅(- y))))/(2⋅a))",
+            "description": "Apply the quadratic formula"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 162,
+        "find": "(a⋅x^2)/a1 + b⋅x = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "(a/a1)⋅x^2 + b⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a1",
+            "contains solve": false
+          },
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 173,
+        "find": "(a⋅x^2)/a1 + (b⋅x)/b1 = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "(a/a1)⋅x^2 + (b/b1)⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a1",
+            "contains solve": false
+          },
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          },
+          {
+            "variable": "b1",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 185,
+        "find": "x^2/a + x/b = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "(1/a)⋅x^2 + (1/b)⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 195,
+        "find": "x^2/a + x = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "(1/a)⋅x^2 + 1⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 205,
+        "find": "x^2 + x/b = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "1⋅x^2 + (1/b)⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 215,
+        "find": "a⋅x^2 + x = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "a⋅x^2 + 1⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 224,
+        "find": "x^2 + b⋅x = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "1⋅x^2 + b⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 233,
+        "find": "x^2 + x = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "1⋅x^2 + 1⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 242,
+        "find": "x^2 - x = y",
+        "next": 26,
+        "steps": [
+          {
+            "replace": "1⋅x^2 + (- 1)⋅x = y",
+            "description": "Rewrite as a standard quadratic"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 250,
+        "find": "root(a, x) = y",
+        "steps": [
+          {
+            "replace": "x = y^a"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 258,
+        "find": "root(x) = y",
+        "steps": [
+          {
+            "replace": "x = y^2"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 265,
+        "find": "sin(x) = y",
+        "steps": [
+          {
+            "replace": "x = asin(y)"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 272,
+        "find": "cos(x) = y",
+        "steps": [
+          {
+            "replace": "x = acos(y)"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 279,
+        "find": "tan(x) = y",
+        "steps": [
+          {
+            "replace": "x = atan(y)"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 286,
+        "find": "asin(x) = y",
+        "steps": [
+          {
+            "replace": "x = sin(y)"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 293,
+        "find": "acos(x) = y",
+        "steps": [
+          {
+            "replace": "x = cos(y)"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 300,
+        "find": "atan(x) = y",
+        "steps": [
+          {
+            "replace": "x = tan(y)"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 307,
+        "find": "log(x, a) = y",
+        "steps": [
+          {
+            "replace": "x^y = a",
+            "description": "Rewrite the equation using the definition of log"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 315,
+        "find": "log(a, x) = y",
+        "steps": [
+          {
+            "replace": "a^y = x",
+            "description": "Rewrite the equation using the definition of log"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      },
+      {
+        "line": 323,
+        "find": "log(x) = y",
+        "steps": [
+          {
+            "replace": "e^y = x",
+            "description": "Rewrite the equation using the definition of natural log"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          },
+          {
+            "variable": "y",
+            "contains solve": false
+          }
+        ],
+        "file": 1
+      }
+    ],
+    "simplify": [
+      {
+        "line": 4,
+        "find": "a^2 + 2⋅a⋅b + b^2",
+        "id": 0,
+        "steps": [
+          {
+            "replace": "(a + b)^2"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 9,
+        "find": "x - x",
+        "id": 1,
+        "steps": [
+          {
+            "replace": "0"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 14,
+        "find": "x + a⋅x",
+        "id": 2,
+        "steps": [
+          {
+            "replace": "(1 + a)⋅x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "x",
+            "contains solve": true
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 22,
+        "find": "a⋅x + b⋅x",
+        "id": 3,
+        "steps": [
+          {
+            "replace": "(a + b)⋅x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 32,
+        "find": "a⋅x + b⋅x",
+        "id": 4,
+        "steps": [
+          {
+            "replace": "(a + b)⋅x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false,
+            "type": "LITERAL"
+          },
+          {
+            "variable": "b",
+            "contains solve": false,
+            "type": "LITERAL"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 41,
+        "find": "a⋅x - (b⋅x)",
+        "id": 5,
+        "steps": [
+          {
+            "replace": "(a - b)⋅x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false,
+            "type": "LITERAL"
+          },
+          {
+            "variable": "b",
+            "contains solve": false,
+            "type": "LITERAL"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 51,
+        "find": "n⋅(a + b)",
+        "id": 6,
+        "steps": [
+          {
+            "replace": "n⋅a + n⋅b"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "contains solve": false
+          },
+          {
+            "variable": "b",
+            "contains solve": false
+          },
+          {
+            "variable": "n",
+            "contains solve": false
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 60,
+        "find": "(a + b)⋅x",
+        "id": 7,
+        "steps": [
+          {
+            "replace": "a⋅x + b⋅x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "b",
+            "contains solve": true
+          },
+          {
+            "variable": "x",
+            "contains solve": true
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 78,
+        "find": "n⋅(a + b)",
+        "id": 8,
+        "steps": [
+          {
+            "replace": "n⋅a + n⋅b"
+          }
+        ],
+        "require": [
+          {
+            "variable": "n",
+            "type": "LITERAL"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 85,
+        "find": "a/x + b/x",
+        "id": 9,
+        "steps": [
+          {
+            "replace": "(a + b)/x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 90,
+        "find": "a/b + c/d",
+        "id": 10,
+        "steps": [
+          {
+            "replace": "(a⋅d + b⋅c)/(b⋅d)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 99,
+        "find": "- 0",
+        "id": 11,
+        "steps": [
+          {
+            "replace": "0"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 104,
+        "find": "0⋅x",
+        "id": 12,
+        "steps": [
+          {
+            "replace": "0"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 109,
+        "find": "1⋅x",
+        "id": 13,
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 114,
+        "find": "(- 1)⋅x",
+        "id": 14,
+        "steps": [
+          {
+            "replace": "- x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 121,
+        "find": "neg1⋅x",
+        "id": 15,
+        "steps": [
+          {
+            "replace": "- x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "neg1",
+            "type": "LITERAL",
+            "value": -1.0
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 128,
+        "find": "- (- x)",
+        "id": 16,
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 133,
+        "find": "- (a + b)",
+        "steps": [
+          {
+            "replace": "- a - b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 137,
+        "find": "- (a⋅b)",
+        "steps": [
+          {
+            "replace": "(- a)⋅b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 141,
+        "find": "- (a/b)",
+        "steps": [
+          {
+            "replace": "(- a)/b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 145,
+        "find": "x⋅x^a",
+        "id": 17,
+        "steps": [
+          {
+            "replace": "x^(1 + a)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 150,
+        "find": "x^a⋅x^b",
+        "id": 18,
+        "steps": [
+          {
+            "replace": "x^(a + b)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 155,
+        "find": "x⋅x",
+        "id": 19,
+        "steps": [
+          {
+            "replace": "x^2"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 161,
+        "find": "a^c⋅b^c",
+        "steps": [
+          {
+            "replace": "(a⋅b)^c"
+          }
+        ],
+        "require": [
+          {
+            "variable": "c",
+            "contains solve": true
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 168,
+        "find": "(a⋅b)^c",
+        "steps": [
+          {
+            "replace": "a^c⋅b^c"
+          }
+        ],
+        "require": [
+          {
+            "variable": "c",
+            "contains solve": false
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 174,
+        "find": "(a/b)⋅(c/d)",
+        "steps": [
+          {
+            "replace": "(a⋅c)/(b⋅d)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 178,
+        "find": "0/x",
+        "steps": [
+          {
+            "replace": "0"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 182,
+        "find": "x/x",
+        "steps": [
+          {
+            "replace": "1"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 186,
+        "find": "x/1",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 190,
+        "find": "(a/b)/c",
+        "steps": [
+          {
+            "replace": "a/(b⋅c)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 194,
+        "find": "(a⋅b)/b",
+        "steps": [
+          {
+            "replace": "a"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 198,
+        "find": "(a⋅x)/(b⋅x)",
+        "steps": [
+          {
+            "replace": "a/b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 202,
+        "find": "x/(a⋅x)",
+        "steps": [
+          {
+            "replace": "1/a"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 206,
+        "find": "a/(b/c)",
+        "steps": [
+          {
+            "replace": "(a⋅c)/b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 210,
+        "find": "a⋅(b/c)",
+        "steps": [
+          {
+            "replace": "(a⋅b)/c"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 214,
+        "find": "x^a/x",
+        "steps": [
+          {
+            "replace": "x^(a - 1)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 218,
+        "find": "x^a/x^b",
+        "steps": [
+          {
+            "replace": "x^(a - b)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 222,
+        "find": "0^x",
+        "steps": [
+          {
+            "replace": "0"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 226,
+        "find": "1^x",
+        "steps": [
+          {
+            "replace": "1"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 230,
+        "find": "x^0",
+        "steps": [
+          {
+            "replace": "1"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 234,
+        "find": "x^1",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 238,
+        "find": "x^(- 1)",
+        "steps": [
+          {
+            "replace": "1/x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 242,
+        "find": "x^(- a)",
+        "steps": [
+          {
+            "replace": "1/x^a"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 246,
+        "find": "(x^a)^b",
+        "steps": [
+          {
+            "replace": "x^(a⋅b)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 250,
+        "find": "asin(sin(x))",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 254,
+        "find": "acos(cos(x))",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 258,
+        "find": "atan(tan(x))",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 262,
+        "find": "log(a, a^x)",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 266,
+        "find": "b^(1/a)",
+        "steps": [
+          {
+            "replace": "root(a, b)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 270,
+        "find": "a^0.5",
+        "steps": [
+          {
+            "replace": "root(a)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 274,
+        "find": "root(n, a^n/b)",
+        "steps": [
+          {
+            "replace": "a/root(n, b)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 278,
+        "find": "root(n, a/b^n)",
+        "steps": [
+          {
+            "replace": "root(n, a)/b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 282,
+        "find": "root(2, x)",
+        "steps": [
+          {
+            "replace": "root(x)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 286,
+        "find": "root(a, x^a)",
+        "steps": [
+          {
+            "replace": "x"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 290,
+        "find": "sin(x)^2 + cos(x)^2",
+        "steps": [
+          {
+            "replace": "1"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 294,
+        "find": "log(a, b^c)",
+        "steps": [
+          {
+            "replace": "c⋅log(a, b)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 298,
+        "find": "log(a^b)",
+        "steps": [
+          {
+            "replace": "b⋅log(a)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 302,
+        "find": "a⋅(b + c) + d⋅(f + g)",
+        "steps": [
+          {
+            "replace": "a⋅b + a⋅c + d⋅f + d⋅g"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 307,
+        "find": "a⋅(- x)",
+        "steps": [
+          {
+            "replace": "(- a)⋅x"
+          }
+        ],
+        "require": [
+          {
+            "variable": "a",
+            "not type": "VARIABLE"
+          },
+          {
+            "variable": "x",
+            "type": "VARIABLE"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 314,
+        "find": "a/b + c",
+        "steps": [
+          {
+            "replace": "(a + b⋅c)/b"
+          }
+        ],
+        "require": [
+          {
+            "variable": "b",
+            "type": "LITERAL"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 320,
+        "find": "(a⋅x^n1)/(b⋅x^n2)",
+        "steps": [
+          {
+            "replace": "(a⋅x^(n1 - n2))/b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 324,
+        "find": "x^n1/(b⋅x^n2)",
+        "steps": [
+          {
+            "replace": "x^(n1 - n2)/b"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 328,
+        "find": "(a⋅x^n1)/x^n2",
+        "steps": [
+          {
+            "replace": "a⋅x^(n1 - n2)"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 332,
+        "find": "x + 0",
+        "id": 20,
+        "steps": [
+          {
+            "replace": "x",
+            "description": "Cancel the ${0}$"
+          }
+        ],
+        "file": 0
+      },
+      {
+        "line": 337,
+        "find": "x + x",
+        "id": 21,
+        "steps": [
+          {
+            "replace": "2⋅x"
+          }
+        ],
+        "file": 0
+      }
+    ]
+  }
+}

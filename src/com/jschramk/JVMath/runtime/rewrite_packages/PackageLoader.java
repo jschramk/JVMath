@@ -3,7 +3,7 @@ package com.jschramk.JVMath.runtime.rewrite_packages;
 import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
-import com.jschramk.JVMath.runtime.math_engine.Requirement;
+import com.jschramk.JVMath.runtime.math_engine.VariableFilter;
 import com.jschramk.JVMath.runtime.math_engine.Rule;
 import com.jschramk.JVMath.runtime.parse.Parser;
 
@@ -16,7 +16,7 @@ public class PackageLoader {
 
     private static Map<String, Object> ruleSets = new HashMap<>();
     private static Map<Integer, Rule<?>> rulesById = new HashMap<>();
-    private static Map<Integer, Requirement> requirementsById = new HashMap<>();
+    private static Map<Integer, VariableFilter> requirementsById = new HashMap<>();
 
     static {
 

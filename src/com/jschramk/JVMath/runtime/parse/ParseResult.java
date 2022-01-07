@@ -1,5 +1,7 @@
 package com.jschramk.JVMath.runtime.parse;
 
+import com.jschramk.JVMath.runtime.components.Equation;
+import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.utils.Utils;
 import mathutils.MathUtils;
 
@@ -35,6 +37,18 @@ public class ParseResult {
 
   public boolean is(Class<?> type) {
     return Utils.classExtends(result.getClass(), type);
+  }
+
+  public boolean isOperand() {
+    return result instanceof Operand;
+  }
+
+  public boolean isEquation() {
+    return result instanceof Equation;
+  }
+
+  public Object getResult() {
+    return result;
   }
 
   public String getInput() {

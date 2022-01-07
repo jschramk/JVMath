@@ -6,7 +6,7 @@ import com.jschramk.JVMath.runtime.components.Literal;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.rewrite_resources.ExternalRequirements;
 
-public class Requirement {
+public class VariableFilter {
 
     private static final String EXTERNAL = "external";
     private static final String CONTAINS_TARGET_VARIABLE = "contains solve";
@@ -22,17 +22,17 @@ public class Requirement {
     private Boolean containsTargetVariable = null;
     private Double requiredValue = null;
     private Double requiredNotValue = null;
-    private RequirementChecker checker;
+    private FilterChecker checker;
 
-    private Requirement(String name) {
+    private VariableFilter(String name) {
         this.variable = name;
     }
 
-    public static Requirement fromJson(JsonObject object) {
+    public static VariableFilter fromJson(JsonObject object) {
 
         String variable = object.get(VARIABLE_NAME).getAsString();
 
-        Requirement requirement = new Requirement(variable);
+        VariableFilter variableFilter = new VariableFilter(variable);
 
         if (object.has(EXTERNAL)) {
 
@@ -40,59 +40,59 @@ public class Requirement {
 
             try {
 
-                requirement.checker =
-                    (RequirementChecker) ExternalRequirements.class.getField(name).get(null);
+                variableFilter.checker =
+                    (FilterChecker) ExternalRequirements.class.getField(name).get(null);
 
-                return requirement;
+                return variableFilter;
 
             } catch (IllegalAccessException | NoSuchFieldException e) {
-                throw new RuntimeException("Unable to access external RequirementChecker: " + name);
+                throw new RuntimeException("Unable to access external FilterChecker: " + name);
             }
 
         }
 
         if (object.has(REQUIRED_TYPE)) {
-            requirement.type(Enums.OperandType.valueOf(object.get(REQUIRED_TYPE).getAsString()));
+            variableFilter.type(Enums.OperandType.valueOf(object.get(REQUIRED_TYPE).getAsString()));
         }
         if (object.has(REQUIRED_NOT_TYPE)) {
-            requirement
-                .notType(Enums.OperandType.valueOf(object.get(REQUIRED_NOT_TYPE).getAsString()));
+            variableFilter.notType(
+                Enums.OperandType.valueOf(object.get(REQUIRED_NOT_TYPE).getAsString()));
         }
         if (object.has(CONTAINS_TARGET_VARIABLE)) {
-            requirement.containsTarget(object.get(CONTAINS_TARGET_VARIABLE).getAsBoolean());
+            variableFilter.containsTarget(object.get(CONTAINS_TARGET_VARIABLE).getAsBoolean());
         }
         if (object.has(REQUIRED_VALUE)) {
-            requirement.value(object.get(REQUIRED_VALUE).getAsDouble());
+            variableFilter.value(object.get(REQUIRED_VALUE).getAsDouble());
         }
         if (object.has(REQUIRED_NOT_VALUE)) {
-            requirement.notValue(object.get(REQUIRED_NOT_VALUE).getAsDouble());
+            variableFilter.notValue(object.get(REQUIRED_NOT_VALUE).getAsDouble());
         }
 
-        return requirement;
+        return variableFilter;
 
     }
 
-    public Requirement type(Enums.OperandType requiredType) {
+    public VariableFilter type(Enums.OperandType requiredType) {
         this.requiredType = requiredType;
         return this;
     }
 
-    public Requirement notType(Enums.OperandType requiredType) {
+    public VariableFilter notType(Enums.OperandType requiredType) {
         this.requiredNotType = requiredType;
         return this;
     }
 
-    public Requirement containsTarget(boolean containsSolveVariable) {
+    public VariableFilter containsTarget(boolean containsSolveVariable) {
         this.containsTargetVariable = containsSolveVariable;
         return this;
     }
 
-    public Requirement value(double value) {
+    public VariableFilter value(double value) {
         requiredValue = value;
         return this;
     }
 
-    public Requirement notValue(double value) {
+    public VariableFilter notValue(double value) {
         requiredNotValue = value;
         return this;
     }
@@ -101,7 +101,7 @@ public class Requirement {
         return variable;
     }
 
-    public boolean meetsMatchRequirements(Operand operand, String targetVariable) {
+    public boolean passes(Operand operand, String targetVariable) {
 
         if (checker != null) {
             return checker.passes(operand, targetVariable);
@@ -139,7 +139,7 @@ public class Requirement {
 
     }
 
-    public interface RequirementChecker {
+    public interface FilterChecker {
 
         boolean passes(Operand operand, String targetVariable);
 

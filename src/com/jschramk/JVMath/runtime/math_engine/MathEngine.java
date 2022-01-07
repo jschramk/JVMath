@@ -21,11 +21,11 @@ public class MathEngine {
 
         StructureSearch.Match leftMatch = StructureSearch
             .computeMatch(rule.getFind().getLeftSide(), equation.getLeftSide(),
-                rule.getRequirements(), solveFor);
+                rule.getFilters(), solveFor);
 
         StructureSearch.Match rightMatch = StructureSearch
             .computeMatch(rule.getFind().getRightSide(), equation.getRightSide(),
-                rule.getRequirements(), solveFor);
+                rule.getFilters(), solveFor);
 
         if (leftMatch == null || rightMatch == null) {
             return null;
@@ -354,7 +354,7 @@ public class MathEngine {
 
         //System.out.println(String.format("%s -> %s ?", to, rule.getFind()));
 
-        StructureSearch.Match match = findMatch(rule.getFind(), to, rule.getRequirements(), target);
+        StructureSearch.Match match = findMatch(rule.getFind(), to, rule.getFilters(), target);
 
         //System.out.println("Simplify with target: " + target);
 

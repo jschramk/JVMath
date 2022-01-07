@@ -1,967 +1,970 @@
-[
-  {
-    "file": "solve.rules",
-    "line": 1,
-    "find": "y = x",
-    "id": "FLIP",
-    "steps": [
-      {
-        "replace": "x = y",
-        "description": "Flip the equation so ${#x}$ is on the left side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 9,
-    "find": "-x = y",
-    "id": "NEGATE",
-    "steps": [
-      {
-        "replace": "x = -y",
-        "description": "Negate both sides and simplify"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 17,
-    "find": "x1 = y + x2",
-    "id": "COLLECT_LIKE",
-    "steps": [
-      {
-        "replace": "x1 - x2 = y + x2 - x2",
-        "description": "Subtract ${#x2}$ from both sides"
-      },
-      {
-        "replace": "x1 - x2 = y",
-        "description": "Cancel ${#x2}$ on the right side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x1",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "x2",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 27,
-    "find": "x + a = y",
-    "id": "SUBTRACT",
-    "steps": [
-      {
-        "replace": "x + a - a = y - a",
-        "description": "Subtract ${#a}$ from both sides"
-      },
-      {
-        "replace": "x = y - a",
-        "description": "Cancel ${#a}$ on the left side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 37,
-    "find": "x/(x1 + a) = y",
-    "steps": [
-      {
-        "replace": "((x1 + a) * x)/(x1 + a) = y (x1 + a)",
-        "description": "Multiply both sides by ${#x1 + #a}$"
-      },
-      {
-        "replace": "x = (x1 + a) * y",
-        "description": "Cancel ${#x1 + #a}$ in the left side numerator and denominator"
-      },
-      {
-        "replace": "x = (x1 * y) + (a * y)",
-        "description": "Distribute the right side"
-      },
-      {
-        "replace": "x - y x1 = y x1 + y a - y x1",
-        "description": "Subtract ${#y #x1}$ from both sides"
-      },
-      {
-        "replace": "x - x1 y = a y",
-        "description": "Cancel ${#y + #x1}$ on the right side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "x1",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 56,
-    "find": "x * a = y",
-    "steps": [
-      {
-        "replace": "(x * a)/a = y/a",
-        "description": "Divide both sides by ${#a}$"
-      },
-      {
-        "replace": "x = y/a",
-        "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 65,
-    "find": "x/a = y",
-    "steps": [
-      {
-        "replace": "(x*a)/a = y * a",
-        "description": "Multiply both sides by ${#a}$"
-      },
-      {
-        "replace": "x = y * a",
-        "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 74,
-    "find": "a/x = b/c",
-    "steps": [
-      {
-        "replace": "x/a = c/b",
-        "description": "Invert both sides of the equation"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "c",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 83,
-    "find": "a/x = b",
-    "steps": [
-      {
-        "replace": "x/a = 1/b",
-        "description": "Invert both sides of the equation"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 91,
-    "find": "a/x = b",
-    "steps": [
-      {
-        "replace": "(a*x)/x = x*b",
-        "description": "Multiply both sides by ${#x}$"
-      },
-      {
-        "replace": "a = x*b",
-        "description": "Cancel ${#x}$ in the numerator and denominator on the left side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 99,
-    "find": "x1 = a/x2",
-    "steps": [
-      {
-        "replace": "x1 x2 = (a x2)/x2",
-        "description": "Multiply both sides by ${#x2}$"
-      },
-      {
-        "replace": "x1 x2 = a",
-        "description": "Cancel ${#x2}$ in the numerator and denominator on the right side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x1",
-        "contains solve": true
-      },
-      {
-        "variable": "x2",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 108,
-    "find": "x1 = a * x2",
-    "steps": [
-      {
-        "replace": "x1/x2 = a"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x1",
-        "contains solve": true
-      },
-      {
-        "variable": "x2",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 116,
-    "find": "a x + b (-x) = y",
-    "steps": [
-      {
-        "replace": "(a - b) x  = y"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 125,
-    "find": "x^a = y",
-    "steps": [
-      {
-        "replace": "root(a, (x^a)) = root(a, y)",
-        "description": "Take the root ${#a}$ of both sides"
-      },
-      {
-        "replace": "x = root(a, y)",
-        "description": "Simplify the left side"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 134,
-    "find": "e^x = y",
-    "steps": [
-      {
-        "replace": "x = log(y)",
-        "description": "Rewrite the equation as a natural logarithm"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 141,
-    "find": "a^x = y",
-    "steps": [
-      {
-        "replace": "x = log(a, y)",
-        "description": "Rewrite the equation as a logarithm"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 149,
-    "find": "a x^2 + b x = y",
-    "id": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "x = ( (-b - root(b^2 - 4 * a * (-y) ))/(2a), (-b + root(b^2 - 4 * a * (-y) ))/(2a))",
-        "description": "Apply the quadratic formula"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 159,
-    "find": "(a x^2)/a1 + b x = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "(a/a1) x^2 + b x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a1",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 170,
-    "find": "(a x^2)/a1 + (b x)/b1 = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "(a/a1) x^2 + (b/b1) x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a1",
-        "contains solve": false
-      },
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      },
-      {
-        "variable": "b1",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 182,
-    "find": "x^2/a + x/b = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "(1/a) x^2 + (1/b) x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 192,
-    "find": "x^2/a + x = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "(1/a) x^2 + 1 x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 202,
-    "find": "x^2 + x/b = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "1 x^2 + (1/b) x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 212,
-    "find": "a x^2 + x = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "a x^2 + 1 x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 221,
-    "find": "x^2 + b x = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "1 x^2 + b x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 230,
-    "find": "x^2 + x = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "1 x^2 + 1 x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 239,
-    "find": "x^2 - x = y",
-    "next": "QUADRATIC",
-    "steps": [
-      {
-        "replace": "1 x^2 + (-1) x = y",
-        "description": "Rewrite as a standard quadratic"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 247,
-    "find": "root(a, x) = y",
-    "steps": [
-      {
-        "replace": "x = y^a"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 255,
-    "find": "root(x) = y",
-    "steps": [
-      {
-        "replace": "x = y^2"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 262,
-    "find": "sin(x) = y",
-    "steps": [
-      {
-        "replace": "x = asin(y)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 269,
-    "find": "cos(x) = y",
-    "steps": [
-      {
-        "replace": "x = acos(y)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 276,
-    "find": "tan(x) = y",
-    "steps": [
-      {
-        "replace": "x = atan(y)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 283,
-    "find": "asin(x) = y",
-    "steps": [
-      {
-        "replace": "x = sin(y)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 290,
-    "find": "acos(x) = y",
-    "steps": [
-      {
-        "replace": "x = cos(y)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 297,
-    "find": "atan(x) = y",
-    "steps": [
-      {
-        "replace": "x = tan(y)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 304,
-    "find": "log(x, a) = y",
-    "steps": [
-      {
-        "replace": "x^y = a",
-        "description": "Rewrite the equation using the definition of log"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 312,
-    "find": "log(a, x) = y",
-    "steps": [
-      {
-        "replace": "a^y = x",
-        "description": "Rewrite the equation using the definition of log"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "solve.rules",
-    "line": 320,
-    "find": "log(x) = y",
-    "steps": [
-      {
-        "replace": "e^y = x",
-        "description": "Rewrite the equation using the definition of natural log"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      },
-      {
-        "variable": "y",
-        "contains solve": false
-      }
-    ]
-  }
-]
+{
+  "file": "solve.rules",
+  "rules": [
+    {
+      "line": 4,
+      "find": "y = x",
+      "action": "solve",
+      "id": "FLIP",
+      "steps": [
+        {
+          "replace": "x = y",
+          "description": "Flip the equation so ${#x}$ is on the left side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 12,
+      "find": "-x = y",
+      "action": "solve",
+      "id": "NEGATE",
+      "steps": [
+        {
+          "replace": "x = -y",
+          "description": "Negate both sides and simplify"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 20,
+      "find": "x1 = y + x2",
+      "action": "solve",
+      "id": "COLLECT_LIKE",
+      "steps": [
+        {
+          "replace": "x1 - x2 = y + x2 - x2",
+          "description": "Subtract ${#x2}$ from both sides"
+        },
+        {
+          "replace": "x1 - x2 = y",
+          "description": "Cancel ${#x2}$ on the right side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x1",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        },
+        {
+          "variable": "x2",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 30,
+      "find": "x + a = y",
+      "action": "solve",
+      "id": "SUBTRACT",
+      "steps": [
+        {
+          "replace": "x + a - a = y - a",
+          "description": "Subtract ${#a}$ from both sides"
+        },
+        {
+          "replace": "x = y - a",
+          "description": "Cancel ${#a}$ on the left side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 40,
+      "find": "x/(x1 + a) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "((x1 + a) * x)/(x1 + a) = y (x1 + a)",
+          "description": "Multiply both sides by ${#x1 + #a}$"
+        },
+        {
+          "replace": "x = (x1 + a) * y",
+          "description": "Cancel ${#x1 + #a}$ in the left side numerator and denominator"
+        },
+        {
+          "replace": "x = (x1 * y) + (a * y)",
+          "description": "Distribute the right side"
+        },
+        {
+          "replace": "x - y x1 = y x1 + y a - y x1",
+          "description": "Subtract ${#y #x1}$ from both sides"
+        },
+        {
+          "replace": "x - x1 y = a y",
+          "description": "Cancel ${#y + #x1}$ on the right side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "x1",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 59,
+      "find": "x * a = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "(x * a)/a = y/a",
+          "description": "Divide both sides by ${#a}$"
+        },
+        {
+          "replace": "x = y/a",
+          "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 68,
+      "find": "x/a = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "(x*a)/a = y * a",
+          "description": "Multiply both sides by ${#a}$"
+        },
+        {
+          "replace": "x = y * a",
+          "description": "Cancel ${#a}$ in the numerator and denominator on the left side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 77,
+      "find": "a/x = b/c",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x/a = c/b",
+          "description": "Invert both sides of the equation"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "c",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 86,
+      "find": "a/x = b",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x/a = 1/b",
+          "description": "Invert both sides of the equation"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 94,
+      "find": "a/x = b",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "(a*x)/x = x*b",
+          "description": "Multiply both sides by ${#x}$"
+        },
+        {
+          "replace": "a = x*b",
+          "description": "Cancel ${#x}$ in the numerator and denominator on the left side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 102,
+      "find": "x1 = a/x2",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x1 x2 = (a x2)/x2",
+          "description": "Multiply both sides by ${#x2}$"
+        },
+        {
+          "replace": "x1 x2 = a",
+          "description": "Cancel ${#x2}$ in the numerator and denominator on the right side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x1",
+          "contains solve": true
+        },
+        {
+          "variable": "x2",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 111,
+      "find": "x1 = a * x2",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x1/x2 = a"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x1",
+          "contains solve": true
+        },
+        {
+          "variable": "x2",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 119,
+      "find": "a x + b (-x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "(a - b) x  = y"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 128,
+      "find": "x^a = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "root(a, (x^a)) = root(a, y)",
+          "description": "Take the root ${#a}$ of both sides"
+        },
+        {
+          "replace": "x = root(a, y)",
+          "description": "Simplify the left side"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 137,
+      "find": "e^x = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = log(y)",
+          "description": "Rewrite the equation as a natural logarithm"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 144,
+      "find": "a^x = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = log(a, y)",
+          "description": "Rewrite the equation as a logarithm"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 152,
+      "find": "a x^2 + b x = y",
+      "action": "solve",
+      "id": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "x = ( (-b - root(b^2 - 4 * a * (-y) ))/(2a), (-b + root(b^2 - 4 * a * (-y) ))/(2a))",
+          "description": "Apply the quadratic formula"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 162,
+      "find": "(a x^2)/a1 + b x = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "(a/a1) x^2 + b x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a1",
+          "contains solve": false
+        },
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 173,
+      "find": "(a x^2)/a1 + (b x)/b1 = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "(a/a1) x^2 + (b/b1) x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a1",
+          "contains solve": false
+        },
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        },
+        {
+          "variable": "b1",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 185,
+      "find": "x^2/a + x/b = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "(1/a) x^2 + (1/b) x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 195,
+      "find": "x^2/a + x = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "(1/a) x^2 + 1 x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 205,
+      "find": "x^2 + x/b = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "1 x^2 + (1/b) x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 215,
+      "find": "a x^2 + x = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "a x^2 + 1 x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 224,
+      "find": "x^2 + b x = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "1 x^2 + b x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 233,
+      "find": "x^2 + x = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "1 x^2 + 1 x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 242,
+      "find": "x^2 - x = y",
+      "action": "solve",
+      "next": "QUADRATIC",
+      "steps": [
+        {
+          "replace": "1 x^2 + (-1) x = y",
+          "description": "Rewrite as a standard quadratic"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 250,
+      "find": "root(a, x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = y^a"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 258,
+      "find": "root(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = y^2"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 265,
+      "find": "sin(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = asin(y)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 272,
+      "find": "cos(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = acos(y)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 279,
+      "find": "tan(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = atan(y)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 286,
+      "find": "asin(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = sin(y)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 293,
+      "find": "acos(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = cos(y)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 300,
+      "find": "atan(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x = tan(y)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 307,
+      "find": "log(x, a) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "x^y = a",
+          "description": "Rewrite the equation using the definition of log"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 315,
+      "find": "log(a, x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "a^y = x",
+          "description": "Rewrite the equation using the definition of log"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 323,
+      "find": "log(x) = y",
+      "action": "solve",
+      "steps": [
+        {
+          "replace": "e^y = x",
+          "description": "Rewrite the equation using the definition of natural log"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        },
+        {
+          "variable": "y",
+          "contains solve": false
+        }
+      ]
+    }
+  ]
+}

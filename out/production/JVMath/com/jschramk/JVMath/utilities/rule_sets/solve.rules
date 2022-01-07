@@ -1,6 +1,9 @@
+// General rules for solving equations
+// Author: jschramk
+
 @FLIP
 solve (y = x) {
-    x = y : Flip the equation so ${#x} is on the left side
+    x = y : "Flip the equation so ${#x} is on the left side"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -8,7 +11,7 @@ solve (y = x) {
 
 @NEGATE
 solve (-x = y) {
-    x = -y : Negate both sides and simplify
+    x = -y : "Negate both sides and simplify"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -16,8 +19,8 @@ solve (-x = y) {
 
 @COLLECT_LIKE
 solve (x1 = y + x2) {
-    x1 - x2 = y + x2 - x2 : Subtract ${#x2} from both sides
-    x1 - x2 = y : Cancel ${#x2} on the right side
+    x1 - x2 = y + x2 - x2 : "Subtract ${#x2} from both sides"
+    x1 - x2 = y : "Cancel ${#x2} on the right side"
 } where {
     x1: is f(#target)
     x2: is f(#target)
@@ -26,8 +29,8 @@ solve (x1 = y + x2) {
 
 @SUBTRACT
 solve (x + a = y) {
-    x + a - a = y - a : Subtract ${#a} from both sides
-    x = y - a : Cancel ${#a} on the left side
+    x + a - a = y - a : "Subtract ${#a} from both sides"
+    x = y - a : "Cancel ${#a} on the left side"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -36,15 +39,15 @@ solve (x + a = y) {
 
 solve (x/(x1 + a) = y) {
 
-    ((x1 + a) * x)/(x1 + a) = y (x1 + a) : Multiply both sides by ${#x1 + #a}
+    ((x1 + a) * x)/(x1 + a) = y (x1 + a) : "Multiply both sides by ${#x1 + #a}"
 
-    x = (x1 + a) * y : Cancel ${#x1 + #a} in the left side numerator and denominator
+    x = (x1 + a) * y : "Cancel ${#x1 + #a} in the left side numerator and denominator"
 
-    x = (x1 * y) + (a * y) : Distribute the right side
+    x = (x1 * y) + (a * y) : "Distribute the right side"
 
-    x - y x1 = y x1 + y a - y x1 : Subtract ${#y #x1} from both sides
+    x - y x1 = y x1 + y a - y x1 : "Subtract ${#y #x1} from both sides"
 
-    x - x1 y = a y : Cancel ${#y + #x1} on the right side
+    x - x1 y = a y : "Cancel ${#y + #x1} on the right side"
 
 } where {
     x: is f(#target)
@@ -54,8 +57,8 @@ solve (x/(x1 + a) = y) {
 }
 
 solve (x * a = y) {
-    (x * a)/a = y/a : Divide both sides by ${#a}
-    x = y/a : Cancel ${#a} in the numerator and denominator on the left side
+    (x * a)/a = y/a : "Divide both sides by ${#a}"
+    x = y/a : "Cancel ${#a} in the numerator and denominator on the left side"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -63,8 +66,8 @@ solve (x * a = y) {
 }
 
 solve (x/a = y) {
-    (x*a)/a = y * a : Multiply both sides by ${#a}
-    x = y * a : Cancel ${#a} in the numerator and denominator on the left side
+    (x*a)/a = y * a : "Multiply both sides by ${#a}"
+    x = y * a : "Cancel ${#a} in the numerator and denominator on the left side"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -72,7 +75,7 @@ solve (x/a = y) {
 }
 
 solve (a/x = b/c) {
-    x/a = c/b : Invert both sides of the equation
+    x/a = c/b : "Invert both sides of the equation"
 } where {
     x: is f(#target)
     a: not f(#target)
@@ -81,7 +84,7 @@ solve (a/x = b/c) {
 }
 
 solve (a/x = b) {
-    x/a = 1/b : Invert both sides of the equation
+    x/a = 1/b : "Invert both sides of the equation"
 } where {
     x: is f(#target)
     a: not f(#target)
@@ -89,16 +92,16 @@ solve (a/x = b) {
 }
 
 solve (a/x = b) {
-    (a*x)/x = x*b : Multiply both sides by ${#x}
-    a = x*b : Cancel ${#x} in the numerator and denominator on the left side
+    (a*x)/x = x*b : "Multiply both sides by ${#x}"
+    a = x*b : "Cancel ${#x} in the numerator and denominator on the left side"
 } where {
     x: is f(#target)
     a: not f(#target)
 }
 
 solve (x1 = a/x2) {
-    x1 x2 = (a x2)/x2 : Multiply both sides by ${#x2}
-    x1 x2 = a : Cancel ${#x2} in the numerator and denominator on the right side
+    x1 x2 = (a x2)/x2 : "Multiply both sides by ${#x2}"
+    x1 x2 = a : "Cancel ${#x2} in the numerator and denominator on the right side"
 } where {
     a: not f(#target)
     x1: is f(#target)
@@ -123,8 +126,8 @@ solve (a x + b (-x) = y) {
 }
 
 solve (x^a = y) {
-    root(a, (x^a)) = root(a, y) : Take the root ${#a} of both sides
-    x = root(a, y) : Simplify the left side
+    root(a, (x^a)) = root(a, y) : "Take the root ${#a} of both sides"
+    x = root(a, y) : "Simplify the left side"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -132,14 +135,14 @@ solve (x^a = y) {
 }
 
 solve (e^x = y) {
-    x = log(y) : Rewrite the equation as a natural logarithm
+    x = log(y) : "Rewrite the equation as a natural logarithm"
 } where {
     x: is f(#target)
     y: not f(#target)
 }
 
 solve (a^x = y) {
-    x = log(a, y) : Rewrite the equation as a logarithm
+    x = log(a, y) : "Rewrite the equation as a logarithm"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -148,7 +151,7 @@ solve (a^x = y) {
 
 @QUADRATIC
 solve (a x^2 + b x = y) {
-    x = ( (-b - root(b^2 - 4 * a * (-y) ))/(2a), (-b + root(b^2 - 4 * a * (-y) ))/(2a)) : Apply the quadratic formula
+    x = ( (-b - root(b^2 - 4 * a * (-y) ))/(2a), (-b + root(b^2 - 4 * a * (-y) ))/(2a)) : "Apply the quadratic formula"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -157,7 +160,7 @@ solve (a x^2 + b x = y) {
 }
 
 solve ((a x^2)/a1 + b x = y) {
-    (a/a1) x^2 + b x = y : Rewrite as a standard quadratic
+    (a/a1) x^2 + b x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -168,7 +171,7 @@ solve ((a x^2)/a1 + b x = y) {
 }
 
 solve ((a x^2)/a1 + (b x)/b1 = y) {
-    (a/a1) x^2 + (b/b1) x = y : Rewrite as a standard quadratic
+    (a/a1) x^2 + (b/b1) x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -180,7 +183,7 @@ solve ((a x^2)/a1 + (b x)/b1 = y) {
 }
 
 solve (x^2/a + x/b = y) {
-    (1/a) x^2 + (1/b) x = y : Rewrite as a standard quadratic
+    (1/a) x^2 + (1/b) x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -190,7 +193,7 @@ solve (x^2/a + x/b = y) {
 }
 
 solve (x^2/a + x = y) {
-    (1/a) x^2 + 1 x = y : Rewrite as a standard quadratic
+    (1/a) x^2 + 1 x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -200,7 +203,7 @@ solve (x^2/a + x = y) {
 }
 
 solve (x^2 + x/b = y) {
-    1 x^2 + (1/b) x = y : Rewrite as a standard quadratic
+    1 x^2 + (1/b) x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -210,7 +213,7 @@ solve (x^2 + x/b = y) {
 }
 
 solve (a x^2 + x = y) {
-    a x^2 + 1 x = y : Rewrite as a standard quadratic
+    a x^2 + 1 x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -219,7 +222,7 @@ solve (a x^2 + x = y) {
 }
 
 solve (x^2 + b x = y) {
-    1 x^2 + b x = y : Rewrite as a standard quadratic
+    1 x^2 + b x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -228,7 +231,7 @@ solve (x^2 + b x = y) {
 }
 
 solve (x^2 + x = y) {
-    1 x^2 + 1 x = y : Rewrite as a standard quadratic
+    1 x^2 + 1 x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -237,7 +240,7 @@ solve (x^2 + x = y) {
 
 // NOTE: this caused issues before but it may not be the fault of this rule in particular
 solve (x^2 - x = y) {
-    1 x^2 + (-1) x = y : Rewrite as a standard quadratic
+    1 x^2 + (-1) x = y : "Rewrite as a standard quadratic"
     @QUADRATIC
 } where {
     x: is f(#target)
@@ -302,7 +305,7 @@ solve (atan(x) = y) {
 }
 
 solve (log(x, a) = y) {
-    x^y = a : Rewrite the equation using the definition of log
+    x^y = a : "Rewrite the equation using the definition of log"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -310,7 +313,7 @@ solve (log(x, a) = y) {
 }
 
 solve (log(a, x) = y) {
-    a^y = x : Rewrite the equation using the definition of log
+    a^y = x : "Rewrite the equation using the definition of log"
 } where {
     x: is f(#target)
     y: not f(#target)
@@ -318,7 +321,7 @@ solve (log(a, x) = y) {
 }
 
 solve (log(x) = y) {
-    e^y = x : Rewrite the equation using the definition of natural log
+    e^y = x : "Rewrite the equation using the definition of natural log"
 } where {
     x: is f(#target)
     y: not f(#target)

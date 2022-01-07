@@ -1,0 +1,2 @@
+action simplify takes expression;
+action solve takes equation;

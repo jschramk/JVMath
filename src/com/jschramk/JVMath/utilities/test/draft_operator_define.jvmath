@@ -1,0 +1,33 @@
+binary operator power {
+    symbols = [^];
+    assoc = right;
+}
+
+binary operator multiply {
+    symbols = [*];
+}
+
+binary operator divide {
+    symbols = [/];
+}
+
+binary operator add {
+    symbols = [+];
+}
+
+binary operator subtract {
+    symbols = [-];
+}
+
+unary operator unary_minus {
+    symbols = pre[-];
+}
+
+unary operator factorial {
+    symbols = post[!];
+}
+
+binary operator parallel {
+    symbols = [||];
+}
+

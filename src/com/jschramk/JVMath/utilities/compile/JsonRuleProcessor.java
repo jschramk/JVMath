@@ -2,7 +2,6 @@ package com.jschramk.JVMath.utilities.compile;
 
 import com.google.gson.*;
 import com.jschramk.JVMath.runtime.components.Equation;
-import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.exceptions.ParserException;
 import com.jschramk.JVMath.runtime.parse.ParseResult;
 import com.jschramk.JVMath.runtime.parse.Parser;
@@ -19,218 +18,202 @@ import java.util.Map;
 
 public class JsonRuleProcessor {
 
-private static int NEXT_ID = 0;
+    private int nextRuleId = 0;
+    private int nextFileId = 0;
+    private Map<String, Integer> ruleIds = new HashMap<>();
+    private Map<String, Integer> fileIds = new HashMap<>();
+    private Map<String, JsonArray> rulesByAction = new HashMap<>();
 
-private static StringBuilder classStringBuilder = new StringBuilder();
-private static Map<String, Integer> operandIds = new HashMap<>();
-private static Map<String, Integer> equationIds = new HashMap<>();
-
-public static void processFiles(String inputDir, String outputDir)
-    throws IOException, ParserException {
-
-    Path inDir = Paths.get(inputDir);
-
-    Path outDir = Paths.get(outputDir);
-
-    Parser p = Parser.getDefault();
-
-    List<String> paths = Compile.getFilesOfType(inDir, "json");
-
-    for (String s : paths) {
-
-        File in = new File(s);
-
-        String outName = outDir.toAbsolutePath() +
-            "\\" +
-            in.getName().replaceFirst("\\.json", ".processed.json");
-
-        File out = new File(outName);
-
-        processFile(in, out, p);
+    public void reset() {
+        nextRuleId = 0;
+        nextFileId = 0;
+        ruleIds.clear();
+        fileIds.clear();
     }
 
-    //writeIdFile();
+    public static void processFiles(String inputDir, String outputDir)
+        throws IOException, ParserException {
 
-}
+        Path inDir = Paths.get(inputDir);
 
-private static void processFile(File input, File output, Parser parser)
-    throws IOException, ParserException {
+        Path outDir = Paths.get(outputDir);
 
-    JsonArray array = (JsonArray) JsonParser.parseReader(new FileReader(input));
+        Parser p = Parser.getDefault();
 
-    processJson(input, array, parser);
+        List<String> paths = Compile.getFilesOfType(inDir, "json");
 
-    Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        JsonRuleProcessor ruleProcessor = new JsonRuleProcessor();
 
-    if (!output.exists() && !output.createNewFile()) {
-        throw new IOException("Unable to create file: " + output);
+        for (String s : paths) {
+
+            File in = new File(s);
+
+            ruleProcessor.addFile(in, p);
+        }
+
+        File out = new File(outDir.toAbsolutePath() + "\\rules.json");
+
+        ruleProcessor.writeToFile(out);
+
     }
 
-    if (!output.canWrite() && !output.setWritable(true)) {
-        throw new IOException("Unable to set file to writable: " + output);
-    }
+    private void writeToFile(File output) throws IOException {
+        if (!output.exists() && !output.createNewFile()) {
+            throw new IOException("Unable to create file: " + output);
+        }
 
-    FileWriter writer = new FileWriter(output);
+        if (!output.canWrite() && !output.setWritable(true)) {
+            throw new IOException("Unable to set file to writable: " + output);
+        }
 
-    writer.write(gson.toJson(array));
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
 
-    writer.close();
+        JsonObject outputObject = new JsonObject();
 
-    if (!output.setWritable(false)) {
-        System.out.println("WARNING: Unable to set file to read only: " +
-            output);
-    }
+        JsonObject fileMapping = new JsonObject();
 
-}
+        for (String fileName : fileIds.keySet()) {
+            fileMapping.addProperty(fileIds.get(fileName) + "", fileName);
+        }
 
-private static void writeIdFile() throws IOException {
+        outputObject.add("files", fileMapping);
 
-    startTopClass();
-    startClassDef();
+        JsonObject rulesObject = new JsonObject();
 
-    startSubclass("operand");
-    startClassDef();
-    addMap(operandIds);
-    endClassDef();
+        for (String action : rulesByAction.keySet()) {
 
-    startSubclass("equation");
-    startClassDef();
-    addMap(equationIds);
-    endClassDef();
-
-    endClassDef();
-
-    File file = new File("src/com/jschramk/JVMath/rewrite_resources/RuleId.java");
-
-    if (!file.exists() && !file.createNewFile()) {
-        throw new IOException("Unable to create file: " + file);
-    }
-
-    if (!file.canWrite() && !file.setWritable(true)) {
-        throw new IOException("Unable to set file to writable: " + file);
-    }
-
-    FileWriter writer = new FileWriter(file);
-    writer.write(classStringBuilder.toString());
-    writer.close();
-
-    if (!file.setWritable(false)) {
-        System.out.println("WARNING: Unable to set file to read only: " + file);
-    }
-
-}
-
-private static void processJson(File f, JsonArray array, Parser parser)
-    throws ParserException {
-
-    for (JsonElement element : array) {
-
-        JsonObject object = (JsonObject) element;
-
-        String sourceFileName = object.get("file").getAsString();
-
-        int sourceFileLine = object.get("line").getAsInt();
-
-        String find = object.get("find").getAsString();
-
-        ParseResult r;
-
-        r = parser.parse(find);
-
-        object.addProperty("find", r.getResultString());
-
-        if (object.has("id")) {
-
-            String idString = object.get("id").getAsString();
-
-            int id = NEXT_ID++;
-
-            if (r.is(Operand.class)) {
-                operandIds.put(idString, id);
-            } else {
-                equationIds.put(idString, id);
-            }
-
-            object.addProperty("id", id);
+            rulesObject.add(action, rulesByAction.get(action));
 
         }
 
-        JsonArray steps = (JsonArray) object.get("steps");
+        outputObject.add("rules", rulesObject);
 
-        for (JsonElement element1 : steps) {
+        FileWriter writer = new FileWriter(output);
 
-            JsonObject object1 = (JsonObject) element1;
+        writer.write(gson.toJson(outputObject));
 
-            String replace = object1.get("replace").getAsString();
+        writer.close();
 
-            r = parser.parse(replace);
+        if (!output.setWritable(false)) {
+            System.out.println("WARNING: Unable to set file to read only: " + output);
+        }
 
-            object1.addProperty("replace", r.getResultString());
+    }
 
-            if (!object1.has("description") && r.is(Equation.class)) {
+    private void addFile(File input, Parser parser) throws IOException, ParserException {
 
-                String msg = String.format(
-                    "WARNING (%s:%d): Step has no description.\n\tRule: FIND[ %s ]\n\tStep: REPLACE[ %s ]",
-                    sourceFileName, sourceFileLine, find, replace);
+        JsonObject inputObject = (JsonObject) JsonParser.parseReader(new FileReader(input));
 
-                System.out.println(msg);
+        addJSON(inputObject, parser);
+
+    }
+
+    private void addJSON(JsonObject inputObject, Parser parser) throws ParserException {
+
+        String sourceFileName = inputObject.get("file").getAsString();
+
+        if (!fileIds.containsKey(sourceFileName)) {
+            fileIds.put(sourceFileName, nextFileId++);
+        }
+
+        JsonArray array = inputObject.get("rules").getAsJsonArray();
+
+        // first pass to create elements
+        for (JsonElement element : array) {
+
+            JsonObject object = (JsonObject) element;
+
+            int sourceFileLine = object.get("line").getAsInt();
+
+            String find = object.get("find").getAsString();
+
+            ParseResult r = parser.parse(find);
+
+            object.addProperty("find", r.getResultString());
+
+            if (object.has("id")) {
+
+                String idString = object.get("id").getAsString();
+
+                int id = nextRuleId++;
+
+                ruleIds.put(idString, id);
+
+                object.addProperty("id", id);
+
+            }
+
+            JsonArray steps = (JsonArray) object.get("steps");
+
+            for (JsonElement element1 : steps) {
+
+                JsonObject object1 = (JsonObject) element1;
+
+                String replace = object1.get("replace").getAsString();
+
+                r = parser.parse(replace);
+
+                object1.addProperty("replace", r.getResultString());
+
+                if (!object1.has("description") && r.is(Equation.class)) {
+
+                    String msg = String.format(
+                        "WARNING (%s:%d): Step has no description.\n\tRule: FIND[ %s ]\n\tStep: REPLACE[ %s ]",
+                        sourceFileName, sourceFileLine, find, replace);
+
+                    System.out.println(msg);
+
+                }
 
             }
 
         }
 
-    }
+        // second pass to link IDs
+        for (JsonElement element : array) {
 
-    for (JsonElement element : array) {
+            JsonObject object = (JsonObject) element;
 
-        JsonObject object = (JsonObject) element;
+            if (object.has("next")) {
 
-        if (object.has("next")) {
+                String idString = object.get("next").getAsString();
 
-            String idString = object.get("next").getAsString();
+                int id = ruleIds.getOrDefault(idString, -1);
 
-            int id = operandIds.getOrDefault(idString,
-                equationIds.getOrDefault(idString, -1)
-            );
+                if (id == -1) {
+                    throw new RuntimeException("Unknown next rule ID: " + idString);
+                }
 
-            if (id == -1) {
-                throw new RuntimeException("Unknown next rule ID: " + idString);
+                object.addProperty("next", id);
+
             }
 
-            object.addProperty("next", id);
+            String action = object.get("action").getAsString();
+
+            if (!rulesByAction.containsKey(action)) {
+
+                //                String msg = String.format(
+                //                    "INFO (%s:%d): New.\n\tRule: FIND[ %s ]\n\tStep: REPLACE[ %s ]",
+                //                    sourceFileName, sourceFileLine, find, replace);
+                //
+                //                System.out.println(msg);
+
+                rulesByAction.put(action, new JsonArray());
+
+            }
+
+            object.remove("action");
+
+            object.addProperty("file", fileIds.get(sourceFileName));
+
+            rulesByAction.get(action).add(object);
 
         }
 
+
+
     }
 
-}
 
-private static void startTopClass() {
-    classStringBuilder.append(
-        "package com.jschramk.JVMath.runtime.rewrite_resources").append(';');
-    classStringBuilder.append("public class ").append("RuleId");
-}
-
-private static void startClassDef() {
-    classStringBuilder.append('{');
-}
-
-private static void startSubclass(String name) {
-    classStringBuilder.append("public static class ").append(name);
-}
-
-private static void addMap(Map<String, Integer> map) {
-    for (Map.Entry<String, Integer> entry : map.entrySet()) {
-        classStringBuilder.append("public static final int ")
-            .append(entry.getKey())
-            .append(" = ")
-            .append(entry.getValue())
-            .append(";");
-    }
-}
-
-private static void endClassDef() {
-    classStringBuilder.append('}');
-}
 
 }

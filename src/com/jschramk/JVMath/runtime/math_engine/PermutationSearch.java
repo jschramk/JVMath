@@ -7,7 +7,7 @@ import com.jschramk.JVMath.runtime.components.Variable;
 
 public class PermutationSearch {
 
-    private static boolean matches(Operand rule, Operand check, Requirements requirements,
+    private static boolean matches(Operand rule, Operand check, VariableFilterMap requirements,
         String solveVariable) {
 
         boolean matches = false; // default to false
@@ -20,7 +20,7 @@ public class PermutationSearch {
 
             Variable var = (Variable) rule;
 
-            matches = requirements == null || requirements.meetsPrerequisites(var.getName(),
+            matches = requirements == null || requirements.passes(var.getName(),
                 solveVariable, check);
 
         } else if (rule instanceof Literal) { // rule operand is literal, check if actual is the same literal

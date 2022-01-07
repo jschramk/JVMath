@@ -23,7 +23,7 @@ public static void main(String[] args) throws IOException, ParserException {
 
 
 
-    System.out.println("Beginning to compile rule sets...\n");
+    System.out.println("Starting to compile source rule sets...\n");
 
     RuleSetCompiler.compileFiles("src/com/jschramk/JVMath/utilities/rule_sets",
         "src/com/jschramk/JVMath/utilities/rewrite_jsons"
@@ -31,7 +31,7 @@ public static void main(String[] args) throws IOException, ParserException {
 
     System.out.println("\nRule sets compiled.\n");
 
-    System.out.println("Beginning to process rewrite JSON files...\n");
+    System.out.println("Starting to package JSON rule sets...\n");
 
     JsonRuleProcessor.processFiles("src/com/jschramk/JVMath/utilities/rewrite_jsons",
         "src/com/jschramk/JVMath/runtime/rewrite_packages"

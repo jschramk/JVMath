@@ -7,15 +7,15 @@ import com.jschramk.JVMath.runtime.components.Equation;
 import com.jschramk.JVMath.runtime.components.Operand;
 import com.jschramk.JVMath.runtime.parse.Parser;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class RuleSet {
+public class RuleRepository {
 
     //private Map<String, Integer>
-    private List<String> fileNames = new ArrayList<>();
-    private List<Rule<Operand>> operandRules = new ArrayList<>();
-    private List<Rule<Equation>> equationRules = new ArrayList<>();
+    private Map<Integer, String> fileNames = new HashMap<>();
+    private Map<String, List<Rule<?>>> rules = new HashMap<>();
 
     public void addJSON(Parser parser, JsonObject jsonObject) {
 
@@ -25,17 +25,8 @@ public class RuleSet {
 
             Rule<String> stringRule = Rule.fromJson(element.getAsJsonObject());
 
-
-
         }
 
     }
 
-    public List<Rule<Operand>> getOperandRules() {
-        return operandRules;
-    }
-
-    public List<Rule<Equation>> getEquationRules() {
-        return equationRules;
-    }
 }

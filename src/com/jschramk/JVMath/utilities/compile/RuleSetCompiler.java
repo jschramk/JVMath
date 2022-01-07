@@ -107,7 +107,7 @@ public class RuleSetCompiler {
 
     private static class CodeRule {
 
-        private String id, action, find, target, next, fileName;
+        private String id, action, find, target, next;
         private List<Step> steps = new ArrayList<>();
         private Filter filter;
         private int line;
@@ -135,7 +135,16 @@ public class RuleSetCompiler {
 
                 String desc = replaceDesc.length > 1 ? replaceDesc[1] : null;
 
+                if(desc != null) {
 
+                    if(!desc.startsWith("\"") || !desc.endsWith("\"")) {
+                        System.err.println("ERROR: Step description is not surrounded by quotes:\n" + desc);
+                        System.exit(1);
+                    }
+
+                    desc = desc.substring(1, desc.length() - 1);
+
+                }
 
                 this.steps.add(new Step(replace, desc));
 
@@ -147,11 +156,13 @@ public class RuleSetCompiler {
 
             JsonObject ret = new JsonObject();
 
-            ret.addProperty("file", fileName);
+            //ret.addProperty("file", fileName);
 
             ret.addProperty("line", line);
 
             ret.addProperty("find", find);
+
+            ret.addProperty("action", action);
 
             if (id != null) {
                 ret.addProperty("id", id);
@@ -265,8 +276,7 @@ public class RuleSetCompiler {
                 + find + '\'' + ", target='" + target + '\'' + ", steps=" + steps + '}';
         }
 
-        public void setFileLocation(String fileName, int line) {
-            this.fileName = fileName;
+        public void setFileLocation(int line) {
             this.line = line;
         }
     }
@@ -467,7 +477,7 @@ public class RuleSetCompiler {
 
     }
 
-    public static CodeRule compileRule(ruleSetParser.R_ruleContext ctx, String fileName) {
+    public static CodeRule compileRule(ruleSetParser.R_ruleContext ctx) {
 
         int line = ctx.getStart().getLine();
 
@@ -475,7 +485,7 @@ public class RuleSetCompiler {
 
         CodeRule defObj = compileDefinition(def);
 
-        defObj.setFileLocation(fileName, line);
+        defObj.setFileLocation(line);
 
         if (ctx.getChildCount() > 1) {
             ruleSetParser.R_filterContext filter = (ruleSetParser.R_filterContext) ctx.getChild(1);
@@ -490,7 +500,7 @@ public class RuleSetCompiler {
 
     }
 
-    public static List<CodeRule> compile(ruleSetParser.ParseContext ctx, String fileName) {
+    public static List<CodeRule> compile(ruleSetParser.ParseContext ctx) {
 
         List<CodeRule> codeRules = new ArrayList<>();
 
@@ -500,7 +510,7 @@ public class RuleSetCompiler {
 
             if (p instanceof ruleSetParser.R_ruleContext) {
 
-                CodeRule r = compileRule((ruleSetParser.R_ruleContext) p, fileName);
+                CodeRule r = compileRule((ruleSetParser.R_ruleContext) p);
 
                 codeRules.add(r);
 
@@ -552,20 +562,27 @@ public class RuleSetCompiler {
         ruleSetParser.ParseContext parse = parser.parse();
 
         // compile rules
-        List<CodeRule> codeRules = compile(parse, input.getName());
+        List<CodeRule> codeRules = compile(parse);
 
-        // create json output
-        JsonArray jsonOutput = new JsonArray();
+        // create json output object
+        JsonObject jsonObject = new JsonObject();
+
+        jsonObject.addProperty("file", input.getName());
+
+        // create json rule array
+        JsonArray rulesArray = new JsonArray();
 
         for (CodeRule r : codeRules) {
-            jsonOutput.add(r.toJson());
+            rulesArray.add(r.toJson());
         }
+
+        jsonObject.add("rules", rulesArray);
 
         FileWriter f = new FileWriter(output);
 
         Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-        f.write(gson.toJson(jsonOutput));
+        f.write(gson.toJson(jsonObject));
 
         f.close();
 

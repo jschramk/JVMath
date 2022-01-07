@@ -1,784 +1,787 @@
-[
-  {
-    "file": "simplify.rules",
-    "line": 3,
-    "find": "a^2 + 2*a*b + b^2",
-    "id": "FACTOR",
-    "steps": [
-      {
-        "replace": "(a + b)^2"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 8,
-    "find": "x - x",
-    "id": "SUBTRACT_SAME",
-    "steps": [
-      {
-        "replace": "0"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 13,
-    "find": "x + a * x",
-    "id": "ADD_WITH_COEFFICIENT",
-    "steps": [
-      {
-        "replace": "(1 + a) * x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "x",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 21,
-    "find": "a * x + b * x",
-    "id": "COLLECT_LIKE_WITH_COEFFICIENTS",
-    "steps": [
-      {
-        "replace": "(a + b) * x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 31,
-    "find": "a * x + b * x",
-    "id": "COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS",
-    "steps": [
-      {
-        "replace": "(a + b) * x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false,
-        "type": "LITERAL"
-      },
-      {
-        "variable": "b",
-        "contains solve": false,
-        "type": "LITERAL"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 40,
-    "find": "a * x + -(b) * x",
-    "id": "COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS_AND_NEGATIONS",
-    "steps": [
-      {
-        "replace": "(a - b) * x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false,
-        "type": "LITERAL"
-      },
-      {
-        "variable": "b",
-        "contains solve": false,
-        "type": "LITERAL"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 50,
-    "find": "n * (a + b)",
-    "id": "DISTRIBUTE_ALL_NON_TARGET",
-    "steps": [
-      {
-        "replace": "(n * a) + (n * b)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "contains solve": false
-      },
-      {
-        "variable": "b",
-        "contains solve": false
-      },
-      {
-        "variable": "n",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 59,
-    "find": "(a + b) * x",
-    "id": "DISTRIBUTE_TARGET",
-    "steps": [
-      {
-        "replace": "a * x + b * x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "b",
-        "contains solve": true
-      },
-      {
-        "variable": "x",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 77,
-    "find": "n * (a + b)",
-    "id": "DISTRIBUTE_LITERAL",
-    "steps": [
-      {
-        "replace": "(n * a) + (n * b)"
-      }
-    ],
-    "require": [
-      {
-        "variable": "n",
-        "type": "LITERAL"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 84,
-    "find": "a/x + b/x",
-    "id": "ADD_SAME_DENOMINATOR",
-    "steps": [
-      {
-        "replace": "(a + b) / x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 89,
-    "find": "a/b + c/d",
-    "id": "ADD_DIFFERENT_DENOMINATOR",
-    "steps": [
-      {
-        "replace": "(a * d + b * c)/(b * d)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 98,
-    "find": "-0",
-    "id": "NEGATIVE_ZERO",
-    "steps": [
-      {
-        "replace": "0"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 103,
-    "find": "0x",
-    "id": "MULTIPLY_BY_ZERO",
-    "steps": [
-      {
-        "replace": "0"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 108,
-    "find": "1x",
-    "id": "MULTIPLY_BY_ONE",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 113,
-    "find": "(-1) * x",
-    "id": "MULTIPLY_BY_NEGATIVE_ONE",
-    "steps": [
-      {
-        "replace": "-x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 120,
-    "find": "neg1 * x",
-    "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
-    "steps": [
-      {
-        "replace": "-x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "neg1",
-        "type": "LITERAL",
-        "value": -1.0
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 127,
-    "find": "-(-x)",
-    "id": "DOUBLE_NEGATIVE",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 132,
-    "find": "-(a + b)",
-    "steps": [
-      {
-        "replace": "-a - b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 136,
-    "find": "-(a * b)",
-    "steps": [
-      {
-        "replace": "(-a) * b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 140,
-    "find": "-(a/b)",
-    "steps": [
-      {
-        "replace": "(-a)/b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 144,
-    "find": "x * x^a",
-    "id": "MULTIPLY_SAME_BASE_1",
-    "steps": [
-      {
-        "replace": "x^(1 + a)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 149,
-    "find": "x^a * x^b",
-    "id": "MULTIPLY_SAME_BASE_2",
-    "steps": [
-      {
-        "replace": "x^(a + b)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 154,
-    "find": "x * x",
-    "id": "MULTIPLY_SAME",
-    "steps": [
-      {
-        "replace": "x^2"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 160,
-    "find": "a^c * b^c",
-    "steps": [
-      {
-        "replace": "(a * b)^c"
-      }
-    ],
-    "require": [
-      {
-        "variable": "c",
-        "contains solve": true
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 167,
-    "find": "(a * b)^c",
-    "steps": [
-      {
-        "replace": "a^c * b^c"
-      }
-    ],
-    "require": [
-      {
-        "variable": "c",
-        "contains solve": false
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 173,
-    "find": "(a/b) * (c/d)",
-    "steps": [
-      {
-        "replace": "(a*c) / (b*d)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 177,
-    "find": "0/x",
-    "steps": [
-      {
-        "replace": "0"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 181,
-    "find": "x/x",
-    "steps": [
-      {
-        "replace": "1"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 185,
-    "find": "x/1",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 189,
-    "find": "a/b/c",
-    "steps": [
-      {
-        "replace": "a/(b * c)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 193,
-    "find": "(a * b)/b",
-    "steps": [
-      {
-        "replace": "a"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 197,
-    "find": "(a * x)/(b * x)",
-    "steps": [
-      {
-        "replace": "a/b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 201,
-    "find": "x/(a * x)",
-    "steps": [
-      {
-        "replace": "1/a"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 205,
-    "find": "a/(b/c)",
-    "steps": [
-      {
-        "replace": "(a * c)/b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 209,
-    "find": "a * (b/c)",
-    "steps": [
-      {
-        "replace": "(a * b)/c"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 213,
-    "find": "x^a/x",
-    "steps": [
-      {
-        "replace": "x^(a - 1)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 217,
-    "find": "x^a/x^b",
-    "steps": [
-      {
-        "replace": "x^(a - b)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 221,
-    "find": "0^x",
-    "steps": [
-      {
-        "replace": "0"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 225,
-    "find": "1^x",
-    "steps": [
-      {
-        "replace": "1"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 229,
-    "find": "x^0",
-    "steps": [
-      {
-        "replace": "1"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 233,
-    "find": "x^1",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 237,
-    "find": "x^-1",
-    "steps": [
-      {
-        "replace": "1/x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 241,
-    "find": "x^-a",
-    "steps": [
-      {
-        "replace": "1/x^a"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 245,
-    "find": "(x^a)^b",
-    "steps": [
-      {
-        "replace": "x^(a * b)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 249,
-    "find": "asin(sin(x))",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 253,
-    "find": "acos(cos(x))",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 257,
-    "find": "atan(tan(x))",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 261,
-    "find": "log(a, a^x)",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 265,
-    "find": "b^(1/a)",
-    "steps": [
-      {
-        "replace": "root(a, b)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 269,
-    "find": "a^(0.5)",
-    "steps": [
-      {
-        "replace": "root(a)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 273,
-    "find": "root(n, a^n/b)",
-    "steps": [
-      {
-        "replace": "a/root(n, b)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 277,
-    "find": "root(n, a/b^n)",
-    "steps": [
-      {
-        "replace": "root(n, a)/b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 281,
-    "find": "root(2, x)",
-    "steps": [
-      {
-        "replace": "root(x)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 285,
-    "find": "root(a, x^a)",
-    "steps": [
-      {
-        "replace": "x"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 289,
-    "find": "sin(x)^2 + cos(x)^2",
-    "steps": [
-      {
-        "replace": "1"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 293,
-    "find": "log(a, b^c)",
-    "steps": [
-      {
-        "replace": "c * log(a, b)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 297,
-    "find": "log(a^b)",
-    "steps": [
-      {
-        "replace": "b * log(a)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 301,
-    "find": "a * (b + c) + d * (f + g)",
-    "steps": [
-      {
-        "replace": "(a * b) + (a * c) + (d * f) + (d * g)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 306,
-    "find": "a * (-x)",
-    "steps": [
-      {
-        "replace": "(-a) * x"
-      }
-    ],
-    "require": [
-      {
-        "variable": "a",
-        "not type": "VARIABLE"
-      },
-      {
-        "variable": "x",
-        "type": "VARIABLE"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 313,
-    "find": "a/b + c",
-    "steps": [
-      {
-        "replace": "(a + b * c)/b"
-      }
-    ],
-    "require": [
-      {
-        "variable": "b",
-        "type": "LITERAL"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 319,
-    "find": "(a * x^n1)/(b * x^n2)",
-    "steps": [
-      {
-        "replace": "a * x^(n1 - n2)/b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 323,
-    "find": "x^n1/(b * x^n2)",
-    "steps": [
-      {
-        "replace": "x^(n1 - n2)/b"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 327,
-    "find": "(a * x^n1)/x^n2",
-    "steps": [
-      {
-        "replace": "a * x^(n1 - n2)"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 331,
-    "find": "x + 0",
-    "id": "ADD_ZERO",
-    "steps": [
-      {
-        "replace": "x",
-        "description": "Cancel the ${0}$"
-      }
-    ]
-  },
-  {
-    "file": "simplify.rules",
-    "line": 336,
-    "find": "x + x",
-    "id": "ADD_SAME",
-    "steps": [
-      {
-        "replace": "2x"
-      }
-    ]
-  }
-]
+{
+  "file": "simplify.rules",
+  "rules": [
+    {
+      "line": 4,
+      "find": "a^2 + 2*a*b + b^2",
+      "action": "simplify",
+      "id": "FACTOR",
+      "steps": [
+        {
+          "replace": "(a + b)^2"
+        }
+      ]
+    },
+    {
+      "line": 9,
+      "find": "x - x",
+      "action": "simplify",
+      "id": "SUBTRACT_SAME",
+      "steps": [
+        {
+          "replace": "0"
+        }
+      ]
+    },
+    {
+      "line": 14,
+      "find": "x + a * x",
+      "action": "simplify",
+      "id": "ADD_WITH_COEFFICIENT",
+      "steps": [
+        {
+          "replace": "(1 + a) * x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "x",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 22,
+      "find": "a * x + b * x",
+      "action": "simplify",
+      "id": "COLLECT_LIKE_WITH_COEFFICIENTS",
+      "steps": [
+        {
+          "replace": "(a + b) * x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 32,
+      "find": "a * x + b * x",
+      "action": "simplify",
+      "id": "COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS",
+      "steps": [
+        {
+          "replace": "(a + b) * x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false,
+          "type": "LITERAL"
+        },
+        {
+          "variable": "b",
+          "contains solve": false,
+          "type": "LITERAL"
+        }
+      ]
+    },
+    {
+      "line": 41,
+      "find": "a * x + -(b) * x",
+      "action": "simplify",
+      "id": "COLLECT_LIKE_WITH_LITERAL_COEFFICIENTS_AND_NEGATIONS",
+      "steps": [
+        {
+          "replace": "(a - b) * x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false,
+          "type": "LITERAL"
+        },
+        {
+          "variable": "b",
+          "contains solve": false,
+          "type": "LITERAL"
+        }
+      ]
+    },
+    {
+      "line": 51,
+      "find": "n * (a + b)",
+      "action": "simplify",
+      "id": "DISTRIBUTE_ALL_NON_TARGET",
+      "steps": [
+        {
+          "replace": "(n * a) + (n * b)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "contains solve": false
+        },
+        {
+          "variable": "b",
+          "contains solve": false
+        },
+        {
+          "variable": "n",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 60,
+      "find": "(a + b) * x",
+      "action": "simplify",
+      "id": "DISTRIBUTE_TARGET",
+      "steps": [
+        {
+          "replace": "a * x + b * x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "b",
+          "contains solve": true
+        },
+        {
+          "variable": "x",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 78,
+      "find": "n * (a + b)",
+      "action": "simplify",
+      "id": "DISTRIBUTE_LITERAL",
+      "steps": [
+        {
+          "replace": "(n * a) + (n * b)"
+        }
+      ],
+      "require": [
+        {
+          "variable": "n",
+          "type": "LITERAL"
+        }
+      ]
+    },
+    {
+      "line": 85,
+      "find": "a/x + b/x",
+      "action": "simplify",
+      "id": "ADD_SAME_DENOMINATOR",
+      "steps": [
+        {
+          "replace": "(a + b) / x"
+        }
+      ]
+    },
+    {
+      "line": 90,
+      "find": "a/b + c/d",
+      "action": "simplify",
+      "id": "ADD_DIFFERENT_DENOMINATOR",
+      "steps": [
+        {
+          "replace": "(a * d + b * c)/(b * d)"
+        }
+      ]
+    },
+    {
+      "line": 99,
+      "find": "-0",
+      "action": "simplify",
+      "id": "NEGATIVE_ZERO",
+      "steps": [
+        {
+          "replace": "0"
+        }
+      ]
+    },
+    {
+      "line": 104,
+      "find": "0x",
+      "action": "simplify",
+      "id": "MULTIPLY_BY_ZERO",
+      "steps": [
+        {
+          "replace": "0"
+        }
+      ]
+    },
+    {
+      "line": 109,
+      "find": "1x",
+      "action": "simplify",
+      "id": "MULTIPLY_BY_ONE",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 114,
+      "find": "(-1) * x",
+      "action": "simplify",
+      "id": "MULTIPLY_BY_NEGATIVE_ONE",
+      "steps": [
+        {
+          "replace": "-x"
+        }
+      ]
+    },
+    {
+      "line": 121,
+      "find": "neg1 * x",
+      "action": "simplify",
+      "id": "MULTIPLY_BY_LITERAL_NEGATIVE_ONE",
+      "steps": [
+        {
+          "replace": "-x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "neg1",
+          "type": "LITERAL",
+          "value": -1.0
+        }
+      ]
+    },
+    {
+      "line": 128,
+      "find": "-(-x)",
+      "action": "simplify",
+      "id": "DOUBLE_NEGATIVE",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 133,
+      "find": "-(a + b)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "-a - b"
+        }
+      ]
+    },
+    {
+      "line": 137,
+      "find": "-(a * b)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(-a) * b"
+        }
+      ]
+    },
+    {
+      "line": 141,
+      "find": "-(a/b)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(-a)/b"
+        }
+      ]
+    },
+    {
+      "line": 145,
+      "find": "x * x^a",
+      "action": "simplify",
+      "id": "MULTIPLY_SAME_BASE_1",
+      "steps": [
+        {
+          "replace": "x^(1 + a)"
+        }
+      ]
+    },
+    {
+      "line": 150,
+      "find": "x^a * x^b",
+      "action": "simplify",
+      "id": "MULTIPLY_SAME_BASE_2",
+      "steps": [
+        {
+          "replace": "x^(a + b)"
+        }
+      ]
+    },
+    {
+      "line": 155,
+      "find": "x * x",
+      "action": "simplify",
+      "id": "MULTIPLY_SAME",
+      "steps": [
+        {
+          "replace": "x^2"
+        }
+      ]
+    },
+    {
+      "line": 161,
+      "find": "a^c * b^c",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(a * b)^c"
+        }
+      ],
+      "require": [
+        {
+          "variable": "c",
+          "contains solve": true
+        }
+      ]
+    },
+    {
+      "line": 168,
+      "find": "(a * b)^c",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a^c * b^c"
+        }
+      ],
+      "require": [
+        {
+          "variable": "c",
+          "contains solve": false
+        }
+      ]
+    },
+    {
+      "line": 174,
+      "find": "(a/b) * (c/d)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(a*c) / (b*d)"
+        }
+      ]
+    },
+    {
+      "line": 178,
+      "find": "0/x",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "0"
+        }
+      ]
+    },
+    {
+      "line": 182,
+      "find": "x/x",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1"
+        }
+      ]
+    },
+    {
+      "line": 186,
+      "find": "x/1",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 190,
+      "find": "a/b/c",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a/(b * c)"
+        }
+      ]
+    },
+    {
+      "line": 194,
+      "find": "(a * b)/b",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a"
+        }
+      ]
+    },
+    {
+      "line": 198,
+      "find": "(a * x)/(b * x)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a/b"
+        }
+      ]
+    },
+    {
+      "line": 202,
+      "find": "x/(a * x)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1/a"
+        }
+      ]
+    },
+    {
+      "line": 206,
+      "find": "a/(b/c)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(a * c)/b"
+        }
+      ]
+    },
+    {
+      "line": 210,
+      "find": "a * (b/c)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(a * b)/c"
+        }
+      ]
+    },
+    {
+      "line": 214,
+      "find": "x^a/x",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x^(a - 1)"
+        }
+      ]
+    },
+    {
+      "line": 218,
+      "find": "x^a/x^b",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x^(a - b)"
+        }
+      ]
+    },
+    {
+      "line": 222,
+      "find": "0^x",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "0"
+        }
+      ]
+    },
+    {
+      "line": 226,
+      "find": "1^x",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1"
+        }
+      ]
+    },
+    {
+      "line": 230,
+      "find": "x^0",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1"
+        }
+      ]
+    },
+    {
+      "line": 234,
+      "find": "x^1",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 238,
+      "find": "x^-1",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1/x"
+        }
+      ]
+    },
+    {
+      "line": 242,
+      "find": "x^-a",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1/x^a"
+        }
+      ]
+    },
+    {
+      "line": 246,
+      "find": "(x^a)^b",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x^(a * b)"
+        }
+      ]
+    },
+    {
+      "line": 250,
+      "find": "asin(sin(x))",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 254,
+      "find": "acos(cos(x))",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 258,
+      "find": "atan(tan(x))",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 262,
+      "find": "log(a, a^x)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 266,
+      "find": "b^(1/a)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "root(a, b)"
+        }
+      ]
+    },
+    {
+      "line": 270,
+      "find": "a^(0.5)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "root(a)"
+        }
+      ]
+    },
+    {
+      "line": 274,
+      "find": "root(n, a^n/b)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a/root(n, b)"
+        }
+      ]
+    },
+    {
+      "line": 278,
+      "find": "root(n, a/b^n)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "root(n, a)/b"
+        }
+      ]
+    },
+    {
+      "line": 282,
+      "find": "root(2, x)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "root(x)"
+        }
+      ]
+    },
+    {
+      "line": 286,
+      "find": "root(a, x^a)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x"
+        }
+      ]
+    },
+    {
+      "line": 290,
+      "find": "sin(x)^2 + cos(x)^2",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "1"
+        }
+      ]
+    },
+    {
+      "line": 294,
+      "find": "log(a, b^c)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "c * log(a, b)"
+        }
+      ]
+    },
+    {
+      "line": 298,
+      "find": "log(a^b)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "b * log(a)"
+        }
+      ]
+    },
+    {
+      "line": 302,
+      "find": "a * (b + c) + d * (f + g)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(a * b) + (a * c) + (d * f) + (d * g)"
+        }
+      ]
+    },
+    {
+      "line": 307,
+      "find": "a * (-x)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(-a) * x"
+        }
+      ],
+      "require": [
+        {
+          "variable": "a",
+          "not type": "VARIABLE"
+        },
+        {
+          "variable": "x",
+          "type": "VARIABLE"
+        }
+      ]
+    },
+    {
+      "line": 314,
+      "find": "a/b + c",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "(a + b * c)/b"
+        }
+      ],
+      "require": [
+        {
+          "variable": "b",
+          "type": "LITERAL"
+        }
+      ]
+    },
+    {
+      "line": 320,
+      "find": "(a * x^n1)/(b * x^n2)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a * x^(n1 - n2)/b"
+        }
+      ]
+    },
+    {
+      "line": 324,
+      "find": "x^n1/(b * x^n2)",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "x^(n1 - n2)/b"
+        }
+      ]
+    },
+    {
+      "line": 328,
+      "find": "(a * x^n1)/x^n2",
+      "action": "simplify",
+      "steps": [
+        {
+          "replace": "a * x^(n1 - n2)"
+        }
+      ]
+    },
+    {
+      "line": 332,
+      "find": "x + 0",
+      "action": "simplify",
+      "id": "ADD_ZERO",
+      "steps": [
+        {
+          "replace": "x",
+          "description": "Cancel the ${0}$"
+        }
+      ]
+    },
+    {
+      "line": 337,
+      "find": "x + x",
+      "action": "simplify",
+      "id": "ADD_SAME",
+      "steps": [
+        {
+          "replace": "2x"
+        }
+      ]
+    }
+  ]
+}
