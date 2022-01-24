@@ -1,6 +1,8 @@
 # Overview
 JVMath is a modular and expandable computer algebra system (CAS) for Java.
 
+**NOTE**: This repository was only recently made public and the documentation is not comprehensive.
+
 # Documentation
 
 ## Table of Contents
