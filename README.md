@@ -12,15 +12,21 @@ JVMath is a modular and expandable computer algebra system (CAS) for Java.
 ## Principle of Operation
 JVMath operates on two types of mathematical input, which are consistently referred to in this project as "expressions", which are any mathematical operations without comparison operators (=, >=, <=), and "equations", which are two expressions set equal to each other.
 
-To operate on expressions and equations, JVMath first parses the user input into a heirarchical tree structure, where the nodes are evaluated in depth-first order. Thus, operations with a higher precedence in the order of operations will be placed deeper in the tree. Equations can be imagined as two expression trees connected at their roots by an equality operator.
+To operate on expressions and equations, JVMath first parses the user input into a heirarchical tree structure, where the nodes are evaluated in depth-first order. Thus, operations with a higher precedence in the order of operations will be placed deeper in the tree. Equations can be imagined as two expression trees connected at their roots by an equality operator. Below is an example of an expression tree for a\*x + b\*x.
+
+<img src="example_tree_1.png" width="500px"/>
 
 To simplify expressions or solve equations, JVMath uses a set of rules that are applied successively to these trees in order to transform them to a simplified or solved state. JVMath will always solve equations such that the desired varaible is on the left side of the equation.
 
 JVMath rules (more info in the JVMath Language section) each have an input expression or equation that they are intended to apply to. These inputs are defined in plain mathematical syntax. When attempting to apply a rule to a given expression, the rule's input expression is parsed to a tree, then JVMath attempts to map the rule's input tree onto the given expression's tree. This is a multi-step process.
 
+### Step 1
 The first step involves iterating through the given tree and checking for places where the rule's tree matches its **structure**. That is, the trees share the same hierarchy of operation nodes, regardless of the types of nodes that the operators are applied to or how many child nodes each operator has. A successful structural match is found when the rule tree's operator hierarchy fully matches a portion of the given tree, starting from the root node.
 
+### Step 2
 The second step involves a more complicated algorithm which attempts to map each variable node in the rule's tree to a node in the given tree. In the first step, JVMath stores information on what operator nodes in the rule's tree are mapped to, which is accessed in this step. In particular, all possible nodes that a variable may map to are stored and accessed here to iteratively eliminate impossible mappings and deduce one possible mapping of variable nodes to nodes in the given tree. This process is complex, but it eliminates the need for a "canonical form" used by other computer algebra systems and allows for rule to apply to a wider range of inputs.
+
+<img src="example_mapping_1.png" width="100%"/>
 
 ## JVMath Language
 JVMath uses a set of rules to operate on expressions and equations. The rules are defined in ```.rules``` source files. These are compiled to JSON files which are included in the JVMath JAR and read at runtime. Rules are applied in the order they are defined in the source files. Below is an example of a rule for solving an equation.
