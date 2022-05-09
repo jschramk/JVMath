@@ -1,6 +1,8 @@
 # Overview
 JVMath is a modular and expandable computer algebra system (CAS) for Java.
 
+JVMath is used in [Solvable](https://play.google.com/store/apps/details?id=com.schramkowski.mathsolver&hl=en_US&gl=US) on Google Play. Try it out!
+
 **NOTE**: This repository was only recently made public and the documentation is not comprehensive.
 
 # Documentation
